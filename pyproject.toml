@@ -1,0 +1,22 @@
+[project]
+name = "iadata-700-projet"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "ipykernel>=7.4.0",
+    "pandas>=3.0.6",
+    "pip>=26.2.1",
+    "requests>=2.34.2",
+    "seaborn>=0.13.2",
+    "squarify>=0.4.5",
+    "tabulate>=0.10.0",
+]
+
+[project.scripts]
+iadata-700-projet = "iadata_700_projet:main"
+
+[build-system]
+requires = ["uv_build>=0.12.20,<0.13.0"]
+build-backend = "uv_build"
