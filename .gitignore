@@ -22,3 +22,9 @@ data/processed/*
 .vscode/
 .idea/
 .DS_Store
+
+# Données générées par le code
+data/1_raw/*
+data/2_interim/*
+data/3_processed/*
+!data/**/.gitkeep
