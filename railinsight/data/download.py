@@ -1,27 +1,24 @@
-"""Téléchargement explicite des jeux de données open data SNCF."""
+"""Chargement des jeux de données open data SNCF directement en DataFrame (aucun fichier créé)."""
 
-from pathlib import Path
+import io
 
+import pandas as pd
 import requests
 
 BASE_URL = "https://ressources.data.sncf.com/api/explore/v2.1/catalog/datasets"
-DATASETS = [
-    "regularite-mensuelle-tgv-aqst",
-    "liste-des-gares",
-    "lignes-lgv-et-par-ecartement",
-    "frequentation-gares"
-]
 
-ROOT = Path(__file__).resolve().parents[2]
-RAW_DIR = ROOT / "data" / "raw"
+# Identifiants des jeux de données (visibles dans l'URL de chaque page du portail)
+REGULARITE = "regularite-mensuelle-tgv-aqst"
+GARES = "liste-des-gares"
+LIGNES = "lignes-lgv-et-par-ecartement"
+FREQUENTATION = "frequentation-gares"
 
-RAW_DIR.mkdir(parents=True, exist_ok=True)
 
-for dataset in DATASETS:
+def load(dataset: str) -> pd.DataFrame:
+    """Charge un jeu de données SNCF Open Data en DataFrame, sans passer par un fichier."""
     response = requests.get(f"{BASE_URL}/{dataset}/exports/csv?delimiter=,", timeout=120)
     response.raise_for_status()
-    (RAW_DIR / f"{dataset}.csv").write_bytes(response.content)
-    print(f"{dataset}.csv téléchargé")
+    return pd.read_csv(io.BytesIO(response.content))
 
 
 
