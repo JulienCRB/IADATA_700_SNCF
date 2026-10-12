@@ -6,6 +6,24 @@ from railinsight.config import OUTLIER_IQR_MULTIPLIER
 from railinsight.exceptions import DataValidationError
 
 
+def normaliser_noms(s: pd.Series) -> pd.Series:
+    """Majuscules, sans accents, tirets remplacés par des espaces.
+
+    Permet de comparer les noms de gares entre les différentes sources
+    (ex. régularité TGV vs liste des gares), qui n'utilisent pas la même
+    convention de nommage (accents, tirets, espaces multiples...).
+    """
+    return (
+        s.str.upper()
+        .str.normalize("NFKD")  # sépare la lettre de son accent : É -> E + ´
+        .str.encode("ascii", errors="ignore")  # supprime les accents
+        .str.decode("ascii")
+        .str.replace("-", " ", regex=False)
+        .str.replace(r"\s+", " ", regex=True)  # espaces multiples -> un seul
+        .str.strip()
+    )
+
+
 def missing_report(data: pd.DataFrame) -> pd.DataFrame:
     """Retourne le nombre et le pourcentage de valeurs manquantes par colonne."""
     if not isinstance(data, pd.DataFrame):
