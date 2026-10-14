@@ -5,8 +5,8 @@ from pathlib import Path
 import pandas as pd
 
 from railinsight.config import (
-    CAUSE_COLUMNS,
     CANCELLED_TRAINS_COLUMN,
+    CAUSE_COLUMNS,
     DATE_COLUMN,
     DEFAULT_DATA_PATH,
     DELAYED_15_COLUMN,
@@ -14,7 +14,11 @@ from railinsight.config import (
     PLANNED_TRAINS_COLUMN,
     ROUTE_COLUMNS,
 )
-from railinsight.exceptions import DataLoadError, DataValidationError, MissingColumnsError
+from railinsight.exceptions import (
+    DataLoadError,
+    DataValidationError,
+    MissingColumnsError,
+)
 
 REQUIRED_COLUMNS = (
     DATE_COLUMN,

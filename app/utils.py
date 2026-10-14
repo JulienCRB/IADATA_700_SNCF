@@ -1,8 +1,7 @@
 """Utilitaires Streamlit - RailInsight"""
-import streamlit as st
-from railinsight.data.loader import load_data
 from railinsight.analysis.causes import analyze_causes
 from railinsight.analysis.reliability import compute_reliability_score
+from railinsight.data.loader import load_data
 
 
 def get_data():
