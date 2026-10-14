@@ -1,0 +1,22 @@
+name: CI
+
+on: push
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Downloads the commit pushed onto the VM
+      - name: Check out code
+        uses: actions/checkout@v5
+
+    # Install the uv on VM
+      - name: Install uv
+        uses: astral-sh/se
+    
+      - name: Install dependencies
+        run: uv sync --locked
+
+      - name: Run tests
+        run: uv run pytest
