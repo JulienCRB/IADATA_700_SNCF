@@ -6,7 +6,11 @@ import pandas as pd
 import pytest
 
 from railinsight.data.loader import load_data, normalize_dataframe
-from railinsight.exceptions import DataLoadError, DataValidationError, MissingColumnsError
+from railinsight.exceptions import (
+    DataLoadError,
+    DataValidationError,
+    MissingColumnsError,
+)
 
 
 def test_normalize_parses_dates_numeric_values_and_fake_missing(raw_dataframe):

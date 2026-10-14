@@ -28,3 +28,7 @@ data/1_raw/*
 data/2_interim/*
 data/3_processed/*
 !data/**/.gitkeep
+
+# Test coverage
+.coverage
+htmlcov/
