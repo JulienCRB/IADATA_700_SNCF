@@ -27,7 +27,9 @@ def normaliser_noms(s: pd.Series) -> pd.Series:
 def missing_report(data: pd.DataFrame) -> pd.DataFrame:
     """Retourne le nombre et le pourcentage de valeurs manquantes par colonne."""
     if not isinstance(data, pd.DataFrame):
-        raise DataValidationError("Le rapport de valeurs manquantes attend un DataFrame.")
+        raise DataValidationError(
+            "Le rapport de valeurs manquantes attend un DataFrame."
+        )
     counts = data.isna().sum()
     return pd.DataFrame(
         {
@@ -44,14 +46,17 @@ def outlier_flags(
     if not isinstance(data, pd.DataFrame):
         raise DataValidationError("Le repérage d'extrêmes attend un DataFrame.")
 
-    selected = list(columns) if columns is not None else list(
-        data.select_dtypes(include="number").columns
+    selected = (
+        list(columns)
+        if columns is not None
+        else list(data.select_dtypes(include="number").columns)
     )
     unknown = sorted(set(selected).difference(data.columns))
     if unknown:
         raise DataValidationError("Colonnes inconnues : " + ", ".join(unknown))
     non_numeric = [
-        column for column in selected
+        column
+        for column in selected
         if not pd.api.types.is_numeric_dtype(data[column].dtype)
     ]
     if non_numeric:

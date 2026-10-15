@@ -1,4 +1,5 @@
-"""Page 3: Saisonnalité"""
+"""Page 3: Saisonnalité."""
+
 import streamlit as st
 
 st.title("🌡️ Quand les retards apparaissent-ils ?")

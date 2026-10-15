@@ -1,4 +1,5 @@
-"""Page 2: Liaisons en difficulté"""
+"""Page 2: Liaisons en difficulté."""
+
 import streamlit as st
 
 st.title("🚨 Liaisons durablement en difficulté")

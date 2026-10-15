@@ -38,7 +38,9 @@ def normalize_dataframe(data: pd.DataFrame) -> pd.DataFrame:
         raise DataValidationError("Les données à normaliser doivent être un DataFrame.")
 
     normalized = data.copy()
-    normalized.columns = [str(column).replace("\ufeff", "").strip() for column in data.columns]
+    normalized.columns = [
+        str(column).replace("\ufeff", "").strip() for column in data.columns
+    ]
     missing_columns = sorted(set(REQUIRED_COLUMNS).difference(normalized.columns))
     if missing_columns:
         raise MissingColumnsError(
@@ -89,5 +91,7 @@ def load_data(path: str | Path = DEFAULT_DATA_PATH) -> pd.DataFrame:
     try:
         raw_data = pd.read_csv(data_path, encoding="utf-8-sig")
     except (OSError, pd.errors.ParserError, UnicodeError) as exc:
-        raise DataLoadError(f"Impossible de lire le fichier {data_path}: {exc}") from exc
+        raise DataLoadError(
+            f"Impossible de lire le fichier {data_path}: {exc}"
+        ) from exc
     return normalize_dataframe(raw_data)

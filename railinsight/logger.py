@@ -13,9 +13,7 @@ def get_logger(name: str = "railinsight") -> logging.Logger:
         return logger
 
     LOG_DIR.mkdir(parents=True, exist_ok=True)
-    formatter = logging.Formatter(
-        "%(asctime)s %(levelname)s %(name)s: %(message)s"
-    )
+    formatter = logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s")
     debug_handler = RotatingFileHandler(
         LOG_DIR / "debug.log", maxBytes=1_000_000, backupCount=3, encoding="utf-8"
     )

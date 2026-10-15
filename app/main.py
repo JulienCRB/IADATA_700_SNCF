@@ -1,10 +1,9 @@
-"""Streamlit main app - RailInsight"""
+"""Streamlit main app - RailInsight."""
+
 import streamlit as st
 
 st.set_page_config(
-    page_title="RailInsight - TGV Fiabilité",
-    page_icon="🚄",
-    layout="wide"
+    page_title="RailInsight - TGV Fiabilité", page_icon="🚄", layout="wide"
 )
 
 st.title("🚄 RailInsight - Comprendre les retards des TGV")
@@ -12,7 +11,7 @@ st.title("🚄 RailInsight - Comprendre les retards des TGV")
 st.markdown("""
 ### Bienvenue sur RailInsight
 
-Cette application explore la fiabilité du réseau TGV français et comprend 
+Cette application explore la fiabilité du réseau TGV français et comprend
 l'origine des retards : réseau, trains ou aléas extérieurs.
 
 **Navigue dans les pages pour :**
