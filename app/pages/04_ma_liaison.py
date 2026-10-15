@@ -1,4 +1,5 @@
-"""Page 4: Ma liaison"""
+"""Page 4: Ma liaison."""
+
 import streamlit as st
 
 st.title("🔍 Ma liaison")

@@ -1,4 +1,5 @@
-"""Page 5: Données et limites"""
+"""Page 5: Données et limites."""
+
 import streamlit as st
 
 st.title("📋 Données et limites")

@@ -41,7 +41,9 @@ class CausesAnalysis(BaseAnalysis):
     def analyze(self) -> pd.DataFrame:
         """Calcule les parts moyennes pondérées par mois."""
         self._validate_columns()
-        records = self.data[[DATE_COLUMN, DELAYED_ARRIVAL_COLUMN, *CAUSE_COLUMNS]].copy()
+        records = self.data[
+            [DATE_COLUMN, DELAYED_ARRIVAL_COLUMN, *CAUSE_COLUMNS]
+        ].copy()
         records["_weighted_delays"] = records[DELAYED_ARRIVAL_COLUMN].fillna(0)
         records["_weighted_delays"] = records["_weighted_delays"].clip(lower=0)
         for column in CAUSE_COLUMNS:

@@ -32,3 +32,22 @@ dev = [
     "pytest-cov>=7.1.0",
     "ruff>=0.17.0",
 ]
+
+[tool.ruff]
+# Default max line length
+line-length = 88
+# Exploration, not delivered code
+extend-exclude = ["notebook"]
+
+[tool.ruff.lint]
+# E/W: pycodestyle (PEP 8 style) | F: Pyflakes (bugs, unused code)
+# I: isort (import order) | D: pydocstyle (docstrings)
+select = ["E", "W", "F", "I", "D"]
+
+[tool.ruff.lint.pydocstyle]
+#Docstring style.
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Test functions don't need docstrings, because their names already describe them.
+"test/**" = ["D"]

@@ -11,6 +11,7 @@ class BaseAnalysis(ABC):
     """Base validant et conservant une copie du jeu de données."""
 
     def __init__(self, data: pd.DataFrame) -> None:
+        """Initialise l'analyse avec un DataFrame."""
         if not isinstance(data, pd.DataFrame):
             raise AnalysisError("Une analyse attend un DataFrame pandas.")
         if data.empty:

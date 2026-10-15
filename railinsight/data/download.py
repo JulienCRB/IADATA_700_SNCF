@@ -1,4 +1,7 @@
-"""Chargement des jeux de données open data SNCF directement en DataFrame (aucun fichier créé)."""
+"""Chargement des jeux de données open data SNCF directement en DataFrame.
+
+Aucun fichier n'est créé : les données restent en mémoire.
+"""
 
 import io
 
@@ -15,11 +18,17 @@ FREQUENTATION = "frequentation-gares"
 
 
 def load(dataset: str) -> pd.DataFrame:
-    """Charge un jeu de données SNCF Open Data en DataFrame, sans passer par un fichier."""
-    response = requests.get(f"{BASE_URL}/{dataset}/exports/csv?delimiter=,", timeout=120)
+    """Charge un jeu de données SNCF Open Data en DataFrame.
+
+    Args:
+        dataset: Identifiant du jeu de données sur le portail SNCF
+            (par exemple ``REGULARITE``).
+
+    Returns:
+        Le jeu de données complet, sans passer par un fichier.
+    """
+    response = requests.get(
+        f"{BASE_URL}/{dataset}/exports/csv?delimiter=,", timeout=120
+    )
     response.raise_for_status()
     return pd.read_csv(io.BytesIO(response.content))
-
-
-
-

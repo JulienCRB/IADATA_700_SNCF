@@ -24,4 +24,6 @@ def test_trend_has_one_row_per_route_and_month(dataframe):
 
 def test_reliability_rejects_missing_columns(dataframe):
     with pytest.raises(AnalysisError, match="absentes"):
-        ReliabilityAnalysis(dataframe.drop(columns=["nb_train_retard_sup_15"])).analyze()
+        ReliabilityAnalysis(
+            dataframe.drop(columns=["nb_train_retard_sup_15"])
+        ).analyze()

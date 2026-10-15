@@ -1,4 +1,5 @@
-"""Utilitaires Streamlit - RailInsight"""
+"""Utilitaires Streamlit - RailInsight."""
+
 from railinsight.analysis.causes import analyze_causes
 from railinsight.analysis.reliability import compute_reliability_score
 from railinsight.data.loader import load_data
