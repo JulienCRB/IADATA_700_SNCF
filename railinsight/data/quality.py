@@ -2,16 +2,14 @@
 
 import pandas as pd
 
-from railinsight.config import OUTLIER_IQR_MULTIPLIER
-from railinsight.exceptions import DataValidationError
-
 
 def normaliser_noms(s: pd.Series) -> pd.Series:
     """Majuscules, sans accents, tirets remplacés par des espaces.
 
     Permet de comparer les noms de gares entre les différentes sources
     (ex. régularité TGV vs liste des gares), qui n'utilisent pas la même
-    convention de nommage (accents, tirets, espaces multiples...).
+    convention de nommage (accents, tirets, espaces multiples, "SAINT" écrit
+    en entier ou abrégé, suffixe "TGV"...).
     """
     return (
         s.str.upper()
@@ -19,61 +17,76 @@ def normaliser_noms(s: pd.Series) -> pd.Series:
         .str.encode("ascii", errors="ignore")  # supprime les accents
         .str.decode("ascii")
         .str.replace("-", " ", regex=False)
+        .str.replace(r"\bSAINTE\b", "ST", regex=True)  # SAINTE -> STE
+        .str.replace(r"\bSAINT\b", "ST", regex=True)  # SAINT -> ST
+        .str.replace(r"\bTGV\b", "", regex=True)  # supprime le mot "TGV"
         .str.replace(r"\s+", " ", regex=True)  # espaces multiples -> un seul
-        .str.strip()
+        .str.strip()  # retire l'espace laissé en fin de nom par la suppression de "TGV"
     )
 
 
-def missing_report(data: pd.DataFrame) -> pd.DataFrame:
-    """Retourne le nombre et le pourcentage de valeurs manquantes par colonne."""
-    if not isinstance(data, pd.DataFrame):
-        raise DataValidationError(
-            "Le rapport de valeurs manquantes attend un DataFrame."
-        )
-    counts = data.isna().sum()
-    return pd.DataFrame(
-        {
-            "missing_count": counts.astype("int64"),
-            "missing_percent": (counts / len(data) * 100 if len(data) else 0.0),
-        }
+def garder_gares_tgv_si_doublon(df: pd.DataFrame) -> pd.DataFrame:
+    """Résout les doublons créés par la suppression du mot "TGV".
+
+    Si plusieurs libellés d'origine donnent le même nom normalisé (ex. "Valence"
+    et "Valence-TGV" -> "VALENCE") et que l'un d'eux contient "TGV", on ne garde
+    que les lignes de la gare TGV. Sans variante TGV, le groupe est laissé tel quel.
+
+    Le DataFrame doit contenir la colonne d'origine "libelle" et la colonne
+    normalisée "gare".
+    """
+    df = df.copy()
+    est_tgv = df["libelle"].str.upper().str.contains(r"\bTGV\b", regex=True, na=False)
+
+    # Nombre de libellés d'origine différents pour un même nom normalisé
+    nb_libelles = df.groupby("gare")["libelle"].transform("nunique")
+
+    # Le groupe contient-il au moins une gare TGV ?
+    groupe_a_un_tgv = est_tgv.groupby(df["gare"]).transform("any")
+
+    # À retirer : gare en doublon, avec une variante TGV, et qui n'est pas la TGV
+    a_supprimer = (nb_libelles > 1) & groupe_a_un_tgv & ~est_tgv
+
+    return df[~a_supprimer]
+
+
+def gares_uniques(df: pd.DataFrame) -> pd.DataFrame:
+    """Une ligne par gare (code UIC unique), avec sa localisation.
+
+    Le jeu de données d'origine contient une ligne par couple (gare, ligne de
+    chemin de fer) : une gare desservie par trois lignes apparaît trois fois.
+    On ne garde ici qu'une ligne par code UIC, et seulement les colonnes
+    d'identification et de localisation.
+    """
+    df = df.rename(columns=str.lower)  # accepte CODE_UIC comme code_uic
+
+    # Selon la source, la colonne s'appelle "departemen" (API) ou "departement"
+    col_dep = "departemen" if "departemen" in df.columns else "departement"
+    colonnes = ["code_uic", "libelle", col_dep, "commune", "x_wgs84", "y_wgs84"]
+
+    return (
+        df[colonnes]
+        .rename(columns={col_dep: "departement"})
+        .dropna(subset=["code_uic"])  # écarte les lignes sans code UIC
+        .drop_duplicates(subset="code_uic")  # garde la première ligne de chaque gare
+        .reset_index(drop=True)
     )
 
 
-def outlier_flags(
-    data: pd.DataFrame, columns: list[str] | tuple[str, ...] | None = None
-) -> pd.DataFrame:
-    """Signale les valeurs extrêmes numériques selon la règle de Tukey."""
-    if not isinstance(data, pd.DataFrame):
-        raise DataValidationError("Le repérage d'extrêmes attend un DataFrame.")
+def ajouter_gares(df: pd.DataFrame, nouvelles_gares: list[dict]) -> pd.DataFrame:
+    """Ajoute à la liste des gares des gares qui en sont absentes.
 
-    selected = (
-        list(columns)
-        if columns is not None
-        else list(data.select_dtypes(include="number").columns)
+    Utile pour les gares absentes du jeu de données d'origine (par exemple
+    les gares étrangères). Chaque gare est un dictionnaire dont les clés sont
+    les colonnes du DataFrame ("code_uic", "libelle", "departement", ...).
+    Si un code UIC existe déjà, la ligne d'origine est conservée.
+    """
+    if not nouvelles_gares:
+        return df
+
+    df_nouvelles = pd.DataFrame(nouvelles_gares)
+    return (
+        pd.concat([df, df_nouvelles], ignore_index=True)
+        .drop_duplicates(subset="code_uic")
+        .reset_index(drop=True)
     )
-    unknown = sorted(set(selected).difference(data.columns))
-    if unknown:
-        raise DataValidationError("Colonnes inconnues : " + ", ".join(unknown))
-    non_numeric = [
-        column
-        for column in selected
-        if not pd.api.types.is_numeric_dtype(data[column].dtype)
-    ]
-    if non_numeric:
-        raise DataValidationError(
-            "Le repérage d'extrêmes exige des colonnes numériques : "
-            + ", ".join(non_numeric)
-        )
-
-    flags = pd.DataFrame(False, index=data.index, columns=selected, dtype=bool)
-    for column in selected:
-        values = data[column]
-        if values.notna().sum() < 2:
-            continue
-        first_quartile = values.quantile(0.25)
-        third_quartile = values.quantile(0.75)
-        spread = third_quartile - first_quartile
-        flags[column] = (values < first_quartile - OUTLIER_IQR_MULTIPLIER * spread) | (
-            values > third_quartile + OUTLIER_IQR_MULTIPLIER * spread
-        )
-    return flags
