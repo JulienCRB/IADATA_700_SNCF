@@ -1,4 +1,7 @@
-"""Preprocessing des données, pour avoir des dataframes ready-to-use dans les analyses."""
+"""Prétraitement des données.
+
+Permet d'obtenir des dataframes ready-to-use dans les différentes analyses.
+"""
 
 import pandas as pd
 
