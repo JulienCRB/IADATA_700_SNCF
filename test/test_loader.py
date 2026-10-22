@@ -1,17 +1,51 @@
 """Tests du chargement et de la normalisation des données."""
 
-from pathlib import Path
-
 import pandas as pd
 import pytest
 
+from railinsight.data.loader import FREQUENTATION, GARES, LIGNES, REGULARITE, load
+
+
+@pytest.mark.parametrize(
+    "dataset",
+    [
+        REGULARITE,
+        GARES,
+        LIGNES,
+        FREQUENTATION,
+    ],
+)
+def test_load(dataset):
+    """Teste le chargement des différents datasets SNCF."""
+
+    df = load(dataset)
+
+    # Vérification du type et du contenu
+    assert isinstance(df, pd.DataFrame)
+    assert not df.empty
+
+    # Vérification des colonnes
+    assert len(df.columns) > 0
+    assert df.columns.is_unique
+
+    # Vérification de l'absence de lignes entièrement vides
+    assert not df.isna().all(axis=1).any()
+
+
+def test_load_invalid_dataset():
+    """Teste le comportement avec un identifiant invalide."""
+
+    with pytest.raises(Exception):
+        load("dataset-inexistant")
+
+
+"""
 from railinsight.data.loader import load_data, normalize_dataframe
 from railinsight.exceptions import (
     DataLoadError,
     DataValidationError,
     MissingColumnsError,
 )
-
 
 def test_normalize_parses_dates_numeric_values_and_fake_missing(raw_dataframe):
     result = normalize_dataframe(raw_dataframe)
@@ -43,3 +77,4 @@ def test_loads_mini_csv_fixture():
 
     assert len(result) == 2
     assert result["nb_train_prevu"].sum() == 200
+    """

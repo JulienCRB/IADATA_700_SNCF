@@ -1,33 +1,89 @@
 """Tests des rapports de qualité et valeurs extrêmes."""
 
 import pandas as pd
-import pytest
 
-from railinsight.data.quality import missing_report, outlier_flags
-from railinsight.exceptions import DataValidationError
-
-
-def test_missing_report_counts_nulls():
-    report = missing_report(pd.DataFrame({"a": [1, None], "b": [None, None]}))
-
-    assert report.loc["a", "missing_count"] == 1
-    assert report.loc["a", "missing_percent"] == 50
-    assert report.loc["b", "missing_percent"] == 100
+from railinsight.data.quality import (
+    ajouter_gares,
+    garder_gares_tgv_si_doublon,
+    gares_uniques,
+    normaliser_noms,
+)
 
 
-def test_missing_report_handles_empty_dataframe():
-    report = missing_report(pd.DataFrame(columns=["a"]))
+def test_normaliser_noms():
+    noms = pd.Series(["Paris-Lyon", "Sainte-Menehould", "LILLE TGV"])
 
-    assert report.loc["a", "missing_count"] == 0
-    assert report.loc["a", "missing_percent"] == 0
+    resultat = normaliser_noms(noms)
+
+    assert resultat.tolist() == [
+        "PARIS LYON",
+        "ST MENEHOULD",
+        "LILLE",
+    ]
 
 
-def test_outlier_flags_marks_extreme_numeric_value():
-    result = outlier_flags(pd.DataFrame({"value": [1, 2, 2, 3, 100]}))
+def test_garder_gares_tgv_si_doublon():
+    df = pd.DataFrame(
+        {
+            "libelle": ["VALENCE", "VALENCE TGV", "PARIS"],
+            "gare": ["VALENCE", "VALENCE", "PARIS"],
+        }
+    )
 
-    assert result["value"].tolist() == [False, False, False, False, True]
+    resultat = garder_gares_tgv_si_doublon(df)
+
+    assert resultat["libelle"].tolist() == ["VALENCE TGV", "PARIS"]
+    assert resultat["gare"].is_unique
 
 
-def test_outlier_flags_rejects_unknown_column():
-    with pytest.raises(DataValidationError, match="inconnues"):
-        outlier_flags(pd.DataFrame({"a": [1, 2]}), ["missing"])
+def test_gares_uniques():
+    df = pd.DataFrame(
+        {
+            "CODE_UIC": [123, 123, 456, None],
+            "LIBELLE": ["PARIS", "PARIS", "LYON", "INCONNUE"],
+            "DEPARTEMEN": ["75", "75", "69", "00"],
+            "COMMUNE": ["Paris", "Paris", "Lyon", "Inconnue"],
+            "X_WGS84": [2.3, 2.3, 4.8, 0.0],
+            "Y_WGS84": [48.8, 48.8, 45.7, 0.0],
+        }
+    )
+
+    resultat = gares_uniques(df)
+
+    assert resultat["code_uic"].is_unique
+    assert resultat["code_uic"].notna().all()
+    assert len(resultat) == 2
+    assert "departement" in resultat.columns
+
+
+def test_ajouter_gares():
+    df = pd.DataFrame(
+        {
+            "code_uic": [123],
+            "libelle": ["PARIS"],
+        }
+    )
+
+    nouvelles_gares = [
+        {"code_uic": 123, "libelle": "PARIS MODIFIE"},
+        {"code_uic": 456, "libelle": "LYON"},
+    ]
+
+    resultat = ajouter_gares(df, nouvelles_gares)
+
+    assert resultat["code_uic"].is_unique
+    assert len(resultat) == 2
+    assert resultat.loc[0, "libelle"] == "PARIS"
+
+
+def test_ajouter_gares_liste_vide():
+    df = pd.DataFrame(
+        {
+            "code_uic": [123],
+            "libelle": ["PARIS"],
+        }
+    )
+
+    resultat = ajouter_gares(df, [])
+
+    pd.testing.assert_frame_equal(resultat, df)
