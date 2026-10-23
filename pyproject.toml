@@ -11,11 +11,9 @@ dependencies = [
     "requests>=2.34.2",
     "seaborn>=0.13.2",
     "squarify>=0.4.5",
+    "streamlit>=1.28.0",
     "tabulate>=0.10.0",
 ]
-
-[project.scripts]
-iadata-700-projet = "iadata_700_projet:main"
 
 [build-system]
 requires = ["uv_build>=0.12.20,<0.13.0"]
@@ -24,3 +22,42 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "railinsight"
 module-root = ""
+
+[dependency-groups]
+# The `dev` group contains development dependencies.
+# `uv sync` installs this group by default, so CI gets
+# these tools automatically.
+dev = [
+    "pytest>=9.1.1",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.0",
+]
+
+[tool.pytest.ini_options]
+# Tells pytest the location of tests files
+testpaths = ["test"]
+# Every pytest run also measures coverage of the package
+addopts = "--cov=railinsight --cov-report=term-missing"
+
+[tool.coverage.report]
+# pytest fails if coverage is below 90 %
+fail_under = 90
+
+[tool.ruff]
+# Default max line length
+line-length = 88
+# Exploration, not delivered code
+extend-exclude = ["notebook"]
+
+[tool.ruff.lint]
+# E/W: pycodestyle (PEP 8 style) | F: Pyflakes (bugs, unused code)
+# I: isort (import order) | D: pydocstyle (docstrings)
+select = ["E", "W", "F", "I", "D"]
+
+[tool.ruff.lint.pydocstyle]
+#Docstring style.
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Test functions don't need docstrings, because their names already describe them.
+"test/**" = ["D"]
