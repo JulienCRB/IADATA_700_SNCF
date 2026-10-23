@@ -32,3 +32,6 @@ data/3_processed/*
 # Test coverage
 .coverage
 htmlcov/
+
+# Logs de l'application
+logs/
