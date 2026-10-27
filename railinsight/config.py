@@ -7,6 +7,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 RAW_DATA_DIR = DATA_DIR / "raw"
 PROCESSED_DATA_DIR = DATA_DIR / "processed"
 DEFAULT_DATA_PATH = RAW_DATA_DIR / "regularite-mensuelle-tgv-aqst.csv"
+STATIONS_PATH = DATA_DIR / "reference" / "gares_coordonnees.csv"
 LOG_DIR = DATA_DIR / "logs"
 
 DATE_COLUMN = "date"
