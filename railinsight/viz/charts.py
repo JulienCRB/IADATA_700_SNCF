@@ -6,8 +6,7 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
-from railinsight.config import CAUSE_COLUMNS, ROUTE_COLUMNS
-from railinsight.exceptions import DataValidationError
+ROUTE_COLUMNS = ("gare_depart", "gare_arrivee")
 
 CAUSE_LABELS = {
     "prct_cause_externe": "Causes externes",
@@ -17,16 +16,17 @@ CAUSE_LABELS = {
     "prct_cause_gestion_gare": "Gestion en gare",
     "prct_cause_prise_en_charge_voyageurs": "Prise en charge voyageurs",
 }
+CAUSE_COLUMNS = tuple(CAUSE_LABELS)
 
 
 def reliability_bar(data: pd.DataFrame, top_n: int = 15) -> go.Figure:
     """Construit un classement graphique des liaisons les moins fiables."""
     if "unreliable_rate" not in data or not set(ROUTE_COLUMNS).issubset(data.columns):
-        raise DataValidationError(
+        raise ValueError(
             "Le résultat ne contient pas les colonnes de fiabilité."
         )
     if top_n < 1:
-        raise DataValidationError("top_n doit être supérieur ou égal à 1.")
+        raise ValueError("top_n doit être supérieur ou égal à 1.")
     chart_data = data.nlargest(top_n, "unreliable_rate").copy()
     chart_data["liaison"] = (
         chart_data[ROUTE_COLUMNS[0]].astype(str)
@@ -52,12 +52,12 @@ def cause_stacked_bar(
     """Construit un graphique empilé de la saisonnalité des causes."""
     selected = list(columns)
     if not {"season", *selected}.issubset(data.columns):
-        raise DataValidationError(
+        raise ValueError(
             "Le résultat ne contient pas les colonnes saison/causes."
         )
     unknown_causes = sorted(set(selected).difference(CAUSE_COLUMNS))
     if unknown_causes:
-        raise DataValidationError("Causes inconnues : " + ", ".join(unknown_causes))
+        raise ValueError("Causes inconnues : " + ", ".join(unknown_causes))
     chart_data = data.melt(
         id_vars="season", value_vars=selected, var_name="cause", value_name="part"
     )
@@ -84,9 +84,9 @@ def network_map(routes: pd.DataFrame, stations: pd.DataFrame) -> go.Figure:
         Une figure où chaque liaison (sens confondus) est un segment.
     """
     if not set(ROUTE_COLUMNS).issubset(routes.columns):
-        raise DataValidationError("Les liaisons doivent avoir départ et arrivée.")
+        raise ValueError("Les liaisons doivent avoir départ et arrivée.")
     if not {"gare", "latitude", "longitude"}.issubset(stations.columns):
-        raise DataValidationError("Les gares doivent avoir des coordonnées.")
+        raise ValueError("Les gares doivent avoir des coordonnées.")
 
     coords = stations.set_index("gare")[["latitude", "longitude"]]
     pairs = (
@@ -150,9 +150,9 @@ def station_ranking(routes: pd.DataFrame, top_n: int | None = None) -> go.Figure
     Sans ``top_n``, toutes les gares sont affichées.
     """
     if not set(ROUTE_COLUMNS).issubset(routes.columns):
-        raise DataValidationError("Les liaisons doivent avoir départ et arrivée.")
+        raise ValueError("Les liaisons doivent avoir départ et arrivée.")
     if top_n is not None and top_n < 1:
-        raise DataValidationError("top_n doit être supérieur ou égal à 1.")
+        raise ValueError("top_n doit être supérieur ou égal à 1.")
 
     pairs = (
         routes[list(ROUTE_COLUMNS)]

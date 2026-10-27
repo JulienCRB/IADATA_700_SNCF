@@ -3,11 +3,10 @@
 import pandas as pd
 import streamlit as st
 
-from railinsight.config import ROUTE_COLUMNS
 from railinsight.data.loader import GARES, load
 from railinsight.data.preprocessing import preprocess_gares, preprocess_regularite
 from railinsight.data.quality import normaliser_noms
-from railinsight.viz.charts import network_map, station_ranking
+from railinsight.viz.charts import ROUTE_COLUMNS, network_map, station_ranking
 from utils import get_data
 
 
