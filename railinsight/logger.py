@@ -1,9 +1,11 @@
-"""Configuration des journaux de l'application."""
+"""Configuration des logs de l'application."""
 
 import logging
 from logging.handlers import RotatingFileHandler
+from pathlib import Path
 
-from railinsight.config import LOG_DIR
+# Define where the log files go
+LOG_DIR = Path(__file__).resolve().parent.parent / "logs"
 
 
 def get_logger(name: str = "railinsight") -> logging.Logger:

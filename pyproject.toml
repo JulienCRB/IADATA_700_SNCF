@@ -34,6 +34,16 @@ dev = [
     "ruff>=0.17.0",
 ]
 
+[tool.pytest.ini_options]
+# Tells pytest the location of tests files
+testpaths = ["test"]
+# Every pytest run also measures coverage of the package
+addopts = "--cov=railinsight --cov-report=term-missing"
+
+[tool.coverage.report]
+# pytest fails if coverage is below 90 %
+fail_under = 90
+
 [tool.ruff]
 # Default max line length
 line-length = 88
