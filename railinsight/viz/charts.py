@@ -22,9 +22,7 @@ CAUSE_COLUMNS = tuple(CAUSE_LABELS)
 def reliability_bar(data: pd.DataFrame, top_n: int = 15) -> go.Figure:
     """Construit un classement graphique des liaisons les moins fiables."""
     if "unreliable_rate" not in data or not set(ROUTE_COLUMNS).issubset(data.columns):
-        raise ValueError(
-            "Le résultat ne contient pas les colonnes de fiabilité."
-        )
+        raise ValueError("Le résultat ne contient pas les colonnes de fiabilité.")
     if top_n < 1:
         raise ValueError("top_n doit être supérieur ou égal à 1.")
     chart_data = data.nlargest(top_n, "unreliable_rate").copy()
@@ -52,9 +50,7 @@ def cause_stacked_bar(
     """Construit un graphique empilé de la saisonnalité des causes."""
     selected = list(columns)
     if not {"season", *selected}.issubset(data.columns):
-        raise ValueError(
-            "Le résultat ne contient pas les colonnes saison/causes."
-        )
+        raise ValueError("Le résultat ne contient pas les colonnes saison/causes.")
     unknown_causes = sorted(set(selected).difference(CAUSE_COLUMNS))
     if unknown_causes:
         raise ValueError("Causes inconnues : " + ", ".join(unknown_causes))
