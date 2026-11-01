@@ -105,8 +105,9 @@ def test_score_fiabilite_classe_la_moins_fiable_a_un_rang_eleve():
 
     resultat = score_fiabilite(data)
 
-    assert resultat.loc["mauvaise_liaison", "score_fiabilite"] > (
-        resultat.loc["bonne_liaison", "score_fiabilite"]
+    assert (
+        resultat.loc["mauvaise_liaison", "score_fiabilite"]
+        > (resultat.loc["bonne_liaison", "score_fiabilite"])
     )
     assert resultat.loc["mauvaise_liaison", "score_fiabilite"] == pytest.approx(1.0)
     assert resultat.loc["bonne_liaison", "score_fiabilite"] == pytest.approx(0.5)
