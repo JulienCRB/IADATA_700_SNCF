@@ -39,6 +39,8 @@ dev = [
 testpaths = ["test"]
 # Every pytest run also measures coverage of the package
 addopts = "--cov=railinsight --cov-report=term-missing"
+# Makes `from utils import ...` work like with `streamlit run app/main.py`
+pythonpath = ["app"]
 
 [tool.coverage.report]
 # pytest fails if coverage is below 90 %
