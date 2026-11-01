@@ -1,5 +1,7 @@
 """Streamlit main app - RailInsight."""
 
+from importlib.metadata import version
+
 import streamlit as st
 
 st.set_page_config(
@@ -21,3 +23,5 @@ l'origine des retards : réseau, trains ou aléas extérieurs.
 - Analyser ta liaison préférée
 - Consulter la datasheet et méthodologie
 """)
+
+st.caption(f"RailInsight · version {version('iadata-700-projet')}")

@@ -1,6 +1,6 @@
 [project]
 name = "iadata-700-projet"
-version = "0.1.0"
+version = "0.4.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
@@ -8,6 +8,7 @@ dependencies = [
     "ipykernel>=7.4.0",
     "pandas>=3.0.6",
     "pip>=26.2.1",
+    "plotly>=7.1.0",
     "requests>=2.34.2",
     "seaborn>=0.13.2",
     "squarify>=0.4.5",
@@ -38,6 +39,8 @@ dev = [
 testpaths = ["test"]
 # Every pytest run also measures coverage of the package
 addopts = "--cov=railinsight --cov-report=term-missing"
+# Makes `from utils import ...` work like with `streamlit run app/main.py`
+pythonpath = ["app"]
 
 [tool.coverage.report]
 # pytest fails if coverage is below 90 %
