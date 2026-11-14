@@ -3,6 +3,7 @@ import pytest
 
 from railinsight.data import preprocessing
 from railinsight.data.preprocessing import (
+    preparer_regularite,
     preprocess_dates,
     preprocess_fq,
     preprocess_gares,
@@ -199,10 +200,10 @@ def test_preprocess_dates():
     ]
 
     assert resultat["mois_annee"].tolist() == [
-        "jan. AA",
-        "fév. AA",
-        "mar. AA",
-        "avr. AA",
+        "jan. 25",
+        "fév. 25",
+        "mar. 25",
+        "avr. 25",
     ]
 
     # Vérifier les saisons
@@ -325,3 +326,61 @@ def test_preprocess_fq_appelle_load(monkeypatch):
     preprocess_fq()
 
     assert appels == [preprocessing.FREQUENTATION]
+
+
+def _brut(date="2024-01", depart="Paris-Lyon", arrivee="Lyon", duree=120, prevus=100):
+    """Construit une ligne brute de régularité (colonnes utiles seulement)."""
+    return {
+        "date": date,
+        "gare_depart": depart,
+        "gare_arrivee": arrivee,
+        "duree_moyenne": duree,
+        "nb_train_prevu": prevus,
+        "nb_annulation": 10,
+    }
+
+
+def test_preparer_regularite_annee_d_octobre_a_septembre():
+    data = pd.DataFrame([_brut(date="2024-09"), _brut(date="2024-10")])
+
+    resultat = preparer_regularite(data)
+
+    # Octobre 2024 ouvre l'année 2025 (oct. 2024 → sept. 2025)
+    assert resultat["annee"].tolist() == [2024, 2025]
+    assert resultat["saison"].tolist() == ["automne", "automne"]
+
+
+def test_preparer_regularite_classe_duree_sur_la_duree_mediane():
+    data = pd.DataFrame(
+        [
+            _brut(depart="A", duree=60),
+            _brut(depart="B", duree=91),
+            _brut(depart="B", duree=95),
+            _brut(depart="C", duree=200),
+            _brut(depart="C", duree=100),
+            _brut(depart="C", duree=190),
+        ]
+    )
+
+    resultat = preparer_regularite(data)
+
+    # C : médiane 190 → "> 3h", même si un mois isolé fait 100 minutes
+    assert resultat["classe_duree"].astype(str).tolist() == [
+        "< 1h30",
+        "1h30-3h",
+        "1h30-3h",
+        "> 3h",
+        "> 3h",
+        "> 3h",
+    ]
+
+
+def test_preparer_regularite_marque_les_internationales_et_les_circules():
+    data = pd.DataFrame([_brut(), _brut(arrivee="Genève")])
+
+    resultat = preparer_regularite(data)
+
+    # Noms normalisés : "Genève" devient "GENEVE", reconnue comme étrangère
+    assert resultat["gare_depart"].tolist() == ["PARIS LYON", "PARIS LYON"]
+    assert resultat["internationale"].tolist() == [False, True]
+    assert resultat["nb_train_circule"].tolist() == [90, 90]

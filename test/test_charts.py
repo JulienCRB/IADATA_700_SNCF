@@ -4,8 +4,7 @@ import pandas as pd
 import pytest
 
 from railinsight.viz.charts import (
-    CAUSE_COLUMNS,
-    cause_stacked_bar,
+    contributions_saison_bar,
     network_map,
     reliability_bar,
     station_ranking,
@@ -33,46 +32,58 @@ def stations() -> pd.DataFrame:
     )
 
 
-def test_reliability_bar(routes):
-    data = routes.assign(unreliable_rate=[0.1, 0.3, 0.2, 0.05])
+@pytest.fixture
+def scores() -> pd.DataFrame:
+    index = pd.MultiIndex.from_tuples(
+        [("PARIS", "LYON"), ("LYON", "PARIS"), ("PARIS", "LILLE"), ("PARIS", "GENEVE")],
+        names=["gare_depart", "gare_arrivee"],
+    )
+    return pd.DataFrame({"score_fiabilite": [0.1, 0.9, 0.5, None]}, index=index)
 
-    figure = reliability_bar(data, top_n=2)
 
-    assert sorted(figure.data[0].x) == [0.2, 0.3]
+def test_reliability_bar_garde_les_moins_fiables(scores):
+    figure = reliability_bar(scores, top_n=2)
+
+    assert sorted(figure.data[0].x) == [0.5, 0.9]
+    assert "LYON → PARIS" in figure.data[0].y
+
+
+def test_reliability_bar_ignore_les_liaisons_sans_score(scores):
+    figure = reliability_bar(scores, top_n=10)
+
+    assert len(figure.data[0].x) == 3
 
 
 def test_reliability_bar_colonnes_manquantes(routes):
-    with pytest.raises(ValueError, match="fiabilité"):
+    with pytest.raises(ValueError, match="score"):
         reliability_bar(routes)
 
 
-def test_reliability_bar_top_n_invalide(routes):
-    data = routes.assign(unreliable_rate=0.1)
-
+def test_reliability_bar_top_n_invalide(scores):
     with pytest.raises(ValueError, match="top_n"):
-        reliability_bar(data, top_n=0)
+        reliability_bar(scores, top_n=0)
 
 
-def test_cause_stacked_bar():
-    data = pd.DataFrame({"season": ["Hiver", "Été"]})
-    for column in CAUSE_COLUMNS:
-        data[column] = [10.0, 20.0]
+def test_contributions_saison_bar_une_serie_par_famille():
+    contributions = pd.DataFrame(
+        {
+            "contrib_reseau": [0.06, 0.05],
+            "contrib_voyageurs": [0.04, 0.07],
+            "contrib_externe": [0.03, 0.03],
+        },
+        index=pd.Index(["hiver", "été"], name="saison"),
+    )
 
-    figure = cause_stacked_bar(data, CAUSE_COLUMNS[:2])
+    figure = contributions_saison_bar(contributions)
 
-    assert len(figure.data) == 2
-
-
-def test_cause_stacked_bar_colonnes_manquantes():
-    with pytest.raises(ValueError, match="saison"):
-        cause_stacked_bar(pd.DataFrame({"season": ["Hiver"]}))
+    assert [trace.name for trace in figure.data] == ["Réseau", "Voyageurs", "Externe"]
+    # Les contributions sont affichées en points de taux de retard
+    assert list(figure.data[0].y) == pytest.approx([6.0, 5.0])
 
 
-def test_cause_stacked_bar_cause_inconnue():
-    data = pd.DataFrame({"season": ["Hiver"], "autre": [1.0]})
-
-    with pytest.raises(ValueError, match="inconnues"):
-        cause_stacked_bar(data, ["autre"])
+def test_contributions_saison_bar_colonnes_manquantes():
+    with pytest.raises(ValueError, match="contributions"):
+        contributions_saison_bar(pd.DataFrame({"contrib_reseau": [0.1]}))
 
 
 def test_network_map(routes, stations):

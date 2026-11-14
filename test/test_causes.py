@@ -4,6 +4,8 @@ import pytest
 from railinsight.analysis.causes import (
     FAMILLES_CAUSES,
     ajouter_nb_retard_par_famille,
+    cause_dominante,
+    contributions_par_liaison,
     contributions_par_saison,
     marquer_cause_fiable,
 )
@@ -105,46 +107,114 @@ def test_ajouter_nb_retard_par_famille_ne_modifie_pas_l_original():
     pd.testing.assert_frame_equal(data, original)
 
 
-def test_contributions_par_saison_pondere_par_le_nombre_de_trains():
-    """Contribution par saison : moyenne pondérée, pas une moyenne simple."""
+def _liaison_saison(
+    gare_depart="PARIS",
+    saison="hiver",
+    nb_train_circule=100,
+    reseau=10,
+    voyageurs=5,
+    externe=2,
+    cause_fiable=True,
+    internationale=False,
+):
+    """Construit une observation déjà préparée pour les tests de contributions."""
+    return {
+        "gare_depart": gare_depart,
+        "gare_arrivee": "LYON",
+        "saison": saison,
+        "nb_train_circule": nb_train_circule,
+        "nb_retard_reseau": reseau,
+        "nb_retard_voyageurs": voyageurs,
+        "nb_retard_externe": externe,
+        "cause_fiable": cause_fiable,
+        "internationale": internationale,
+    }
+
+
+def test_contributions_par_liaison_pondere_par_les_trains_circules():
+    """Sur plusieurs mois, la contribution est pondérée, pas une moyenne simple."""
     data = pd.DataFrame(
+        [
+            _liaison_saison(nb_train_circule=100, reseau=10),
+            _liaison_saison(nb_train_circule=300, reseau=60),
+        ]
+    )
+
+    resultat = contributions_par_liaison(data)
+
+    # (10 + 60) / (100 + 300) = 0.175, pas (0.10 + 0.20) / 2 = 0.15
+    assert resultat.loc[("PARIS", "LYON"), "contrib_reseau"] == pytest.approx(0.175)
+
+
+def test_contributions_par_liaison_exclut_les_observations_non_fiables():
+    data = pd.DataFrame(
+        [
+            _liaison_saison(nb_train_circule=100, reseau=10),
+            _liaison_saison(nb_train_circule=1000, reseau=999, cause_fiable=False),
+        ]
+    )
+
+    resultat = contributions_par_liaison(data)
+
+    assert resultat.loc[("PARIS", "LYON"), "contrib_reseau"] == pytest.approx(0.10)
+
+
+def test_cause_dominante_retourne_le_nom_de_la_famille():
+    contributions = pd.DataFrame(
         {
-            "saison": ["hiver", "hiver"],
-            "nb_train_prevu": [100, 300],
-            "cause_fiable": [True, True],
-            "nb_retard_reseau": [10, 60],
-            "nb_retard_voyageurs": [5, 15],
-            "nb_retard_externe": [2, 3],
-        }
+            "contrib_reseau": [0.10, 0.02],
+            "contrib_voyageurs": [0.05, 0.08],
+            "contrib_externe": [0.01, 0.01],
+        },
+        index=["liaison_a", "liaison_b"],
+    )
+
+    assert cause_dominante(contributions).tolist() == ["reseau", "voyageurs"]
+
+
+def test_contributions_par_saison_prend_la_mediane_des_liaisons():
+    """Pas de total réseau : on prend la liaison médiane, pas la somme des trains."""
+    data = pd.DataFrame(
+        [
+            _liaison_saison(gare_depart="A", nb_train_circule=100, reseau=10),
+            _liaison_saison(gare_depart="B", nb_train_circule=100, reseau=20),
+            _liaison_saison(gare_depart="C", nb_train_circule=10_000, reseau=9_000),
+        ]
     )
 
     resultat = contributions_par_saison(data)
 
-    # contrib_reseau = (10 + 60) / (100 + 300) = 0.175, pas (0.10 + 0.20) / 2 = 0.15
-    assert resultat.loc["hiver", "contrib_reseau"] == pytest.approx(0.175)
+    # Contributions 0.10, 0.20 et 0.90 : médiane 0.20. Un total réseau donnerait
+    # (10 + 20 + 9000) / 10 200 = 0.885, écrasé par la plus grosse liaison.
+    assert resultat.loc["hiver", "contrib_reseau"] == pytest.approx(0.20)
 
 
-def test_contributions_par_saison_exclut_les_observations_non_fiables():
-    """Les observations `cause_fiable=False` ne comptent pas dans l'agrégation."""
+def test_contributions_par_saison_exclut_les_internationales():
     data = pd.DataFrame(
-        {
-            "saison": ["été", "été"],
-            "nb_train_prevu": [100, 1_000_000],
-            "cause_fiable": [True, False],
-            "nb_retard_reseau": [10, 999_999],
-            "nb_retard_voyageurs": [5, 0],
-            "nb_retard_externe": [2, 0],
-        }
+        [
+            _liaison_saison(gare_depart="A", reseau=10),
+            _liaison_saison(gare_depart="B", reseau=90, internationale=True),
+        ]
     )
 
     resultat = contributions_par_saison(data)
 
-    assert resultat.loc["été", "contrib_reseau"] == pytest.approx(0.10)
+    assert resultat.loc["hiver", "contrib_reseau"] == pytest.approx(0.10)
+
+
+def test_contributions_par_saison_trie_les_saisons():
+    data = pd.DataFrame(
+        [_liaison_saison(saison=s) for s in ["été", "hiver", "automne", "printemps"]]
+    )
+
+    resultat = contributions_par_saison(data)
+
+    assert resultat.index.tolist() == ["hiver", "printemps", "été", "automne"]
 
 
 def test_contributions_par_saison_leve_une_erreur_si_colonne_manquante():
     """Une colonne requise manquante doit lever une `ValueError` explicite."""
-    data = pd.DataFrame({"saison": ["hiver"], "nb_train_prevu": [100]})
+    data = pd.DataFrame({"saison": ["hiver"], "nb_train_circule": [100]})
 
     with pytest.raises(ValueError, match="Colonnes manquantes"):
         contributions_par_saison(data)

@@ -33,18 +33,21 @@ def _mois_liaison(
     gare_depart="PARIS",
     gare_arrivee="LYON",
     classe_duree="> 3h",
-    nb_train_prevu=100,
+    internationale=False,
+    nb_train_prevu=200,
     nb_annulation=10,
-    nb_train_retard_arrivee=20,
+    nb_train_retard_arrivee=38,
     retard_moyen_tous_trains_arrivee=5.0,
 ):
-    """Construit une observation (liaison x mois) pour les tests de fiabilité."""
+    """Construit une observation (liaison x mois) préparée pour les tests."""
     return {
         "gare_depart": gare_depart,
         "gare_arrivee": gare_arrivee,
         "classe_duree": classe_duree,
+        "internationale": internationale,
         "nb_train_prevu": nb_train_prevu,
         "nb_annulation": nb_annulation,
+        "nb_train_circule": nb_train_prevu - nb_annulation,
         "nb_train_retard_arrivee": nb_train_retard_arrivee,
         "retard_moyen_tous_trains_arrivee": retard_moyen_tous_trains_arrivee,
     }
@@ -52,43 +55,47 @@ def _mois_liaison(
 
 def test_composantes_fiabilite_calcule_les_trois_composantes():
     """Vérifie le calcul des 3 composantes sur un cas simple, à la main."""
-    data = pd.DataFrame(
-        [
-            _mois_liaison(
-                nb_train_prevu=100,
-                nb_annulation=10,
-                nb_train_retard_arrivee=18,
-                retard_moyen_tous_trains_arrivee=5.0,
-            )
-        ]
-    )
+    data = pd.DataFrame([_mois_liaison()])
 
     resultat = composantes_fiabilite(data)
     ligne = resultat.loc[("PARIS", "LYON")]
 
-    # part_retard = trains en retard / trains circulés = 18 / (100 - 10) = 0.2
+    # part_retard = trains en retard / trains circulés = 38 / (200 - 10) = 0.2
     assert ligne["part_retard"] == pytest.approx(0.2)
-    # taux_annulation = annulés / prévus = 10 / 100 = 0.1
-    assert ligne["taux_annulation"] == pytest.approx(0.1)
+    # taux_annulation = annulés / prévus = 10 / 200 = 0.05
+    assert ligne["taux_annulation"] == pytest.approx(0.05)
     assert ligne["retard_moyen_tous_trains"] == pytest.approx(5.0)
     assert ligne["classe_duree"] == "> 3h"
 
 
-def test_composantes_fiabilite_pondere_le_retard_moyen_par_les_trains_du_mois():
+def test_composantes_fiabilite_pondere_le_retard_moyen_par_les_trains_circules():
     """Le retard moyen sur plusieurs mois doit être pondéré, pas une moyenne simple."""
     data = pd.DataFrame(
         [
-            _mois_liaison(nb_train_prevu=100, retard_moyen_tous_trains_arrivee=10.0),
-            _mois_liaison(nb_train_prevu=300, retard_moyen_tous_trains_arrivee=2.0),
+            _mois_liaison(nb_train_prevu=110, retard_moyen_tous_trains_arrivee=10.0),
+            _mois_liaison(nb_train_prevu=310, retard_moyen_tous_trains_arrivee=2.0),
         ]
     )
 
     resultat = composantes_fiabilite(data)
 
-    # (100*10 + 300*2) / 400 = 4.0, pas (10 + 2) / 2 = 6.0
+    # Trains circulés : 100 et 300. (100*10 + 300*2) / 400 = 4.0, pas 6.0
     assert resultat.loc[("PARIS", "LYON"), "retard_moyen_tous_trains"] == pytest.approx(
         4.0
     )
+
+
+def test_composantes_fiabilite_ecarte_les_petits_volumes():
+    data = pd.DataFrame(
+        [
+            _mois_liaison(gare_depart="PARIS"),
+            _mois_liaison(gare_depart="PETITE", nb_train_prevu=50, nb_annulation=0),
+        ]
+    )
+
+    resultat = composantes_fiabilite(data, volume_min=100)
+
+    assert list(resultat.index) == [("PARIS", "LYON")]
 
 
 def test_score_fiabilite_classe_la_moins_fiable_a_un_rang_eleve():
@@ -130,6 +137,26 @@ def test_score_fiabilite_normalise_par_classe_de_duree_separement():
     # Seule liaison de sa classe : rang = 1.0 (percentile max), peu importe la valeur
     assert resultat.loc["seule_courte", "score_fiabilite"] == pytest.approx(1.0)
     assert resultat.loc["seule_longue", "score_fiabilite"] == pytest.approx(1.0)
+
+
+def test_score_fiabilite_ne_classe_pas_les_internationales():
+    """Les liaisons internationales gardent un score vide (décision Phase 2)."""
+    data = pd.DataFrame(
+        {
+            "classe_duree": ["> 3h", "> 3h", "> 3h"],
+            "internationale": [False, False, True],
+            "part_retard": [0.1, 0.2, 0.9],
+            "taux_annulation": [0.01, 0.02, 0.9],
+            "retard_moyen_tous_trains": [3.0, 4.0, 30.0],
+        },
+        index=["bonne", "moyenne", "etrangere"],
+    )
+
+    resultat = score_fiabilite(data)
+
+    assert pd.isna(resultat.loc["etrangere", "score_fiabilite"])
+    # L'internationale ne compte pas dans le classement des autres
+    assert resultat.loc["moyenne", "score_fiabilite"] == pytest.approx(1.0)
 
 
 def test_score_fiabilite_leve_une_erreur_sans_classe_duree():
