@@ -41,7 +41,4 @@ st.metric("Part interne (Réseau + Voyageurs)", part_affichee)
 _, stations = get_map_data()
 route_selectionnee = pd.DataFrame([liaison], columns=ROUTE_COLUMNS)
 st.subheader("Trajet sélectionné")
-st.plotly_chart(
-    network_map(route_selectionnee, stations), use_container_width=True
-)
-
+st.plotly_chart(network_map(route_selectionnee, stations), use_container_width=True)
