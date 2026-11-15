@@ -96,6 +96,7 @@ def network_map(routes: pd.DataFrame, stations: pd.DataFrame) -> go.Figure:
     Args:
         routes: Liaisons avec les colonnes de ``ROUTE_COLUMNS``.
         stations: Gares avec les colonnes ``gare``, ``latitude``, ``longitude``.
+
     Returns:
         Une figure où chaque liaison (sens confondus) est un segment.
     """
