@@ -11,17 +11,20 @@ Score de fiabilité V1 (Phase 4), porté depuis le notebook
 - Calculé sur les 12 derniers mois disponibles.
 - La part d'origine interne (Réseau + Voyageurs) est calculée à part, affichée
   à côté du score sans influencer son calcul.
+- Les liaisons internationales n'ont pas de score (données peu fiables,
+  décision de la Phase 2) ; leurs composantes restent calculées.
 
-Limite connue (à documenter dans la datasheet) : le seuil de retard par classe
-de durée (5/10/15 minutes selon le cadrage) n'est pas disponible dans le
-dataset SNCF. La composante ``part_retard`` utilise donc
-``nb_train_retard_arrivee`` (seuil standard SNCF) comme proxy pour toutes les
-classes de durée.
+Le seuil de retard par classe de durée (5/10/15 minutes selon le cadrage) est
+déjà celui de ``nb_train_retard_arrivee`` : la SNCF publie une régularité
+« composite » qui applique ces seuils selon la durée du trajet.
 """
 
 import pandas as pd
 
+from railinsight.data.preprocessing import LIAISON
+
 from .causes import FAMILLES_CAUSES
+from .difficulte import VOLUME_MIN
 
 #: Colonnes des 3 composantes brutes du score de fiabilité.
 COMPOSANTES_FIABILITE: list[str] = [
@@ -46,46 +49,45 @@ def agreger_derniers_mois(data: pd.DataFrame, n_mois: int = 12) -> pd.DataFrame:
 
 
 def composantes_fiabilite(
-    data: pd.DataFrame, liaison_cols: list[str] = ["gare_depart", "gare_arrivee"]
+    data: pd.DataFrame, volume_min: int = VOLUME_MIN
 ) -> pd.DataFrame:
     """Calcule les 3 composantes brutes du score de fiabilité, par liaison.
 
     Composantes (cadrage, section 3) : part de trains en retard (sur les trains
-    circulés, c'est-à-dire prévus moins annulés), taux d'annulation, et retard
-    moyen de tous les trains à l'arrivée (pondéré par le nombre de trains
-    prévus chaque mois).
+    circulés), taux d'annulation (sur les trains prévus), et retard moyen de
+    tous les trains à l'arrivée (pondéré par les trains circulés chaque mois).
+    Les liaisons avec moins de `volume_min` trains circulés sont écartées.
 
     Args:
-        data: Jeu de régularité (idéalement restreint aux 12 derniers mois via
-            `agreger_derniers_mois`), avec les colonnes ``nb_train_prevu``,
-            ``nb_annulation``, ``nb_train_retard_arrivee``,
-            ``retard_moyen_tous_trains_arrivee`` et ``classe_duree``.
-        liaison_cols: Colonnes identifiant une liaison.
+        data: Jeu de régularité préparé (``preparer_regularite``), idéalement
+            restreint aux 12 derniers mois via `agreger_derniers_mois`.
+        volume_min: Nombre minimal de trains circulés sur la période.
 
     Returns:
-        Un DataFrame indexé par liaison avec les colonnes de `COMPOSANTES_FIABILITE` et
-        ``classe_duree``.
+        Un DataFrame indexé par liaison avec ``classe_duree``,
+        ``internationale`` et les colonnes de `COMPOSANTES_FIABILITE`.
     """
     data = data.copy()
-    data["nb_train_circule"] = data["nb_train_prevu"] - data["nb_annulation"]
     data["retard_pondere"] = (
-        data["retard_moyen_tous_trains_arrivee"] * data["nb_train_prevu"]
+        data["retard_moyen_tous_trains_arrivee"] * data["nb_train_circule"]
     )
 
-    agg = data.groupby(liaison_cols).agg(
+    agg = data.groupby(LIAISON).agg(
+        classe_duree=("classe_duree", "first"),
+        internationale=("internationale", "first"),
         nb_train_prevu=("nb_train_prevu", "sum"),
         nb_train_circule=("nb_train_circule", "sum"),
         nb_annulation=("nb_annulation", "sum"),
         nb_train_retard_arrivee=("nb_train_retard_arrivee", "sum"),
         retard_pondere=("retard_pondere", "sum"),
-        classe_duree=("classe_duree", "first"),
     )
+    agg = agg[agg["nb_train_circule"] >= volume_min]
 
     agg["part_retard"] = agg["nb_train_retard_arrivee"] / agg["nb_train_circule"]
     agg["taux_annulation"] = agg["nb_annulation"] / agg["nb_train_prevu"]
-    agg["retard_moyen_tous_trains"] = agg["retard_pondere"] / agg["nb_train_prevu"]
+    agg["retard_moyen_tous_trains"] = agg["retard_pondere"] / agg["nb_train_circule"]
 
-    return agg[["classe_duree", *COMPOSANTES_FIABILITE]]
+    return agg[["classe_duree", "internationale", *COMPOSANTES_FIABILITE]]
 
 
 def score_fiabilite(
@@ -96,7 +98,9 @@ def score_fiabilite(
     Le score est la moyenne des rangs en pourcentile des composantes, calculés
     à l'intérieur de la classe de durée de chaque liaison. Un score proche de
     0 indique une liaison fiable par rapport aux autres liaisons de durée
-    comparable ; proche de 1, une liaison peu fiable.
+    comparable ; proche de 1, une liaison peu fiable. Si la colonne
+    ``internationale`` est présente, ces liaisons ne sont pas classées et
+    gardent un score vide.
 
     Args:
         data: Résultat de `composantes_fiabilite` (colonnes ``classe_duree`` +
@@ -116,7 +120,12 @@ def score_fiabilite(
         )
 
     data = data.copy()
-    rangs = data.groupby("classe_duree", observed=True)[composantes].rank(pct=True)
+    comparables = data
+    if "internationale" in data.columns:
+        comparables = data[~data["internationale"]]
+    rangs = comparables.groupby("classe_duree", observed=True)[composantes].rank(
+        pct=True
+    )
     rangs.columns = [f"rang_{c}" for c in composantes]
     data = data.join(rangs)
     data["score_fiabilite"] = data[rangs.columns].mean(axis=1)
@@ -126,7 +135,7 @@ def score_fiabilite(
 def part_origine_interne(
     data: pd.DataFrame,
     familles: dict[str, list[str]] = FAMILLES_CAUSES,
-    liaison_cols: list[str] = ["gare_depart", "gare_arrivee"],
+    liaison_cols: list[str] = LIAISON,
 ) -> pd.Series:
     """Part des retards d'origine interne (Réseau + Voyageurs), par liaison.
 

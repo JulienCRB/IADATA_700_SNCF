@@ -13,6 +13,42 @@ from .quality import (
     normaliser_noms,
 )
 
+#: Colonnes identifiant une liaison (un sens de circulation).
+LIAISON: list[str] = ["gare_depart", "gare_arrivee"]
+
+#: Gares hors de France : une liaison qui en touche une est internationale.
+GARES_ETRANGERES: list[str] = [
+    "BARCELONA",
+    "FRANCFORT",
+    "GENEVE",
+    "ITALIE",
+    "LAUSANNE",
+    "MADRID",
+    "STUTTGART",
+    "ZURICH",
+]
+
+#: Classes de durée du cadrage, avec leurs bornes en minutes.
+CLASSES_DUREE: list[str] = ["< 1h30", "1h30-3h", "> 3h"]
+BORNES_DUREE: list[float] = [0, 90, 180, float("inf")]
+
+#: Saison météorologique de chaque mois.
+SAISONS: dict[int, str] = {
+    12: "hiver",
+    1: "hiver",
+    2: "hiver",
+    3: "printemps",
+    4: "printemps",
+    5: "printemps",
+    6: "été",
+    7: "été",
+    8: "été",
+    9: "automne",
+    10: "automne",
+    11: "automne",
+}
+ORDRE_SAISONS: list[str] = ["hiver", "printemps", "été", "automne"]
+
 
 def preprocess_gares(df_gares_brut: pd.DataFrame) -> pd.DataFrame:
     """Transforme la liste brute des gares en liste propre."""
@@ -177,7 +213,7 @@ def preprocess_dates(
         - AAAAMM : clé de tri chronologique
         - mois : nom complet du mois en français
         - mois_court : abréviation du mois suivie d'un point
-        - mois_annee : abréviation suivie de " AA"
+        - mois_annee : abréviation suivie de l'année sur deux chiffres
         - saison : saison météorologique
     """
     # Convertir les dates au format datetime
@@ -231,26 +267,13 @@ def preprocess_dates(
     # Abréviation de trois lettres suivie d'un point
     df_dates["mois_court"] = df_dates["mois"].str[:3] + "."
 
-    # Abréviation suivie de " AA"
-    df_dates["mois_annee"] = df_dates["mois_court"] + " AA"
+    # Abréviation suivie de l'année sur deux chiffres (ex. "jan. 25")
+    df_dates["mois_annee"] = (
+        df_dates["mois_court"] + " " + dates_mensuelles.strftime("%y")
+    )
 
     # Déterminer la saison météorologique
-    saisons = {
-        12: "hiver",
-        1: "hiver",
-        2: "hiver",
-        3: "printemps",
-        4: "printemps",
-        5: "printemps",
-        6: "été",
-        7: "été",
-        8: "été",
-        9: "automne",
-        10: "automne",
-        11: "automne",
-    }
-
-    df_dates["saison"] = df_dates["MM"].map(saisons)
+    df_dates["saison"] = df_dates["MM"].map(SAISONS)
 
     return df_dates
 
@@ -262,4 +285,42 @@ def preprocess_fq() -> pd.DataFrame:
     # Normaliser les noms de gares pour les jointures
     df["gare"] = normaliser_noms(df["gare"])
 
+    return df
+
+
+def preparer_regularite(df_regularite: pd.DataFrame) -> pd.DataFrame:
+    """Ajoute au jeu de régularité les colonnes communes à toutes les analyses.
+
+    Colonnes ajoutées :
+        - annee : année d'octobre à septembre, nommée par l'année où elle se
+          termine (oct. 2024 → sept. 2025 = 2025), comme en Phase 2.
+        - saison : saison météorologique du mois.
+        - classe_duree : classe de durée de la liaison (cadrage), à partir de sa
+          durée médiane sur toute la période.
+        - internationale : `True` si la liaison touche une gare étrangère.
+        - nb_train_circule : trains réellement circulés (prévus − annulés).
+
+    Les noms de gare sont aussi normalisés (majuscules, sans accents).
+
+    Args:
+        df_regularite: Jeu de régularité brut (sortie de ``load(REGULARITE)``).
+
+    Returns:
+        Une copie du jeu de régularité avec les colonnes ajoutées.
+    """
+    df = df_regularite.copy()
+    for colonne in LIAISON:
+        df[colonne] = normaliser_noms(df[colonne])
+
+    mois = df["date"].str[5:7].astype(int)
+    df["annee"] = df["date"].str[:4].astype(int) + (mois >= 10).astype(int)
+    df["saison"] = mois.map(SAISONS)
+
+    duree_liaison = df.groupby(LIAISON)["duree_moyenne"].transform("median")
+    df["classe_duree"] = pd.cut(duree_liaison, bins=BORNES_DUREE, labels=CLASSES_DUREE)
+
+    df["internationale"] = df["gare_depart"].isin(GARES_ETRANGERES) | df[
+        "gare_arrivee"
+    ].isin(GARES_ETRANGERES)
+    df["nb_train_circule"] = df["nb_train_prevu"] - df["nb_annulation"]
     return df

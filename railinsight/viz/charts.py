@@ -1,71 +1,92 @@
 """Figures Plotly pour les résultats des analyses RailInsight."""
 
-from collections.abc import Sequence
-
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
 ROUTE_COLUMNS = ("gare_depart", "gare_arrivee")
 
-CAUSE_LABELS = {
-    "prct_cause_externe": "Causes externes",
-    "prct_cause_infra": "Infrastructure",
-    "prct_cause_gestion_trafic": "Gestion du trafic",
-    "prct_cause_materiel_roulant": "Matériel roulant",
-    "prct_cause_gestion_gare": "Gestion en gare",
-    "prct_cause_prise_en_charge_voyageurs": "Prise en charge voyageurs",
+#: Libellés affichés pour les trois familles de causes.
+FAMILLE_LABELS = {
+    "contrib_reseau": "Réseau",
+    "contrib_voyageurs": "Voyageurs",
+    "contrib_externe": "Externe",
 }
-CAUSE_COLUMNS = tuple(CAUSE_LABELS)
 
 
-def reliability_bar(data: pd.DataFrame, top_n: int = 15) -> go.Figure:
-    """Construit un classement graphique des liaisons les moins fiables."""
-    if "unreliable_rate" not in data or not set(ROUTE_COLUMNS).issubset(data.columns):
-        raise ValueError("Le résultat ne contient pas les colonnes de fiabilité.")
+def reliability_bar(scores: pd.DataFrame, top_n: int = 15) -> go.Figure:
+    """Classe les liaisons les moins fiables selon leur score de fiabilité.
+
+    Args:
+        scores: Résultat de ``score_fiabilite``, indexé par liaison. Les
+            liaisons sans score (internationales) sont ignorées.
+        top_n: Nombre de liaisons à afficher.
+
+    Returns:
+        Un graphique en barres horizontales, la moins fiable en haut.
+    """
+    if "score_fiabilite" not in scores.columns:
+        raise ValueError("Le résultat ne contient pas de score de fiabilité.")
     if top_n < 1:
         raise ValueError("top_n doit être supérieur ou égal à 1.")
-    chart_data = data.nlargest(top_n, "unreliable_rate").copy()
+
+    chart_data = (
+        scores.dropna(subset=["score_fiabilite"])
+        .nlargest(top_n, "score_fiabilite")
+        .reset_index()
+    )
     chart_data["liaison"] = (
-        chart_data[ROUTE_COLUMNS[0]].astype(str)
-        + " → "
-        + chart_data[ROUTE_COLUMNS[1]].astype(str)
+        chart_data[ROUTE_COLUMNS[0]] + " → " + chart_data[ROUTE_COLUMNS[1]]
     )
     return px.bar(
         chart_data,
-        x="unreliable_rate",
+        x="score_fiabilite",
         y="liaison",
         orientation="h",
+        range_x=[0, 1],
         labels={
-            "unreliable_rate": "Annulations et retards > 15 min",
+            "score_fiabilite": "Score (0 = plus fiable, 1 = moins fiable de sa classe)",
             "liaison": "Liaison",
         },
-        title="Liaisons TGV les moins fiables",
+        title="Liaisons TGV les moins fiables de leur classe de durée",
     ).update_layout(yaxis={"categoryorder": "total ascending"})
 
 
-def cause_stacked_bar(
-    data: pd.DataFrame, columns: Sequence[str] = CAUSE_COLUMNS
-) -> go.Figure:
-    """Construit un graphique empilé de la saisonnalité des causes."""
-    selected = list(columns)
-    if not {"season", *selected}.issubset(data.columns):
-        raise ValueError("Le résultat ne contient pas les colonnes saison/causes.")
-    unknown_causes = sorted(set(selected).difference(CAUSE_COLUMNS))
-    if unknown_causes:
-        raise ValueError("Causes inconnues : " + ", ".join(unknown_causes))
-    chart_data = data.melt(
-        id_vars="season", value_vars=selected, var_name="cause", value_name="part"
+def contributions_saison_bar(contributions: pd.DataFrame) -> go.Figure:
+    """Compare la contribution des trois familles de causes selon la saison.
+
+    Les barres sont côte à côte et non empilées : ce sont des médianes de
+    liaisons, qui ne s'additionnent pas exactement.
+
+    Args:
+        contributions: Résultat de ``contributions_par_saison`` (indexé par
+            saison, colonnes ``contrib_<famille>``).
+
+    Returns:
+        Un graphique en barres groupées, en points de taux de retard.
+    """
+    if not set(FAMILLE_LABELS).issubset(contributions.columns):
+        raise ValueError("Le résultat ne contient pas les contributions par famille.")
+
+    chart_data = (
+        (contributions[list(FAMILLE_LABELS)] * 100)
+        .rename(columns=FAMILLE_LABELS)
+        .rename_axis("saison")
+        .reset_index()
+        .melt(id_vars="saison", var_name="famille", value_name="points")
     )
-    chart_data["cause"] = chart_data["cause"].map(CAUSE_LABELS)
     return px.bar(
         chart_data,
-        x="season",
-        y="part",
-        color="cause",
-        barmode="stack",
-        labels={"season": "Saison", "part": "Part des retards (%)", "cause": "Cause"},
-        title="Causes de retard selon la saison",
+        x="saison",
+        y="points",
+        color="famille",
+        barmode="group",
+        labels={
+            "saison": "Saison",
+            "points": "Contribution au taux de retard (points)",
+            "famille": "Famille de causes",
+        },
+        title="Causes de retard selon la saison (liaison médiane)",
     )
 
 

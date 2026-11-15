@@ -1,8 +1,9 @@
 """Analyses dédiées à l'identification et l'étude des causes de pannes ou de retards.
 
 Reprend les conventions validées en Phase 1 (répartition des causes par liaison) et
-portées depuis le notebook ``notebook/phase3_phase4_exploration.ipynb`` pour la Phase 3
-(lecture par saison). Les trois familles de causes suivent le cadrage du projet
+en Phase 3 (lecture par saison). Les contributions sont toujours calculées par
+liaison, sur les trains circulés : jamais de total réseau (cadrage, section 2).
+Les trois familles de causes suivent le cadrage du projet
 (``documentation/cadrage_question_directrice.md``, section 2) :
 
 - SNCF Réseau : infrastructure, gestion du trafic.
@@ -11,6 +12,8 @@ portées depuis le notebook ``notebook/phase3_phase4_exploration.ipynb`` pour la
 """
 
 import pandas as pd
+
+from railinsight.data.preprocessing import LIAISON, ORDRE_SAISONS
 
 #: Colonnes `prct_cause_*` du dataset de régularité, groupées par famille.
 FAMILLES_CAUSES: dict[str, list[str]] = {
@@ -72,39 +75,84 @@ def ajouter_nb_retard_par_famille(
     return data
 
 
-def contributions_par_saison(
-    data: pd.DataFrame, familles: dict[str, list[str]] = FAMILLES_CAUSES
+def contributions_par_liaison(
+    data: pd.DataFrame,
+    par: str | None = None,
+    familles: dict[str, list[str]] = FAMILLES_CAUSES,
 ) -> pd.DataFrame:
-    """Contribution de chaque famille de causes au taux de retard, par saison.
+    """Contribution de chaque famille de causes au taux de retard, par liaison.
 
-    Ne garde que les observations ``cause_fiable``. La contribution est pondérée
-    par le nombre de trains prévus (jamais une moyenne de taux, cf. cadrage).
+    La contribution d'une famille est la part des trains circulés qui sont en
+    retard à cause d'elle (trains en retard de la famille ÷ trains circulés).
+    Les trois contributions s'additionnent au taux de retard de la liaison.
+    Ne garde que les observations ``cause_fiable``.
 
     Args:
-        data: Jeu de régularité prétraité, avec les colonnes ``saison``,
-            ``nb_train_prevu``, ``cause_fiable`` et ``nb_retard_<famille>``
-            (voir `ajouter_nb_retard_par_famille`).
+        data: Jeu de régularité préparé (``preparer_regularite``), avec
+            ``cause_fiable`` et les colonnes ``nb_retard_<famille>``.
+        par: Colonne de découpage supplémentaire (ex. ``"saison"``), ou `None`
+            pour une seule valeur par liaison.
         familles: Groupes de causes à agréger.
 
     Returns:
-        Un DataFrame indexé par saison, avec une colonne ``contrib_<famille>``
-        par famille.
+        Un DataFrame indexé par liaison (et par `par`), avec une colonne
+        ``contrib_<famille>`` par famille.
+    """
+    cles = LIAISON + ([par] if par else [])
+    colonnes_nb_retard = [f"nb_retard_{famille}" for famille in familles]
+
+    data_ok = data[data["cause_fiable"]]
+    agg = data_ok.groupby(cles, observed=True)[
+        ["nb_train_circule", *colonnes_nb_retard]
+    ].sum()
+
+    for famille in familles:
+        agg[f"contrib_{famille}"] = (
+            agg[f"nb_retard_{famille}"] / agg["nb_train_circule"]
+        )
+    return agg[[f"contrib_{famille}" for famille in familles]]
+
+
+def cause_dominante(contributions: pd.DataFrame) -> pd.Series:
+    """Famille de causes qui contribue le plus au retard de chaque liaison (Phase 1).
+
+    Args:
+        contributions: Résultat de `contributions_par_liaison`.
+
+    Returns:
+        Série indexée comme `contributions`, avec le nom de la famille
+        dominante (``"reseau"``, ``"voyageurs"`` ou ``"externe"``).
+    """
+    return contributions.idxmax(axis=1).str.removeprefix("contrib_")
+
+
+def contributions_par_saison(
+    data: pd.DataFrame, familles: dict[str, list[str]] = FAMILLES_CAUSES
+) -> pd.DataFrame:
+    """Contribution de chaque famille par saison, pour la liaison médiane (Phase 3).
+
+    Le cadrage interdit tout total réseau (un même train compte dans plusieurs
+    liaisons) : on calcule les contributions de chaque liaison pour chaque
+    saison, puis on prend la médiane des liaisons. Les liaisons internationales
+    sont exclues (données peu fiables, décision de la Phase 2).
+
+    Args:
+        data: Jeu de régularité préparé, avec ``saison``, ``internationale``,
+            ``cause_fiable`` et les colonnes ``nb_retard_<famille>``.
+        familles: Groupes de causes à agréger.
+
+    Returns:
+        Un DataFrame indexé par saison (hiver → automne), avec une colonne
+        ``contrib_<famille>`` par famille.
 
     Raises:
         ValueError: Si une colonne requise est absente de `data`.
     """
-    requis = {"saison", "nb_train_prevu", "cause_fiable"}
+    requis = {"saison", "internationale", "nb_train_circule", "cause_fiable"}
     if not requis.issubset(data.columns):
         raise ValueError(f"Colonnes manquantes : {requis.difference(data.columns)}")
 
-    data_ok = data[data["cause_fiable"]]
-    colonnes_nb_retard = [f"nb_retard_{famille}" for famille in familles]
-
-    agg = data_ok.groupby("saison", observed=True).agg(
-        nb_train_prevu=("nb_train_prevu", "sum"),
-        **{colonne: (colonne, "sum") for colonne in colonnes_nb_retard},
-    )
-    for famille in familles:
-        agg[f"contrib_{famille}"] = agg[f"nb_retard_{famille}"] / agg["nb_train_prevu"]
-
-    return agg
+    nationales = data[~data["internationale"]]
+    par_liaison = contributions_par_liaison(nationales, par="saison", familles=familles)
+    medianes = par_liaison.groupby("saison").median()
+    return medianes.reindex([s for s in ORDRE_SAISONS if s in medianes.index])
