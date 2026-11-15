@@ -6,7 +6,7 @@ import pytest
 from streamlit.testing.v1 import AppTest
 
 APP_DIR = Path(__file__).parent.parent / "app"
-PAGES = [APP_DIR / "main.py", *sorted((APP_DIR / "pages").glob("*.py"))]
+PAGES = [APP_DIR / "main.py", *sorted((APP_DIR / "vues").glob("*.py"))]
 
 
 @pytest.mark.parametrize("page", PAGES, ids=lambda page: page.name)

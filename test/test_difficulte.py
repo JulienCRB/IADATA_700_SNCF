@@ -4,8 +4,11 @@ import pandas as pd
 import pytest
 
 from railinsight.analysis.difficulte import (
+    ajouter_axe,
     cause_de_l_evolution,
+    classer_evolution,
     evolution_causes,
+    gares_concernees,
     liaisons_en_difficulte,
     seuils_par_classe,
     taux_par_annee,
@@ -148,3 +151,41 @@ def test_evolution_causes_et_cause_de_l_evolution():
 
     # A : +0.10 de Réseau contre +0.00 pour B → le Réseau porte son évolution
     assert causes.to_dict() == {("A", "PARIS"): "reseau"}
+
+
+def test_ajouter_axe_regroupe_les_deux_sens():
+    index = pd.MultiIndex.from_tuples(
+        [("PARIS", "LYON"), ("LYON", "PARIS")], names=["gare_depart", "gare_arrivee"]
+    )
+    bilan = pd.DataFrame({"en_difficulte": [True, False]}, index=index)
+
+    resultat = ajouter_axe(bilan)
+
+    assert resultat["axe"].tolist() == ["LYON ↔ PARIS", "LYON ↔ PARIS"]
+    assert "axe" not in bilan.columns
+
+
+def test_classer_evolution_a_un_point_pres():
+    bilan = pd.DataFrame({"evolution_relative": [0.03, 0.005, -0.004, -0.02]})
+
+    resultat = classer_evolution(bilan)
+
+    assert resultat["tendance"].tolist() == [
+        "s'aggrave",
+        "suit le réseau",
+        "suit le réseau",
+        "résiste mieux",
+    ]
+
+
+def test_gares_concernees_compte_les_deux_extremites():
+    index = pd.MultiIndex.from_tuples(
+        [("LYON", "PARIS"), ("PARIS", "LILLE"), ("NICE", "LYON")],
+        names=["gare_depart", "gare_arrivee"],
+    )
+    bilan = pd.DataFrame({"en_difficulte": [True, True, False]}, index=index)
+
+    gares = gares_concernees(bilan)
+
+    # NICE → LYON n'est pas en difficulté : seules les deux premières comptent
+    assert gares.to_dict() == {"PARIS": 2, "LYON": 1, "LILLE": 1}
