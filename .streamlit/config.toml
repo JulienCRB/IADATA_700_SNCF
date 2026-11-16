@@ -1,8 +1,10 @@
 [theme]
-primaryColor = "#1f77b4"
+# Palette inspirée de l'identité SNCF, la même que PALETTE dans
+# railinsight/viz/charts.py : carmillon pour les accents, bleu nuit pour le texte.
+primaryColor = "#e05206"
 backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f0f2f6"
-textColor = "#262730"
+secondaryBackgroundColor = "#f3f4f7"
+textColor = "#1d2b4f"
 font = "sans serif"
 
 [client]

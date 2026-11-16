@@ -4,81 +4,64 @@
 
 ```
 app/
-├── main.py              ← Page d'accueil (automatiquement servie en premier)
-├── pages/               ← Pages supplémentaires (numérotées 01_, 02_, etc.)
-│   ├── 01_retards.py   
-│   ├── 02_liaisons.py
-│   ├── 03_saisons.py
-│   ├── 04_ma_liaison.py
-│   └── 05_donnees.py
-├── utils.py            ← Fonctions partagées + cache des données
-└── config.py           ← Config générale (optionnel)
+├── main.py          ← Point d'entrée : configuration + menu (st.navigation)
+├── utils.py         ← Chargement des données avec cache + petits formats d'affichage
+└── vues/            ← Une page par fichier, déclarée dans main.py
+    ├── accueil.py
+    ├── retards.py
+    ├── liaisons.py
+    ├── saisons.py
+    ├── ma_liaison.py
+    └── donnees.py
 ```
+
+Le dossier s'appelle `vues/` et non `pages/` : Streamlit transforme automatiquement
+un dossier `pages/` en menu, ce qui entrerait en conflit avec `st.navigation`.
 
 ## Exécuter l'app
 
 ```bash
-# Installation des dépendances (une fois)
 uv sync
-
-# Lancer l'app
-streamlit run app/main.py
+uv run streamlit run app/main.py
 ```
 
-## Comment structurer le code
+Streamlit recharge les pages quand on les modifie, mais pas le package `railinsight` :
+après une modification de `railinsight/`, relancez la commande.
 
-### 1️⃣ **Créer une page** (`app/pages/XX_nom.py`)
+## Ajouter une page
+
+1. Créer `app/vues/ma_page.py`.
+2. La déclarer dans `main.py`, dans la bonne section :
+   `st.Page("vues/ma_page.py", title="Ma page", icon="📄")`.
+3. Elle est testée automatiquement par `test/test_app.py` (elle doit démarrer sans
+   erreur).
+
+## Règle : l'app affiche, `railinsight/` calcule
+
+Une page ne fait aucun calcul : elle récupère les données préparées, appelle une
+méthode de `Regularite` et affiche le résultat avec un graphique de
+`railinsight.viz.charts`. Tout nouveau calcul va dans `railinsight/`, avec un test.
 
 ```python
 import streamlit as st
-from app.utils import get_data
+from utils import get_regularite
 
-st.title("Ma page")
+from railinsight.viz.charts import contributions_saison_bar
 
-data = get_data()  # Récupère les données en cache
-# ... ton code Streamlit ici
+contributions = get_regularite().contributions_par_saison()
+st.plotly_chart(contributions_saison_bar(contributions), width="stretch")
 ```
 
-### 2️⃣ **Utiliser le package `railinsight`**
+`get_regularite()` est mis en cache : les données SNCF ne sont téléchargées et
+préparées qu'une fois pour toutes les pages.
 
-Le dossier `railinsight/` contient la logique métier :
-- `railinsight.data.loader` → charge les données
-- `railinsight.data.quality` → vérifie la qualité
-- `railinsight.analysis.causes` → analyse les causes
-- `railinsight.analysis.reliability` → calcule les scores
-- `railinsight.viz.charts` → crée les graphiques
+## Pages selon le cadrage (section 5)
 
-**Exemple :**
-```python
-from railinsight.analysis.causes import analyze_causes
-from railinsight.viz.charts import plot_causes
-
-data = get_data()
-causes = analyze_causes(data)
-fig = plot_causes(causes)
-st.plotly_chart(fig)  # ou st.pyplot(fig)
-```
-
-### 3️⃣ **Mettre en cache** (important!)
-
-Streamlit réexécute tout à chaque interaction. Utilise `@st.cache_data` pour éviter de recharger les données :
-
-```python
-@st.cache_data
-def get_data():
-    return load_data(...)
-```
-
-## Pages selon le cadrage
-
-Regarde [documentation/cadrage_question_directrice.md](../documentation/cadrage_question_directrice.md) pour les spécifications.
-
-| Page | Contenu | Selon le cadrage |
-|------|---------|-----------------|
-| `main.py` | Accueil + explication | Section 5, "Accueil" |
-| `01_retards.py` | Distribution par cause | Section 5, "D'où viennent les retards ?" |
-| `02_liaisons.py` | Liaisons en difficulté | Section 5, "Liaisons en difficulté" |
-| `03_saisons.py` | Saisonnalité | Section 5, "Saisons" |
-| `04_ma_liaison.py` | Score de fiabilité | Section 5, "Ma liaison" |
-| `05_donnees.py` | Datasheet + méthodologie | Section 5, "Données et limites" |
-
+| Page | Fichier | Méthode de `Regularite` |
+|------|---------|-------------------------|
+| Accueil | `accueil.py` | `nb_liaisons`, `periode`, chiffres clés |
+| D'où viennent les retards ? | `retards.py` | `contributions_par_liaison()` |
+| Liaisons en difficulté | `liaisons.py` | `liaisons_en_difficulte()` |
+| Saisons | `saisons.py` | `contributions_par_saison()` |
+| Ma liaison | `ma_liaison.py` | `score_fiabilite()`, `historique_composantes()` |
+| Données et limites | `donnees.py` | `periode` |
