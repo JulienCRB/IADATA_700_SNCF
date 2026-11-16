@@ -4,7 +4,7 @@
 
 Application web interactive qui explore la ponctualité du réseau TGV français à partir des données ouvertes de la SNCF, et qui explique l'origine des retards : le réseau, les trains ou des aléas extérieurs.
 
-**Application en ligne** : _(lien à ajouter après le déploiement)_
+**Application en ligne** : https://iadata700sncf-f3gtf7w2ptvtrgtkpj3jdq.streamlit.app 
 
 ---
 
@@ -34,17 +34,18 @@ Le cadrage complet (décisions, phases d'analyse, contenu des pages) est dans [`
 
 ## Ce que montre l'application
 
+L'application compte six pages, regroupées dans le menu de gauche :
+
 | Page | Question | Contenu |
 |---|---|---|
-| Accueil | Pourquoi s'y intéresser ? | Question directrice, source des données |
-| D'où viennent les retards ? | Réseau, trains ou aléas ? | Répartition des liaisons selon leurs causes de retard |
-| Liaisons en difficulté | Lesquelles, et comment évoluent-elles ? | Liaisons durablement en difficulté, évolution et cause de cette évolution |
-| Saisons | Quand les retards apparaissent-ils, et pourquoi ? | Contributions des causes par saison |
-| Ma liaison | Ma liaison est-elle fiable ? | Score de fiabilité, part d'origine interne, découpage des causes |
-| Données et limites | Peut-on faire confiance aux chiffres ? | Source, méthodologie, limites |
-| Carte du réseau | Où passent les TGV ? | Carte interactive des liaisons et des gares |
+| Accueil | Pourquoi s'y intéresser ? | La question, l'essentiel en quatre chiffres, où aller ensuite |
+| D'où viennent les retards ? | Réseau, trains ou aléas ? | Poids de chaque famille de causes, liaisons les plus touchées |
+| Liaisons en difficulté | Lesquelles, et comment évoluent-elles ? | Carte des liaisons en difficulté, évolution en 2026, données axe par axe |
+| Saisons | Quand les retards apparaissent-ils ? | Causes de retard saison par saison |
+| Ma liaison | Ma liaison est-elle fiable ? | Score de fiabilité, causes de ses retards, historique |
+| Données et limites | Peut-on faire confiance aux chiffres ? | Source, définition d'un retard, règles de lecture |
 
-**Données** : [Régularité mensuelle TGV (AQST)](https://ressources.data.sncf.com/explore/dataset/regularite-mensuelle-tgv-aqst/information/), SNCF Open Data. Une ligne par liaison (gare de départ, gare d'arrivée) et par mois, depuis janvier 2018. Les données sont téléchargées directement depuis l'API SNCF au lancement de l'application (aucun fichier à fournir).
+Le détail de l'application (structure, ajout d'une page, règles de code) est dans [`app/README.md`](app/README.md).
 
 ## Installation
 
@@ -103,7 +104,7 @@ regularite.score_fiabilite()            # Phase 4 : score de fiabilité (12 dern
 | `railinsight.analysis.causes` | Familles de causes, contributions, cause dominante, saisons |
 | `railinsight.analysis.difficulte` | Seuils, volume minimal, liaisons en difficulté, évolution |
 | `railinsight.analysis.reliability` | Score de fiabilité et part d'origine interne |
-| `railinsight.viz.charts` | Graphiques Plotly (barres, carte du réseau) |
+| `railinsight.viz.charts` | Graphiques Plotly de l'application (contributions, évolution, carte, historique) |
 | `railinsight.logger` | Configuration des logs |
 
 ## Tests et qualité du code
@@ -139,22 +140,24 @@ Les fichiers tournent à 1 Mo (3 sauvegardes conservées).
 
 ## Déploiement
 
-_(À compléter une fois l'application déployée.)_
+L'application est déployée sur **Streamlit Community Cloud** : https://iadata700sncf-f3gtf7w2ptvtrgtkpj3jdq.streamlit.app/
 
-L'application est prévue pour **Streamlit Community Cloud** :
+Pour la redéployer ou la déployer depuis un autre compte :
 
-1. Se connecter sur [share.streamlit.io](https://share.streamlit.io) avec son compte GitHub.
+1. Se connecter sur [share.streamlit.io](https://share.streamlit.io) avec un compte GitHub ayant accès au dépôt.
 2. Créer une application à partir du dépôt `JulienCRB/IADATA_700_SNCF`, branche `main`.
-3. Indiquer `app/main.py` comme fichier principal et Python 3.13.
-4. Déployer : les dépendances sont lues depuis le dépôt.
+3. Indiquer `app/main.py` comme fichier principal et Python 3.13 (dans les paramètres avancés).
+4. Déployer : les dépendances sont installées à partir du dépôt.
+
+L'application se met à jour automatiquement à chaque push sur `main`.
 
 ## Structure du projet
 
 ```
 IADATA_700_SNCF/
 ├── app/                     # Application Streamlit
-│   ├── main.py              # Page d'accueil
-│   ├── pages/               # Une page par question du cadrage
+│   ├── main.py              # Point d'entrée : configuration et menu
+│   ├── vues/                # Une page par question du cadrage
 │   └── utils.py             # Chargement des données en cache
 ├── railinsight/             # Package d'analyse (logique métier)
 │   ├── data/                # Chargement, préparation, qualité
@@ -194,4 +197,4 @@ Les principaux choix, détaillés dans le cadrage et les notebooks :
 - Une Pull Request vers `develop`, relue et approuvée par un autre membre, avec la CI au vert.
 - `main` reçoit les versions stables, marquées par des tags (par exemple `v0.4.1`).
 
-**Équipe** : _(noms à compléter)_
+**Équipe** : Pierre Kraus, Julien Crabos, Younes Attarki, Jonathan Phan, Charles-Emmanuel Jégou
