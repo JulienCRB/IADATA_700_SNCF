@@ -143,7 +143,8 @@ def contributions_par_saison(
 
     Returns:
         Un DataFrame indexé par saison (hiver → automne), avec une colonne
-        ``contrib_<famille>`` par famille.
+        ``contrib_<famille>`` par famille et ``total`` (taux de retard de la
+        liaison médiane, toutes causes).
 
     Raises:
         ValueError: Si une colonne requise est absente de `data`.
@@ -154,5 +155,62 @@ def contributions_par_saison(
 
     nationales = data[~data["internationale"]]
     par_liaison = contributions_par_liaison(nationales, par="saison", familles=familles)
+    par_liaison["total"] = par_liaison.sum(axis=1)
     medianes = par_liaison.groupby("saison").median()
     return medianes.reindex([s for s in ORDRE_SAISONS if s in medianes.index])
+
+
+#: Niveaux de retard d'une famille : trains en retard pour 100 trains circulés.
+NIVEAUX: list[str] = ["moins de 3", "3 à 6", "6 à 9", "9 ou plus"]
+BORNES_NIVEAUX: list[float] = [0, 3, 6, 9, float("inf")]
+
+
+def repartition_par_niveau(
+    contributions: pd.DataFrame, familles: dict[str, list[str]] = FAMILLES_CAUSES
+) -> pd.DataFrame:
+    """Part des liaisons à chaque niveau de retard, pour chaque famille de causes.
+
+    Exemple de lecture : « le réseau cause 9 retards ou plus sur 100 trains sur
+    14 % des liaisons ».
+
+    Args:
+        contributions: Résultat de `contributions_par_liaison`.
+        familles: Familles de causes à répartir.
+
+    Returns:
+        Un DataFrame indexé par famille, une colonne par niveau de `NIVEAUX`
+        (parts de 0 à 1, chaque ligne somme à 1).
+    """
+    lignes = {}
+    for famille in familles:
+        niveaux = pd.cut(
+            contributions[f"contrib_{famille}"] * 100,
+            bins=BORNES_NIVEAUX,
+            right=False,
+            labels=NIVEAUX,
+        )
+        lignes[famille] = niveaux.value_counts(normalize=True).reindex(
+            NIVEAUX, fill_value=0
+        )
+    return pd.DataFrame(lignes).T
+
+
+def liaisons_les_plus_touchees(
+    contributions: pd.DataFrame,
+    n: int = 3,
+    familles: dict[str, list[str]] = FAMILLES_CAUSES,
+) -> dict[str, pd.Series]:
+    """Les `n` liaisons où chaque famille de causes pèse le plus.
+
+    Args:
+        contributions: Résultat de `contributions_par_liaison`.
+        n: Nombre de liaisons par famille.
+        familles: Familles de causes.
+
+    Returns:
+        Pour chaque famille, une série indexée par liaison (contribution en
+        taux), de la plus touchée à la moins touchée.
+    """
+    return {
+        famille: contributions[f"contrib_{famille}"].nlargest(n) for famille in familles
+    }

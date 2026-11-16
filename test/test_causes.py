@@ -7,7 +7,9 @@ from railinsight.analysis.causes import (
     cause_dominante,
     contributions_par_liaison,
     contributions_par_saison,
+    liaisons_les_plus_touchees,
     marquer_cause_fiable,
+    repartition_par_niveau,
 )
 
 
@@ -225,3 +227,63 @@ def test_familles_causes_couvrent_les_six_colonnes_du_dataset():
     toutes_colonnes = [col for colonnes in FAMILLES_CAUSES.values() for col in colonnes]
     assert len(toutes_colonnes) == 6
     assert len(set(toutes_colonnes)) == 6
+
+
+def _contributions(reseau, voyageurs, externe):
+    """Résultat de `contributions_par_liaison` pour des liaisons A, B, C..."""
+    index = pd.MultiIndex.from_tuples(
+        [(chr(65 + i), "PARIS") for i in range(len(reseau))],
+        names=["gare_depart", "gare_arrivee"],
+    )
+    return pd.DataFrame(
+        {
+            "contrib_reseau": reseau,
+            "contrib_voyageurs": voyageurs,
+            "contrib_externe": externe,
+        },
+        index=index,
+    )
+
+
+def test_repartition_par_niveau_classe_les_liaisons():
+    contributions = _contributions(
+        reseau=[0.02, 0.04, 0.07, 0.10],
+        voyageurs=[0.05, 0.05, 0.05, 0.05],
+        externe=[0.01, 0.01, 0.01, 0.03],
+    )
+
+    repartition = repartition_par_niveau(contributions)
+
+    # Réseau : 2, 4, 7 et 10 retards sur 100 → un quart des liaisons par niveau
+    assert repartition.loc["reseau"].tolist() == pytest.approx([0.25] * 4)
+    # 3 retards sur 100 tombent dans « 3 à 6 » (borne incluse à gauche)
+    assert repartition.loc["externe", "3 à 6"] == pytest.approx(0.25)
+    assert repartition.sum(axis=1).tolist() == pytest.approx([1.0, 1.0, 1.0])
+
+
+def test_liaisons_les_plus_touchees_par_famille():
+    contributions = _contributions(
+        reseau=[0.02, 0.09, 0.05],
+        voyageurs=[0.08, 0.01, 0.03],
+        externe=[0.01, 0.02, 0.04],
+    )
+
+    plus_touchees = liaisons_les_plus_touchees(contributions, n=2)
+
+    assert list(plus_touchees["reseau"].index) == [("B", "PARIS"), ("C", "PARIS")]
+    assert list(plus_touchees["voyageurs"].index) == [("A", "PARIS"), ("C", "PARIS")]
+
+
+def test_contributions_par_saison_total_de_la_liaison_mediane():
+    data = pd.DataFrame(
+        [
+            _liaison_saison(gare_depart="A", reseau=10, voyageurs=5, externe=2),
+            _liaison_saison(gare_depart="B", reseau=20, voyageurs=5, externe=5),
+            _liaison_saison(gare_depart="C", reseau=4, voyageurs=4, externe=4),
+        ]
+    )
+
+    resultat = contributions_par_saison(data)
+
+    # Totaux par liaison : 0.17, 0.30, 0.12 → liaison médiane 0.17
+    assert resultat.loc["hiver", "total"] == pytest.approx(0.17)

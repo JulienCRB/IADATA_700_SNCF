@@ -1,4 +1,8 @@
-"""Streamlit main app - RailInsight."""
+"""Streamlit main app - RailInsight.
+
+Point d'entrée : configure l'application et déclare les pages, dans l'ordre du
+cadrage (section 5). Chaque page est un fichier de ``app/vues/``.
+"""
 
 from importlib.metadata import version
 
@@ -8,20 +12,20 @@ st.set_page_config(
     page_title="RailInsight - TGV Fiabilité", page_icon="🚄", layout="wide"
 )
 
-st.title("🚄 RailInsight - Comprendre les retards des TGV")
+pages = {
+    "": [
+        st.Page("vues/accueil.py", title="Accueil", icon="🏠", default=True),
+    ],
+    "Analyses": [
+        st.Page("vues/retards.py", title="D'où viennent les retards ?", icon="📊"),
+        st.Page("vues/liaisons.py", title="Liaisons en difficulté", icon="🚨"),
+        st.Page("vues/saisons.py", title="Saisons", icon="🌡️"),
+        st.Page("vues/ma_liaison.py", title="Ma liaison", icon="🔍"),
+    ],
+    "Contexte": [
+        st.Page("vues/donnees.py", title="Données et limites", icon="📋"),
+    ],
+}
 
-st.markdown("""
-### Bienvenue sur RailInsight
-
-Cette application explore la fiabilité du réseau TGV français et comprend
-l'origine des retards : réseau, trains ou aléas extérieurs.
-
-**Navigue dans les pages pour :**
-- Voir d'où viennent les retards
-- Découvrir les liaisons en difficulté
-- Comprendre la saisonnalité
-- Analyser ta liaison préférée
-- Consulter la datasheet et méthodologie
-""")
-
-st.caption(f"RailInsight · version {version('iadata-700-projet')}")
+st.sidebar.caption(f"RailInsight · version {version('iadata-700-projet')}")
+st.navigation(pages).run()
