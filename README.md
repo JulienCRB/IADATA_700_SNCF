@@ -91,9 +91,9 @@ from railinsight.regularite import Regularite
 regularite = Regularite.depuis_sncf()
 
 regularite.contributions_par_liaison()  # Phase 1 : causes de retard par liaison
-regularite.liaisons_en_difficulte()     # Phase 2 : liaisons durablement en difficulté
-regularite.contributions_par_saison()   # Phase 3 : causes par saison
-regularite.score_fiabilite()            # Phase 4 : score de fiabilité (12 derniers mois)
+regularite.liaisons_en_difficulte()  # Phase 2 : liaisons durablement en difficulté
+regularite.contributions_par_saison()  # Phase 3 : causes par saison
+regularite.score_fiabilite()  # Phase 4 : score de fiabilité (12 derniers mois)
 ```
 
 | Module | Rôle |
