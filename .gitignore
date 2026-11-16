@@ -35,3 +35,6 @@ htmlcov/
 
 # Logs de l'application
 logs/
+
+# Liste temporaire pour l'audit de sécurité
+requirements-audit.txt
