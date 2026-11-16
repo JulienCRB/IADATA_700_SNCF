@@ -179,3 +179,60 @@ def cause_de_l_evolution(delta: pd.DataFrame, en_difficulte: pd.Series) -> pd.Se
     tendance = delta[~selection].median()
     ecart = delta[selection] - tendance
     return ecart.idxmax(axis=1).str.removeprefix("contrib_")
+
+
+def ajouter_axe(bilan: pd.DataFrame) -> pd.DataFrame:
+    """Ajoute la colonne ``axe`` : les deux sens d'une liaison sous un même nom.
+
+    Le calcul reste fait par sens ; l'axe sert seulement à regrouper les deux
+    sens à l'affichage (décision 4 de la Phase 2).
+
+    Args:
+        bilan: DataFrame indexé par liaison (gare de départ, gare d'arrivée).
+
+    Returns:
+        Copie de `bilan` avec ``axe`` (ex. ``"LYON ↔ PARIS"``, gares triées).
+    """
+    bilan = bilan.copy()
+    bilan["axe"] = [" ↔ ".join(sorted(liaison)) for liaison in bilan.index]
+    return bilan
+
+
+#: Les trois tendances de 2026, par rapport au reste du réseau.
+TENDANCES: list[str] = ["s'aggrave", "suit le réseau", "résiste mieux"]
+
+
+def classer_evolution(bilan: pd.DataFrame, seuil: float = 0.01) -> pd.DataFrame:
+    """Range chaque liaison dans une tendance, selon son évolution relative.
+
+    À 1 point près (`seuil`), une liaison « suit le réseau » ; au-delà, elle
+    « s'aggrave » plus que les autres ou « résiste mieux » (Phase 2).
+
+    Args:
+        bilan: Résultat de `liaisons_en_difficulte` (colonne
+            ``evolution_relative``).
+        seuil: Écart toléré à l'évolution du réseau, en taux.
+
+    Returns:
+        Copie de `bilan` avec la colonne ``tendance`` (une valeur de `TENDANCES`).
+    """
+    bilan = bilan.copy()
+    relative = bilan["evolution_relative"]
+    bilan["tendance"] = TENDANCES[1]
+    bilan.loc[relative > seuil, "tendance"] = TENDANCES[0]
+    bilan.loc[relative < -seuil, "tendance"] = TENDANCES[2]
+    return bilan
+
+
+def gares_concernees(bilan: pd.DataFrame) -> pd.Series:
+    """Nombre de liaisons en difficulté qui partent de ou arrivent à chaque gare.
+
+    Args:
+        bilan: Résultat de `liaisons_en_difficulte` (colonne ``en_difficulte``).
+
+    Returns:
+        Série indexée par gare, de la plus concernée à la moins concernée.
+    """
+    selection = bilan[bilan["en_difficulte"]]
+    gares = pd.Series([gare for liaison in selection.index for gare in liaison])
+    return gares.value_counts()

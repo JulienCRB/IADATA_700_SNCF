@@ -96,3 +96,48 @@ def test_score_fiabilite_avec_part_interne(regularite):
     assert pd.isna(scores.loc[("GENEVE", "PARIS"), "score_fiabilite"])
     # Réseau + Voyageurs = 30 + 20 + 10 + 10 + 10 = 80 % des retards
     assert scores["part_origine_interne"].iloc[0] == pytest.approx(0.8)
+
+
+def test_nb_liaisons_et_periode(regularite):
+    assert regularite.nb_liaisons == len(TAUX_PAR_LIAISON)
+    assert regularite.periode == ("2022-10", "2026-09")
+
+
+def test_liaisons_en_difficulte_ajoute_l_axe(regularite):
+    bilan = regularite.liaisons_en_difficulte()
+
+    assert bilan.loc[("A", "PARIS"), "axe"] == "A ↔ PARIS"
+
+
+def test_historique_composantes_une_ligne_par_annee(regularite):
+    historique = regularite.historique_composantes().loc[("A", "PARIS")]
+
+    # Oct. 2022 → sept. 2026 : les années 2023 à 2026
+    assert historique.index.tolist() == [2023, 2024, 2025, 2026]
+    assert historique["part_retard"].iloc[0] == pytest.approx(0.40)
+
+
+def test_contribution_mediane_par_famille(regularite):
+    poids = regularite.contribution_mediane()
+
+    # Liaisons nationales A, B, C, D : taux 0.40, 0.10, 0.12, 0.08 → médiane 0.11.
+    # Externe = 20 % des retards → 0.11 x 0.20 = 0.022, même sans être dominant.
+    assert poids.index.tolist() == ["reseau", "voyageurs", "externe"]
+    assert poids["externe"] == pytest.approx(0.022)
+
+
+def test_score_fiabilite_verdict_en_mots(regularite):
+    scores = regularite.score_fiabilite()
+
+    # A est la moins fiable des 4 liaisons nationales ; GENEVE n'a pas de verdict
+    assert scores.loc[("A", "PARIS"), "niveau"] == "peu fiable"
+    assert scores.loc[("A", "PARIS"), "plus_fiable_que"] == pytest.approx(0.0)
+    assert pd.isna(scores.loc[("GENEVE", "PARIS"), "niveau"])
+
+
+def test_score_fiabilite_en_etoiles(regularite):
+    scores = regularite.score_fiabilite()
+
+    # D a le moins de retards : la plus fiable, donc le plus d'étoiles
+    assert scores["etoiles"].idxmax() == ("D", "PARIS")
+    assert scores["etoiles"].dropna().between(0, 5).all()

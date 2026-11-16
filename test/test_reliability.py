@@ -5,7 +5,11 @@ from railinsight.analysis.reliability import (
     COMPOSANTES_FIABILITE,
     agreger_derniers_mois,
     composantes_fiabilite,
+    etoiles,
+    medianes_par_classe,
+    niveau_fiabilite,
     part_origine_interne,
+    position_dans_classe,
     score_fiabilite,
 )
 
@@ -211,3 +215,63 @@ def test_part_origine_interne_exclut_les_observations_non_fiables():
     resultat = part_origine_interne(data)
 
     assert resultat.loc[("PARIS", "LYON")] == pytest.approx(1.0)
+
+
+def test_composantes_fiabilite_par_annee():
+    """Avec `par`, une ligne par liaison et par année (historique)."""
+    data = pd.DataFrame(
+        [
+            {**_mois_liaison(nb_train_retard_arrivee=19), "annee": 2025},
+            {**_mois_liaison(nb_train_retard_arrivee=38), "annee": 2026},
+        ]
+    )
+
+    resultat = composantes_fiabilite(data, volume_min=0, par="annee")
+
+    assert resultat.loc[("PARIS", "LYON", 2025), "part_retard"] == pytest.approx(0.1)
+    assert resultat.loc[("PARIS", "LYON", 2026), "part_retard"] == pytest.approx(0.2)
+
+
+def test_position_dans_classe_part_des_liaisons_moins_fiables():
+    scores = pd.DataFrame(
+        {
+            "classe_duree": ["> 3h"] * 4,
+            "score_fiabilite": [0.2, 0.4, 0.6, 0.8],
+        },
+        index=["a", "b", "c", "d"],
+    )
+
+    position = position_dans_classe(scores)
+
+    # « a » est plus fiable que 3 liaisons sur 4, « d » que personne
+    assert position.tolist() == pytest.approx([0.75, 0.5, 0.25, 0.0])
+
+
+def test_niveau_fiabilite_par_tiers():
+    assert niveau_fiabilite(0.9) == "plutôt fiable"
+    assert niveau_fiabilite(0.5) == "dans la moyenne"
+    assert niveau_fiabilite(0.1) == "peu fiable"
+    assert niveau_fiabilite(float("nan")) is None
+
+
+def test_medianes_par_classe_sans_internationales():
+    scores = pd.DataFrame(
+        {
+            "classe_duree": ["> 3h", "> 3h", "> 3h"],
+            "internationale": [False, False, True],
+            "part_retard": [0.10, 0.20, 0.90],
+            "taux_annulation": [0.01, 0.03, 0.50],
+            "retard_moyen_tous_trains": [2.0, 4.0, 30.0],
+        }
+    )
+
+    medianes = medianes_par_classe(scores)
+
+    assert medianes.loc["> 3h", "part_retard"] == pytest.approx(0.15)
+
+
+def test_etoiles_cinq_pour_la_plus_fiable():
+    assert etoiles(0.0) == 5
+    assert etoiles(1.0) == 0
+    assert etoiles(0.43) == 3
+    assert etoiles(float("nan")) is None

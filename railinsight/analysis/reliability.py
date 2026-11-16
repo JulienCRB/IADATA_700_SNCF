@@ -49,7 +49,7 @@ def agreger_derniers_mois(data: pd.DataFrame, n_mois: int = 12) -> pd.DataFrame:
 
 
 def composantes_fiabilite(
-    data: pd.DataFrame, volume_min: int = VOLUME_MIN
+    data: pd.DataFrame, volume_min: int = VOLUME_MIN, par: str | None = None
 ) -> pd.DataFrame:
     """Calcule les 3 composantes brutes du score de fiabilité, par liaison.
 
@@ -62,9 +62,11 @@ def composantes_fiabilite(
         data: Jeu de régularité préparé (``preparer_regularite``), idéalement
             restreint aux 12 derniers mois via `agreger_derniers_mois`.
         volume_min: Nombre minimal de trains circulés sur la période.
+        par: Colonne de découpage supplémentaire (ex. ``"annee"`` pour
+            l'historique), ou `None` pour une seule valeur par liaison.
 
     Returns:
-        Un DataFrame indexé par liaison avec ``classe_duree``,
+        Un DataFrame indexé par liaison (et par `par`) avec ``classe_duree``,
         ``internationale`` et les colonnes de `COMPOSANTES_FIABILITE`.
     """
     data = data.copy()
@@ -72,7 +74,8 @@ def composantes_fiabilite(
         data["retard_moyen_tous_trains_arrivee"] * data["nb_train_circule"]
     )
 
-    agg = data.groupby(LIAISON).agg(
+    cles = LIAISON + ([par] if par else [])
+    agg = data.groupby(cles, observed=True).agg(
         classe_duree=("classe_duree", "first"),
         internationale=("internationale", "first"),
         nb_train_prevu=("nb_train_prevu", "sum"),
@@ -165,3 +168,81 @@ def part_origine_interne(
     ]
     total = agg.sum(axis=1)
     return agg[internes].sum(axis=1) / total
+
+
+#: Verdict grand public, du plus fiable au moins fiable.
+NIVEAUX_FIABILITE: list[str] = ["plutôt fiable", "dans la moyenne", "peu fiable"]
+
+
+def position_dans_classe(scores: pd.DataFrame) -> pd.Series:
+    """Part des liaisons de même classe de durée moins fiables que chaque liaison.
+
+    Se lit « plus fiable que X % des trajets de même durée ». Les liaisons sans
+    score (internationales) n'ont pas de position.
+
+    Args:
+        scores: Résultat de `score_fiabilite`.
+
+    Returns:
+        Série indexée par liaison, de 0 (la moins fiable) à près de 1.
+    """
+    rang = scores.groupby("classe_duree", observed=True)["score_fiabilite"].rank(
+        pct=True
+    )
+    return 1 - rang
+
+
+def niveau_fiabilite(position: float) -> str | None:
+    """Traduit une position dans la classe en verdict : tiers supérieur, etc.
+
+    Args:
+        position: Résultat de `position_dans_classe` pour une liaison.
+
+    Returns:
+        Une valeur de `NIVEAUX_FIABILITE`, ou `None` sans position.
+    """
+    if pd.isna(position):
+        return None
+    if position >= 2 / 3:
+        return NIVEAUX_FIABILITE[0]
+    if position >= 1 / 3:
+        return NIVEAUX_FIABILITE[1]
+    return NIVEAUX_FIABILITE[2]
+
+
+def medianes_par_classe(
+    scores: pd.DataFrame, composantes: list[str] = COMPOSANTES_FIABILITE
+) -> pd.DataFrame:
+    """Valeurs d'un trajet typique (médiane) de chaque classe de durée.
+
+    Sert de point de comparaison : « 17 % de retards, contre 14 % pour un trajet
+    typique de même durée ». Les liaisons internationales sont exclues.
+
+    Args:
+        scores: Résultat de `composantes_fiabilite` ou de `score_fiabilite`.
+        composantes: Colonnes à résumer.
+
+    Returns:
+        Un DataFrame indexé par classe de durée, une colonne par composante.
+    """
+    comparables = scores
+    if "internationale" in scores.columns:
+        comparables = scores[~scores["internationale"]]
+    return comparables.groupby("classe_duree", observed=True)[composantes].median()
+
+
+def etoiles(score: float) -> int | None:
+    """Note de fiabilité sur 5 étoiles, 5 étant la plus fiable.
+
+    Le score va de 0 (la plus fiable de sa classe) à 1 (la moins fiable) : on
+    l'inverse et on le ramène sur 5, arrondi à l'étoile près.
+
+    Args:
+        score: Score de fiabilité (colonne ``score_fiabilite``).
+
+    Returns:
+        Un nombre d'étoiles de 0 à 5, ou `None` sans score.
+    """
+    if pd.isna(score):
+        return None
+    return round((1 - score) * 5)
