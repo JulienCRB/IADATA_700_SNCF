@@ -1,7 +1,7 @@
 [project]
 name = "iadata-700-projet"
 version = "0.4.1"
-description = "Add your description here"
+description = "RailInsight : fiabilité et causes des retards des TGV, liaison par liaison, à partir des données ouvertes SNCF, avec une application Streamlit."
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
