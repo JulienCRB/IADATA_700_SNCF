@@ -27,7 +27,12 @@ extérieurs), quelles liaisons vont mal durablement, et à quelle saison.
 st.subheader("L'essentiel en quatre chiffres")
 cartes = st.columns(4)
 with cartes[0].container(border=True):
-    st.metric("TGV en retard, sur 100", f"{round(poids.sum() * 100)}")
+    st.metric(
+        "TGV en retard, sur 100",
+        f"{round(poids.sum() * 100)}",
+        help="Liaison typique : la liaison du milieu quand on les range de la "
+        "meilleure à la moins bonne. Détails : page « Données et limites ».",
+    )
     st.caption("Sur une liaison typique, de 2018 à 2026.")
 with cartes[1].container(border=True):
     cause = premiere_cause.idxmax()

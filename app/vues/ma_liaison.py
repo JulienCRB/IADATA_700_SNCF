@@ -110,7 +110,8 @@ with col3.container(border=True):
     )
 st.caption(
     "En retard = plus de 5 min (trajet de moins de 1h30), 10 min (1h30 à 3h) ou "
-    "15 min (plus de 3h) à l'arrivée. Rouge : moins bien qu'un trajet typique ; "
+    "15 min (plus de 3h) à l'arrivée. Trajet typique : le trajet du milieu parmi "
+    "ceux de même durée. Rouge : moins bien qu'un trajet typique ; "
     "vert : mieux."
 )
 
