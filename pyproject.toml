@@ -53,7 +53,7 @@ fail_under = 90
 # Default max line length
 line-length = 88
 # Exploration, not delivered code
-extend-exclude = ["notebook"]
+extend-exclude = ["notebook", "docs"]
 
 [tool.ruff.lint]
 # E/W: pycodestyle (PEP 8 style) | F: Pyflakes (bugs, unused code)
