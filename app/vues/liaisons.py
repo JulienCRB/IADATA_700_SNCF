@@ -1,7 +1,15 @@
 """Page « Liaisons en difficulté » : lesquelles, et comment évoluent-elles (Phase 2)."""
 
 import streamlit as st
-from utils import get_gares, get_regularite, libelle_famille, nom_gare, pourcent
+from utils import (
+    get_gares,
+    get_regularite,
+    libelle_famille,
+    log_action,
+    nom_gare,
+    pourcent,
+    tracer_page,
+)
 
 from railinsight.analysis.difficulte import TENDANCES, gares_concernees
 from railinsight.data.preprocessing import CLASSES_DUREE
@@ -17,6 +25,8 @@ TRAJETS = {
     "1h30-3h": "Trajets moyens (1h30 à 3h)",
     "> 3h": "Trajets longs (plus de 3h)",
 }
+
+tracer_page("Liaisons en difficulté")
 
 bilan_complet = get_regularite().liaisons_en_difficulte()
 
@@ -34,6 +44,11 @@ classe = st.segmented_control(
     default="Toutes",
     format_func=lambda c: TRAJETS.get(c, "Tous les trajets"),
 )
+filtre_actif = classe or "Toutes"
+if st.session_state.get("filtre_classe_liaisons") != filtre_actif:
+    st.session_state["filtre_classe_liaisons"] = filtre_actif
+    log_action("Liaisons en difficulté — Filtre type de trajet : %s", filtre_actif)
+
 bilan = bilan_complet
 if classe and classe != "Toutes":
     bilan = bilan_complet[bilan_complet["classe_duree"] == classe]

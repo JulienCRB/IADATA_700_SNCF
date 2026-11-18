@@ -1,13 +1,15 @@
 """Page « D'où viennent les retards ? » : le poids de chaque famille de causes."""
 
 import streamlit as st
-from utils import LIBELLES_FAMILLES, get_regularite, pourcent
+from utils import LIBELLES_FAMILLES, get_regularite, pourcent, tracer_page
 
 from railinsight.analysis.causes import (
     liaisons_les_plus_touchees,
     repartition_par_niveau,
 )
 from railinsight.viz.charts import niveaux_par_famille_bar, retards_sur_100_bar
+
+tracer_page("D'où viennent les retards ?")
 
 regularite = get_regularite()
 contributions = regularite.contributions_par_liaison()

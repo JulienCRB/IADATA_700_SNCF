@@ -6,8 +6,10 @@ from utils import (
     LIBELLES_FAMILLES,
     etoiles_texte,
     get_regularite,
+    log_action,
     nom_gare,
     pourcent,
+    tracer_page,
 )
 
 from railinsight.analysis.reliability import medianes_par_classe
@@ -26,6 +28,8 @@ TRAJETS = {
     "> 3h": "trajets de plus de 3h",
 }
 
+tracer_page("Ma liaison")
+
 regularite = get_regularite()
 scores = regularite.score_fiabilite()
 typiques = medianes_par_classe(scores)
@@ -41,6 +45,11 @@ departs = sorted(scores.index.get_level_values("gare_depart").unique())
 depart = col1.selectbox("🚉 Je pars de", departs)
 arrivee = col2.selectbox("🏁 Je vais à", sorted(scores.loc[depart].index))
 liaison = (depart, arrivee)
+
+if st.session_state.get("derniere_liaison_consultee") != liaison:
+    st.session_state["derniere_liaison_consultee"] = liaison
+    log_action("Ma liaison — Trajet consulté : %s → %s", depart, arrivee)
+
 ligne = scores.loc[liaison]
 typique = typiques.loc[ligne["classe_duree"]]
 trajets = TRAJETS[ligne["classe_duree"]]
