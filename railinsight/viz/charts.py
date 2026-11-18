@@ -348,16 +348,7 @@ def carte_difficulte(
         trace_lats, trace_lons = trace_liaison(depart, arrivee)
         lats += [*trace_lats, None]
         lons += [*trace_lons, None]
-    traces = [
-        go.Scattermap(
-            lat=lats,
-            lon=lons,
-            mode="lines",
-            line={"width": 1, "color": PALETTE["bleu_petro"]},
-            hoverinfo="skip",
-            name="Autres liaisons",
-        )
-    ]
+    traces = []
     selection = bilan[bilan["en_difficulte"]]
     liaisons = []
     for depart, arrivee in liaisons_connues(selection.index):
@@ -380,7 +371,7 @@ def carte_difficulte(
                 text=[nom] * len(trace_lats),
                 hovertemplate="%{text}<extra></extra>",
                 legendgroup=tendance,
-                legendrank=ordre.index(tendance),
+                legendrank=ordre.index(tendance) + 1,
                 showlegend=tendance not in legendes_vues,
                 name=tendance,
             )
@@ -396,10 +387,22 @@ def carte_difficulte(
                     mode="lines",
                     line={"width": 4, "color": couleur},
                     legendgroup=tendance,
-                    legendrank=ordre.index(tendance),
+                    legendrank=ordre.index(tendance) + 1,
                     name=tendance,
                 )
             )
+    # Fin trait par-dessus les liaisons colorées, sans les cacher.
+    traces.append(
+        go.Scattermap(
+            lat=lats,
+            lon=lons,
+            mode="lines",
+            line={"width": 1, "color": PALETTE["bleu_petro"]},
+            hoverinfo="skip",
+            legendrank=0,
+            name="Autres liaisons",
+        )
+    )
     gares = sorted({gare for liaison in selection.index for gare in liaison})
     gares = [gare for gare in gares if gare in coords.index]
     traces.append(
