@@ -542,7 +542,7 @@ wheels = [
 
 [[package]]
 name = "iadata-700-projet"
-version = "0.4.1"
+version = "1.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "ipykernel" },

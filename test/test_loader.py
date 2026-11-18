@@ -149,6 +149,7 @@ def test_load_dataframe_sans_lignes(monkeypatch):
     with pytest.raises(DatasetVideError):
         load("regularite")
 
+
 def test_exporter_donnees_test(tmp_path, monkeypatch):
     """Vérifie la création des fichiers CSV dans le dossier cible sans appel API."""
 

@@ -1,103 +1,94 @@
-"""Exceptions personnalisées du projet RailInsight (IADATA_700_SNCF)."""
+"""Exceptions métier du projet RailInsight."""
 
 from collections.abc import Iterable
 from typing import Any
 
 
 class RailInsightError(Exception):
-    """Exception mère de toutes les erreurs métier du projet RailInsight."""
-
-
-# =====================================================================
-# 1. Erreurs de chargement / API Open Data SNCF (loader.py)
-# =====================================================================
+    """Exception racine de toutes les erreurs métier de RailInsight."""
 
 
 class ChargementDonneesError(RailInsightError):
-    """Erreur survenue lors de la récupération ou de la lecture d'un dataset."""
+    """Erreur survenue lors du téléchargement ou de la lecture d'un dataset."""
 
 
 class ErreurAPISNCF(ChargementDonneesError):
-    """Échec de communication ou réponse HTTP en erreur de l'API SNCF Open Data."""
+    """Erreur renvoyée par l'API Open Data SNCF ou lors de l'appel réseau."""
 
     def __init__(
-        self,
-        dataset: str,
-        message: str,
-        *,
-        status_code: int | None = None,
+        self, dataset: str, message: str, status_code: int | None = None
     ) -> None:
+        """Initialise l'erreur avec le nom du dataset et le statut HTTP éventuel."""
         self.dataset = dataset
         self.status_code = status_code
-        detail_http = f" (HTTP {status_code})" if status_code is not None else ""
-        super().__init__(f"[{dataset}]{detail_http} {message}")
+        prefixe = f"[{dataset}]"
+        if status_code is not None:
+            prefixe = f"{prefixe} (HTTP {status_code})"
+        super().__init__(f"{prefixe} {message}")
 
 
 class DatasetIntrouvableError(ErreurAPISNCF):
-    """Identifiant de dataset inconnu sur le portail SNCF Open Data (HTTP 404)."""
+    """Le dataset demandé n'existe pas sur le portail SNCF (HTTP 404)."""
 
     def __init__(self, dataset: str) -> None:
+        """Initialise l'erreur 404 pour un identifiant de dataset inconnu."""
         super().__init__(
             dataset,
-            "Jeu de données introuvable sur le portail SNCF Open Data.",
+            "Dataset introuvable sur le portail SNCF.",
             status_code=404,
         )
 
 
-# =====================================================================
-# 2. Erreurs de validation et de structure des données
-# =====================================================================
-
-
 class DonneesInvalidesError(RailInsightError):
-    """Données absentes, incomplètes ou mal structurées."""
+    """Les données fournies ne respectent pas la structure ou le format attendu."""
 
 
 class ColonnesManquantesError(DonneesInvalidesError):
-    """Une ou plusieurs colonnes attendues sont absentes du DataFrame."""
+    """Une ou plusieurs colonnes indispensables sont absentes du DataFrame."""
 
     def __init__(
-        self,
-        colonnes: Iterable[str],
-        *,
-        contexte: str | None = None,
+        self, colonnes: Iterable[str], contexte: str | None = None
     ) -> None:
+        """Initialise l'erreur avec la liste triée des colonnes manquantes."""
         self.colonnes = sorted(set(colonnes))
         self.contexte = contexte
-        prefixe = f"Dans '{contexte}' — " if contexte else ""
-        super().__init__(f"{prefixe}Colonnes manquantes : {', '.join(self.colonnes)}")
+        liste = ", ".join(self.colonnes)
+        message = f"Colonnes manquantes : {liste}"
+        if contexte:
+            message = f"Dans '{contexte}' — {message}"
+        super().__init__(message)
 
 
 class DatasetVideError(DonneesInvalidesError):
-    """Le DataFrame est vide ou ne contient plus aucune ligne après filtrage."""
+    """Le jeu de données est vide ou ne contient aucune observation exploitable."""
 
 
 class FormatDateInvalideError(DonneesInvalidesError):
-    """Colonne de dates vide ou non conforme au format attendu (AAAA-MM)."""
+    """Une colonne de dates ne respecte pas le format attendu."""
 
     def __init__(self, colonne: str, details: str | None = None) -> None:
+        """Initialise l'erreur avec le nom de la colonne de dates en cause."""
         self.colonne = colonne
-        suffixe = f" : {details}" if details else ""
-        super().__init__(f"Dates invalides dans la colonne '{colonne}'{suffixe}")
-
-
-# =====================================================================
-# 3. Erreurs de paramètres ou de périmètre d'analyse
-# =====================================================================
+        self.details = details
+        message = f"Dates invalides dans la colonne '{colonne}'"
+        if details:
+            message = f"{message} : {details}"
+        super().__init__(message)
 
 
 class AnalyseError(RailInsightError):
-    """Erreur liée au paramétrage ou au périmètre d'un calcul métier."""
+    """Erreur survenue lors du calcul d'un indicateur d'analyse."""
 
 
 class ParametreInvalideError(AnalyseError):
-    """Paramètre d'analyse hors domaine valide (seuil, quantile, volume, n...)."""
+    """Un paramètre passé à une fonction d'analyse est hors bornes ou invalide."""
 
-    def __init__(self, parametre: str, valeur: Any, raison: str) -> None:
+    def __init__(self, parametre: str, valeur: Any, message: str) -> None:
+        """Initialise l'erreur avec le nom et la valeur invalide du paramètre."""
         self.parametre = parametre
         self.valeur = valeur
-        super().__init__(f"Paramètre '{parametre}={valeur!r}' invalide : {raison}")
+        super().__init__(f"Paramètre '{parametre}={valeur}' invalide : {message}")
 
 
 class PeriodeInvalideError(AnalyseError):
-    """Période de référence ou année de suivi absente des données disponibles."""
+    """Les années ou périodes demandées sont absentes des données disponibles."""

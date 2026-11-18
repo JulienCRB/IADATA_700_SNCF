@@ -329,7 +329,8 @@ def test_preprocess_dates_colonne_absente():
 
 
 def test_preprocess_fq(monkeypatch):
-    """Vérifie le chargement et la normalisation de la fréquentation depuis le CSV local."""
+    """Vérifie le chargement et la normalisation
+    de la fréquentation depuis le CSV local."""
 
     df_brut = _charger_csv_test(FREQUENTATION)
     appels = []
@@ -429,7 +430,13 @@ def test_preparer_regularite_sur_donnees_test():
     resultat = preparer_regularite(df_reg)
 
     assert len(resultat) == len(df_reg)
-    for col in ["annee", "saison", "classe_duree", "internationale", "nb_train_circule"]:
+    for col in [
+        "annee",
+        "saison",
+        "classe_duree",
+        "internationale",
+        "nb_train_circule",
+    ]:
         assert col in resultat.columns
 
 

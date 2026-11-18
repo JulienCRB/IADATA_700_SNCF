@@ -64,7 +64,9 @@ def agreger_derniers_mois(data: pd.DataFrame, n_mois: int = 12) -> pd.DataFrame:
     if "date" not in data.columns:
         raise ColonnesManquantesError(["date"], contexte="agreger_derniers_mois")
     if data.empty:
-        raise DatasetVideError("Le DataFrame fourni à 'agreger_derniers_mois' est vide.")
+        raise DatasetVideError(
+            "Le DataFrame fourni à 'agreger_derniers_mois' est vide."
+        )
 
     derniers = sorted(data["date"].unique())[-n_mois:]
     log.debug("Filtrage sur les %d derniers mois : %s", len(derniers), derniers)
@@ -134,7 +136,8 @@ def composantes_fiabilite(
     agg = agg[agg["nb_train_circule"] >= volume_min]
     if agg.empty:
         raise DatasetVideError(
-            f"Aucune liaison ne dépasse le volume minimal de {volume_min} trains circulés."
+            f"""Aucune liaison ne dépasse le volume
+            minimal de {volume_min} trains circulés."""
         )
 
     agg["part_retard"] = agg["nb_train_retard_arrivee"] / agg["nb_train_circule"]
@@ -241,7 +244,8 @@ def part_origine_interne(
     data_ok = data[data["cause_fiable"]]
     if data_ok.empty:
         raise DatasetVideError(
-            "Aucune observation avec 'cause_fiable=True' pour calculer la part d'origine interne."
+            """Aucune observation avec 'cause_fiable=True'
+            pour calculer la part d'origine interne."""
         )
 
     agg = data_ok.groupby(liaison_cols)[list(colonnes_nb_retard)].sum()

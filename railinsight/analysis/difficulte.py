@@ -129,7 +129,9 @@ def seuils_par_classe(
     """
     if not (0 < quantile < 1):
         raise ParametreInvalideError(
-            "quantile", quantile, "le quantile doit être compris strictement entre 0 et 1."
+            "quantile",
+            quantile,
+            "le quantile doit être compris strictement entre 0 et 1.",
         )
     if not annees:
         raise ParametreInvalideError(
@@ -255,7 +257,7 @@ def evolution_causes(
 
     Returns:
         Une ligne par liaison nationale, avec une colonne ``contrib_<famille>``
-        (contribution de suivi − contribution de référence, en taux).
+        (contribution de suivi contribution de référence, en taux).
 
     Raises:
         ColonnesManquantesError: Si une colonne requise est absente.
@@ -281,7 +283,8 @@ def evolution_causes(
     periodes_presentes = set(contrib.index.get_level_values("periode"))
     if "reference" not in periodes_presentes:
         raise PeriodeInvalideError(
-            f"Aucune donnée fiable disponible pour la période de référence {annees_reference}."
+            f"""Aucune donnée fiable disponible
+            pour la période de référence {annees_reference}."""
         )
     if "suivi" not in periodes_presentes:
         raise PeriodeInvalideError(

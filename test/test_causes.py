@@ -216,7 +216,8 @@ def test_contributions_par_saison_trie_les_saisons():
 
 
 def test_contributions_par_saison_leve_une_erreur_si_colonne_manquante():
-    """Une colonne requise manquante doit lever une `ColonnesManquantesError` explicite."""
+    """Une colonne requise manquante doit lever
+    une `ColonnesManquantesError` explicite."""
     data = pd.DataFrame({"saison": ["hiver"], "nb_train_circule": [100]})
 
     with pytest.raises(ColonnesManquantesError, match="Colonnes manquantes"):

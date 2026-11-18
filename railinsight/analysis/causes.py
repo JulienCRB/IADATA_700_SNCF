@@ -118,9 +118,7 @@ def ajouter_nb_retard_par_famille(
         ParametreInvalideError: Si `familles` est vide.
         ColonnesManquantesError: Si une colonne requise est absente de `data`.
     """
-    _verifier_colonnes_causes(
-        data, familles, contexte="ajouter_nb_retard_par_famille"
-    )
+    _verifier_colonnes_causes(data, familles, contexte="ajouter_nb_retard_par_famille")
     data = data.copy()
     for famille, colonnes in familles.items():
         data[f"nb_retard_{famille}"] = (
@@ -166,7 +164,8 @@ def contributions_par_liaison(
     data_ok = data[data["cause_fiable"]]
     if data_ok.empty:
         raise DatasetVideError(
-            "Aucune observation avec 'cause_fiable=True' disponible pour calculer les contributions."
+            """Aucune observation avec 'cause_fiable=True' disponible
+            pour calculer les contributions."""
         )
 
     agg = data_ok.groupby(cles, observed=True)[
