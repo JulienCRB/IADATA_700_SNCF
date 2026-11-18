@@ -3,6 +3,9 @@
 import pandas as pd
 
 from railinsight.exceptions import ColonnesManquantesError
+from railinsight.logger import get_logger
+
+log = get_logger(__name__)
 
 
 def normaliser_noms(s: pd.Series) -> pd.Series:
@@ -59,6 +62,7 @@ def garder_gares_tgv_si_doublon(df: pd.DataFrame) -> pd.DataFrame:
     # À retirer : gare en doublon, avec une variante TGV, et qui n'est pas la TGV
     a_supprimer = (nb_libelles > 1) & groupe_a_un_tgv & ~est_tgv
 
+    log.debug("Doublons non-TGV écartés : %d lignes", int(a_supprimer.sum()))
     return df[~a_supprimer]
 
 
@@ -84,13 +88,15 @@ def gares_uniques(df: pd.DataFrame) -> pd.DataFrame:
     if manquantes:
         raise ColonnesManquantesError(manquantes, contexte="gares_uniques")
 
-    return (
+    resultat = (
         df[colonnes]
         .rename(columns={col_dep: "departement"})
         .dropna(subset=["code_uic"])  # écarte les lignes sans code UIC
         .drop_duplicates(subset="code_uic")  # garde la première ligne de chaque gare
         .reset_index(drop=True)
     )
+    log.debug("Déduplication des gares : %d -> %d lignes", len(df), len(resultat))
+    return resultat
 
 
 def ajouter_gares(df: pd.DataFrame, nouvelles_gares: list[dict]) -> pd.DataFrame:
@@ -117,8 +123,13 @@ def ajouter_gares(df: pd.DataFrame, nouvelles_gares: list[dict]) -> pd.DataFrame
             ["code_uic"], contexte="ajouter_gares (nouvelles_gares)"
         )
 
-    return (
+    resultat = (
         pd.concat([df, df_nouvelles], ignore_index=True)
         .drop_duplicates(subset="code_uic")
         .reset_index(drop=True)
     )
+    log.debug(
+        "Ajout de gares complémentaires : %d gares ajoutées",
+        len(resultat) - len(df),
+    )
+    return resultat

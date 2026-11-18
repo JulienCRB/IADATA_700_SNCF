@@ -27,9 +27,12 @@ from railinsight.exceptions import (
     DatasetVideError,
     ParametreInvalideError,
 )
+from railinsight.logger import get_logger
 
 from .causes import FAMILLES_CAUSES
 from .difficulte import VOLUME_MIN
+
+log = get_logger(__name__)
 
 #: Colonnes des 3 composantes brutes du score de fiabilité.
 COMPOSANTES_FIABILITE: list[str] = [
@@ -64,6 +67,7 @@ def agreger_derniers_mois(data: pd.DataFrame, n_mois: int = 12) -> pd.DataFrame:
         raise DatasetVideError("Le DataFrame fourni à 'agreger_derniers_mois' est vide.")
 
     derniers = sorted(data["date"].unique())[-n_mois:]
+    log.debug("Filtrage sur les %d derniers mois : %s", len(derniers), derniers)
     return data[data["date"].isin(derniers)].copy()
 
 
@@ -137,6 +141,12 @@ def composantes_fiabilite(
     agg["taux_annulation"] = agg["nb_annulation"] / agg["nb_train_prevu"]
     agg["retard_moyen_tous_trains"] = agg["retard_pondere"] / agg["nb_train_circule"]
 
+    log.debug(
+        "Composantes de fiabilité calculées pour %d liaisons (volume_min=%d, par=%s)",
+        len(agg),
+        volume_min,
+        par,
+    )
     return agg[["classe_duree", "internationale", *COMPOSANTES_FIABILITE]]
 
 
@@ -188,6 +198,11 @@ def score_fiabilite(
     rangs.columns = [f"rang_{c}" for c in composantes]
     data = data.join(rangs)
     data["score_fiabilite"] = data[rangs.columns].mean(axis=1)
+
+    log.info(
+        "Score de fiabilité calculé pour %d liaisons comparables",
+        len(comparables),
+    )
     return data
 
 

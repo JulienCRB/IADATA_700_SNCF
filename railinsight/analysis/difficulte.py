@@ -20,8 +20,11 @@ from railinsight.exceptions import (
     ParametreInvalideError,
     PeriodeInvalideError,
 )
+from railinsight.logger import get_logger
 
 from .causes import contributions_par_liaison
+
+log = get_logger(__name__)
 
 #: Années (d'octobre à septembre) de la période de référence et de suivi.
 ANNEES_REFERENCE: list[int] = [2023, 2024, 2025]
@@ -91,7 +94,16 @@ def taux_par_annee(data: pd.DataFrame, volume_min: int = VOLUME_MIN) -> pd.DataF
 
     mois_par_annee = data.groupby("annee")["date"].nunique()
     volume_requis = volume_min * par_an["annee"].map(mois_par_annee) / 12
-    return par_an[par_an["nb_train_circule"] >= volume_requis].reset_index(drop=True)
+    resultat = par_an[par_an["nb_train_circule"] >= volume_requis].reset_index(
+        drop=True
+    )
+
+    log.debug(
+        "Taux annuels calculés : %d liaisons-années retenues (volume_min=%d)",
+        len(resultat),
+        volume_min,
+    )
+    return resultat
 
 
 def seuils_par_classe(
@@ -218,6 +230,13 @@ def liaisons_en_difficulte(
     tendance = bilan.loc[~bilan["en_difficulte"], "evolution"].median()
     bilan["evolution_relative"] = bilan["evolution"] - tendance
 
+    log.info(
+        "Liaisons en difficulté identifiées : %d/%d (référence=%s, suivi=%s)",
+        int(bilan["en_difficulte"].sum()),
+        len(bilan),
+        annees_reference,
+        annee_suivi,
+    )
     return bilan.drop(columns=["nb_train_circule", "nb_train_retard_arrivee"])
 
 
@@ -271,7 +290,10 @@ def evolution_causes(
 
     reference = contrib.xs("reference", level="periode")
     suivi = contrib.xs("suivi", level="periode")
-    return (suivi - reference).dropna()
+    delta = (suivi - reference).dropna()
+
+    log.debug("Évolution des causes calculée pour %d liaisons", len(delta))
+    return delta
 
 
 def cause_de_l_evolution(delta: pd.DataFrame, en_difficulte: pd.Series) -> pd.Series:

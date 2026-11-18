@@ -10,6 +10,7 @@ from railinsight.exceptions import (
     DatasetVideError,
     FormatDateInvalideError,
 )
+from railinsight.logger import get_logger
 
 from .loader import FREQUENTATION, load
 from .quality import (
@@ -18,6 +19,8 @@ from .quality import (
     gares_uniques,
     normaliser_noms,
 )
+
+log = get_logger(__name__)
 
 #: Colonnes identifiant une liaison (un sens de circulation).
 LIAISON: list[str] = ["gare_depart", "gare_arrivee"]
@@ -153,7 +156,9 @@ def preprocess_gares(df_gares_brut: pd.DataFrame) -> pd.DataFrame:
     # Normaliser les noms pour les jointures
     df["gare"] = normaliser_noms(df["libelle"])
 
-    return df.reset_index(drop=True)
+    df = df.reset_index(drop=True)
+    log.info("Référentiel des gares prétraité : %d gares uniques", len(df))
+    return df
 
 
 def preprocess_regularite(
@@ -229,7 +234,10 @@ def preprocess_regularite(
         ]
     ).unique()
 
-    print(f"{len(manquantes)} gares sans code UIC : {sorted(manquantes)}")
+    if len(manquantes) > 0:
+        log.warning("%d gares sans code UIC : %s", len(manquantes), sorted(manquantes))
+    else:
+        log.debug("Toutes les gares ont été associées à un code UIC.")
 
     return df
 
@@ -329,6 +337,12 @@ def preprocess_dates(
     # Déterminer la saison météorologique
     df_dates["saison"] = df_dates["MM"].map(SAISONS)
 
+    log.debug(
+        "Table de dates générée : %s à %s (%d mois)",
+        df_dates["date"].iloc[0],
+        df_dates["date"].iloc[-1],
+        len(df_dates),
+    )
     return df_dates
 
 
@@ -342,8 +356,12 @@ def preprocess_fq() -> pd.DataFrame:
     df = load(FREQUENTATION)
     if "nom_gare" not in df.columns:
         raise ColonnesManquantesError(["nom_gare"], contexte="preprocess_fq")
+
     df = df.copy()
+    # Normaliser les noms de gares pour les jointures
     df["gare"] = normaliser_noms(df["nom_gare"])
+
+    log.info("Dataset de fréquentation prétraité : %d lignes", len(df))
     return df
 
 
@@ -410,4 +428,10 @@ def preparer_regularite(df_regularite: pd.DataFrame) -> pd.DataFrame:
         "gare_arrivee"
     ].isin(GARES_ETRANGERES)
     df["nb_train_circule"] = df["nb_train_prevu"] - df["nb_annulation"]
+
+    log.info(
+        "Jeu de régularité préparé : %d lignes (%d observations internationales)",
+        len(df),
+        int(df["internationale"].sum()),
+    )
     return df

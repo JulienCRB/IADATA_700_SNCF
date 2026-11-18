@@ -19,6 +19,9 @@ from railinsight.exceptions import (
     DatasetVideError,
     ParametreInvalideError,
 )
+from railinsight.logger import get_logger
+
+log = get_logger(__name__)
 
 #: Colonnes `prct_cause_*` du dataset de régularité, groupées par famille.
 FAMILLES_CAUSES: dict[str, list[str]] = {
@@ -86,7 +89,16 @@ def marquer_cause_fiable(
     )
     somme_causes = data[toutes_causes].sum(axis=1)
     a_des_retards = data["nb_train_retard_arrivee"] > 0
-    return ~(a_des_retards & ((somme_causes - 100).abs() > tolerance))
+    fiable = ~(a_des_retards & ((somme_causes - 100).abs() > tolerance))
+
+    nb_non_fiables = int((~fiable).sum())
+    if nb_non_fiables > 0:
+        log.warning(
+            "%d observations avec répartition des causes non fiable (écart > %.1f pts)",
+            nb_non_fiables,
+            tolerance,
+        )
+    return fiable
 
 
 def ajouter_nb_retard_par_famille(
@@ -165,6 +177,13 @@ def contributions_par_liaison(
         agg[f"contrib_{famille}"] = (
             agg[f"nb_retard_{famille}"] / agg["nb_train_circule"]
         )
+
+    log.debug(
+        "Contributions calculées sur %d/%d observations fiables (par=%s)",
+        len(data_ok),
+        len(data),
+        par,
+    )
     return agg[[f"contrib_{famille}" for famille in familles]]
 
 
@@ -233,6 +252,8 @@ def contributions_par_saison(
     par_liaison = contributions_par_liaison(nationales, par="saison", familles=familles)
     par_liaison["total"] = par_liaison.sum(axis=1)
     medianes = par_liaison.groupby("saison").median()
+
+    log.info("Contributions par saison calculées (%d saisons)", len(medianes))
     return medianes.reindex([s for s in ORDRE_SAISONS if s in medianes.index])
 
 
