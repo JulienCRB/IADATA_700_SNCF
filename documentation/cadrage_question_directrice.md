@@ -26,7 +26,7 @@
 | Grain du classement | Une valeur par liaison et par an, par classe de durée, petites liaisons exclues |
 | « Durablement en difficulté » | Au-dessus du seuil (quartile supérieur, à confirmer sur la distribution) la majorité des années de la période de référence |
 | Prédiction | Abandonnée : le brief demande de comprendre les causes structurelles |
-| Liaisons internationales | Gardées ou non selon leur part du volume de trains, à mesurer |
+| Liaisons internationales | Exclues des comparaisons (seuils, sélection, score) : 5 % des trains, données peu fiables. Affichées avec un avertissement (voir `arbitrages_phase2.pdf`) |
 
 ## 3. Score de fiabilité (V1)
 
@@ -81,8 +81,17 @@
 | Ma liaison | Ma liaison est-elle fiable ? | Score de fiabilité + part d'origine interne, historique des 3 composantes, découpage des causes |
 | Données et limites | Peut-on faire confiance aux chiffres ? | Datasheet résumée, interdiction du total réseau, causes déclarées, construction du score |
 
-## 6. Points encore ouverts
+## 6. Points tranchés
 
-- [ ] Seuil exact et volume minimal (après lecture des distributions).
-- [ ] Bornes de la période de référence et de la période de suivi.
-- [ ] Années atypiques (crise sanitaire, grèves) : gardées, signalées ou exclues.
+Ces points étaient ouverts au lancement ; ils ont été tranchés en Phase 2 (détail et justifications
+dans `documentation/arbitrages_phase2.pdf`).
+
+- [x] **Seuil et volume minimal** : seuil = quartile supérieur du taux de retard par classe de
+  durée ; volume minimal = 100 trains circulés par an (au prorata pour une année incomplète).
+- [x] **Périodes** : années d'octobre à septembre ; référence = 2023 à 2025, suivi = 2026
+  (octobre 2025 à septembre 2026).
+- [x] **Années atypiques** (2018 incomplète, crise sanitaire 2020-2021) : gardées dans les données,
+  mais exclues du calcul du seuil, qui ne porte que sur la période de référence.
+- [x] **Seuil de retard 5/10/15 min** : déjà appliqué dans les données (régularité « composite »
+  publiée par la SNCF).
+- [x] **Dénominateur** : taux de retard calculé sur les trains circulés (prévus − annulés).
