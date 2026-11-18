@@ -6,6 +6,10 @@ dist/
 wheels/
 *.egg-info
 
+# Sphinx documentation (le HTML généré n'est pas commité, il est déployé via
+# GitHub Pages par la CI ; le dossier source/ reste versionné).
+docs/build/
+
 # Virtual environments
 .venv
 
