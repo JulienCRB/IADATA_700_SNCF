@@ -12,6 +12,7 @@ from railinsight.analysis.reliability import (
     position_dans_classe,
     score_fiabilite,
 )
+from railinsight.exceptions import ColonnesManquantesError
 
 
 def test_agreger_derniers_mois_garde_uniquement_les_n_derniers():
@@ -167,7 +168,7 @@ def test_score_fiabilite_leve_une_erreur_sans_classe_duree():
     """`classe_duree` est requise pour normaliser par classe de durée."""
     data = pd.DataFrame({"part_retard": [0.1], "taux_annulation": [0.1]})
 
-    with pytest.raises(ValueError, match="classe_duree"):
+    with pytest.raises(ColonnesManquantesError, match="classe_duree"):
         score_fiabilite(data, composantes=["part_retard", "taux_annulation"])
 
 

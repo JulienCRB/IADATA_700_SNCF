@@ -5,6 +5,12 @@ Permet d'obtenir des dataframes ready-to-use dans les différentes analyses.
 
 import pandas as pd
 
+from railinsight.exceptions import (
+    ColonnesManquantesError,
+    DatasetVideError,
+    FormatDateInvalideError,
+)
+
 from .loader import FREQUENTATION, load
 from .quality import (
     ajouter_gares,
@@ -51,8 +57,18 @@ ORDRE_SAISONS: list[str] = ["hiver", "printemps", "été", "automne"]
 
 
 def preprocess_gares(df_gares_brut: pd.DataFrame) -> pd.DataFrame:
-    """Transforme la liste brute des gares en liste propre."""
+    """Transforme la liste brute des gares en liste propre.
+
+    Raises:
+        DatasetVideError: Si `df_gares_brut` est vide.
+        ColonnesManquantesError: Si une colonne requise est absente.
+    """
+    if df_gares_brut.empty:
+        raise DatasetVideError("Le DataFrame brut des gares est vide.")
+
     df = df_gares_brut.rename(columns=str.lower).copy()
+    if "libelle" not in df.columns:
+        raise ColonnesManquantesError(["libelle"], contexte="preprocess_gares")
 
     # Créer le nom normalisé pour identifier les variantes d'une même gare
     df["gare"] = normaliser_noms(df["libelle"])
@@ -149,7 +165,28 @@ def preprocess_regularite(
     Le code UIC est retrouvé en comparant le nom normalisé de la gare avec
     la liste propre des gares. Les gares introuvables peuvent être renseignées
     manuellement dans le dictionnaire uic_manuels.
+
+    Raises:
+        DatasetVideError: Si `df_regularite` ou `df_gares_propre` est vide.
+        ColonnesManquantesError: Si une colonne requise est absente.
     """
+    if df_regularite.empty:
+        raise DatasetVideError("Le DataFrame de régularité est vide.")
+    if df_gares_propre.empty:
+        raise DatasetVideError("Le référentiel propre des gares est vide.")
+
+    manquantes_reg = set(LIAISON) - set(df_regularite.columns)
+    if manquantes_reg:
+        raise ColonnesManquantesError(
+            manquantes_reg, contexte="preprocess_regularite (df_regularite)"
+        )
+
+    manquantes_gares = {"gare", "code_uic"} - set(df_gares_propre.columns)
+    if manquantes_gares:
+        raise ColonnesManquantesError(
+            manquantes_gares, contexte="preprocess_regularite (df_gares_propre)"
+        )
+
     df = df_regularite.copy()
 
     # Nom normalisé -> code UIC
@@ -215,17 +252,34 @@ def preprocess_dates(
         - mois_court : abréviation du mois suivie d'un point
         - mois_annee : abréviation suivie de l'année sur deux chiffres
         - saison : saison météorologique
+
+    Raises:
+        ColonnesManquantesError: Si `colonne_date` est absente de `df_regularite`.
+        FormatDateInvalideError: Si les dates sont vides ou ne respectent pas le
+            format ``AAAA-MM``.
     """
+    if colonne_date not in df_regularite.columns:
+        raise ColonnesManquantesError([colonne_date], contexte="preprocess_dates")
+
     # Convertir les dates au format datetime
-    dates = pd.to_datetime(
-        df_regularite[colonne_date],
-        format="%Y-%m",
-        errors="raise",
-    )
+    try:
+        dates = pd.to_datetime(
+            df_regularite[colonne_date],
+            format="%Y-%m",
+            errors="raise",
+        )
+    except (ValueError, TypeError) as err:
+        raise FormatDateInvalideError(
+            colonne_date,
+            details="les dates doivent respecter le format 'AAAA-MM'.",
+        ) from err
 
     # Vérifier que le dataset contient des dates
     if dates.isna().all():
-        raise ValueError(f"La colonne '{colonne_date}' ne contient aucune date valide.")
+        raise FormatDateInvalideError(
+            colonne_date,
+            details="la colonne ne contient aucune date valide.",
+        )
 
     date_min = dates.min()
     date_max = dates.max()
@@ -279,8 +333,15 @@ def preprocess_dates(
 
 
 def preprocess_fq() -> pd.DataFrame:
-    """Charge et prétraite le dataset de fréquentation."""
+    """Charge et prétraite le dataset de fréquentation.
+
+    Raises:
+        ChargementDonneesError: En cas d'échec de téléchargement ou de lecture.
+        ColonnesManquantesError: Si la colonne ``gare`` est absente.
+    """
     df = load(FREQUENTATION)
+    if "gare" not in df.columns:
+        raise ColonnesManquantesError(["gare"], contexte="preprocess_fq")
 
     # Normaliser les noms de gares pour les jointures
     df["gare"] = normaliser_noms(df["gare"])
@@ -307,13 +368,41 @@ def preparer_regularite(df_regularite: pd.DataFrame) -> pd.DataFrame:
 
     Returns:
         Une copie du jeu de régularité avec les colonnes ajoutées.
+
+    Raises:
+        DatasetVideError: Si `df_regularite` est vide.
+        ColonnesManquantesError: Si une colonne requise est absente.
+        FormatDateInvalideError: Si la colonne ``date`` n'est pas au format
+            ``AAAA-MM``.
     """
+    if df_regularite.empty:
+        raise DatasetVideError("Le DataFrame de régularité à préparer est vide.")
+
+    requis = {
+        *LIAISON,
+        "date",
+        "duree_moyenne",
+        "nb_train_prevu",
+        "nb_annulation",
+    }
+    manquantes = requis - set(df_regularite.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="preparer_regularite")
+
     df = df_regularite.copy()
     for colonne in LIAISON:
         df[colonne] = normaliser_noms(df[colonne])
 
-    mois = df["date"].str[5:7].astype(int)
-    df["annee"] = df["date"].str[:4].astype(int) + (mois >= 10).astype(int)
+    try:
+        mois = df["date"].str[5:7].astype(int)
+        annee_base = df["date"].str[:4].astype(int)
+    except (ValueError, TypeError, AttributeError) as err:
+        raise FormatDateInvalideError(
+            "date",
+            details="impossible d'extraire l'année et le mois au format 'AAAA-MM'.",
+        ) from err
+
+    df["annee"] = annee_base + (mois >= 10).astype(int)
     df["saison"] = mois.map(SAISONS)
 
     duree_liaison = df.groupby(LIAISON)["duree_moyenne"].transform("median")

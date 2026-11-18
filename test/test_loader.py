@@ -2,8 +2,16 @@
 
 import pandas as pd
 import pytest
+import requests
 
+import railinsight.data.loader as loader
 from railinsight.data.loader import FREQUENTATION, GARES, LIGNES, REGULARITE, load
+from railinsight.exceptions import (
+    ChargementDonneesError,
+    DatasetIntrouvableError,
+    DatasetVideError,
+    ErreurAPISNCF,
+)
 
 
 @pytest.mark.parametrize(
@@ -35,46 +43,108 @@ def test_load(dataset):
 def test_load_invalid_dataset():
     """Teste le comportement avec un identifiant invalide."""
 
-    with pytest.raises(Exception):
+    with pytest.raises(DatasetIntrouvableError):
         load("dataset-inexistant")
 
 
-"""
-from railinsight.data.loader import load_data, normalize_dataframe
-from railinsight.exceptions import (
-    DataLoadError,
-    DataValidationError,
-    MissingColumnsError,
-)
+def test_load_dataset_vide():
+    """Vérifie qu'un nom de dataset vide lève une erreur."""
 
-def test_normalize_parses_dates_numeric_values_and_fake_missing(raw_dataframe):
-    result = normalize_dataframe(raw_dataframe)
-
-    assert str(result.loc[0, "date"]) == "2024-01"
-    assert result.loc[0, "nb_train_prevu"] == 100
-    assert pd.isna(result.loc[0, "commentaire_annulation"])
+    with pytest.raises(DatasetIntrouvableError):
+        load("")
 
 
-def test_normalize_rejects_missing_required_columns():
-    with pytest.raises(MissingColumnsError, match="Colonnes obligatoires"):
-        normalize_dataframe(pd.DataFrame({"date": ["2024-01"]}))
+def test_load_timeout(monkeypatch):
+    """Vérifie la gestion d'un dépassement de délai réseau."""
+
+    def fake_get(url, timeout):
+        raise requests.Timeout()
+
+    monkeypatch.setattr(loader.requests, "get", fake_get)
+
+    with pytest.raises(ErreurAPISNCF):
+        load("regularite")
 
 
-def test_normalize_rejects_invalid_dates(raw_dataframe):
-    raw_dataframe.loc[0, "date"] = "pas-une-date"
-    with pytest.raises(DataValidationError, match="date"):
-        normalize_dataframe(raw_dataframe)
+def test_load_erreur_reseau(monkeypatch):
+    """Vérifie la gestion d'une erreur de connexion."""
+
+    def fake_get(url, timeout):
+        raise requests.RequestException("erreur réseau")
+
+    monkeypatch.setattr(loader.requests, "get", fake_get)
+
+    with pytest.raises(ErreurAPISNCF):
+        load("regularite")
 
 
-def test_load_data_reports_missing_file(tmp_path):
-    with pytest.raises(DataLoadError, match="Impossible de lire"):
-        load_data(tmp_path / "absent.csv")
+def test_load_erreur_http(monkeypatch):
+    """Vérifie la gestion d'une erreur serveur (code HTTP 500)."""
+
+    class FakeResponse:
+        status_code = 500
+        ok = False
+        content = b""
+
+    def fake_get(url, timeout):
+        return FakeResponse()
+
+    monkeypatch.setattr(loader.requests, "get", fake_get)
+
+    with pytest.raises(ErreurAPISNCF):
+        load("regularite")
 
 
-def test_loads_mini_csv_fixture():
-    fixture_path = Path(__file__).parent / "fixtures" / "mini_sncf.csv"
-    result = load_data(fixture_path)
+def test_load_csv_vide(monkeypatch):
+    """Vérifie qu'un flux CSV vide lève une DatasetVideError."""
 
-    assert len(result) == 2
-    assert result["nb_train_prevu"].sum() == 200
-    """
+    class FakeResponse:
+        status_code = 200
+        ok = True
+        content = b""
+
+    def fake_get(url, timeout):
+        return FakeResponse()
+
+    monkeypatch.setattr(loader.requests, "get", fake_get)
+
+    with pytest.raises(DatasetVideError):
+        load("regularite")
+
+
+def test_load_csv_malforme(monkeypatch):
+    """Vérifie qu'un fichier CSV illisible lève une ChargementDonneesError."""
+
+    class FakeResponse:
+        status_code = 200
+        ok = True
+        content = b"a,b\n1,2"
+
+    def fake_get(url, timeout):
+        return FakeResponse()
+
+    def fake_read_csv(flux):
+        raise pd.errors.ParserError("erreur de lecture")
+
+    monkeypatch.setattr(loader.requests, "get", fake_get)
+    monkeypatch.setattr(loader.pd, "read_csv", fake_read_csv)
+
+    with pytest.raises(ChargementDonneesError):
+        load("regularite")
+
+
+def test_load_dataframe_sans_lignes(monkeypatch):
+    """Vérifie qu'un CSV avec seulement les noms de colonnes lève DatasetVideError."""
+
+    class FakeResponse:
+        status_code = 200
+        ok = True
+        content = b"col1,col2\n"
+
+    def fake_get(url, timeout):
+        return FakeResponse()
+
+    monkeypatch.setattr(loader.requests, "get", fake_get)
+
+    with pytest.raises(DatasetVideError):
+        load("regularite")

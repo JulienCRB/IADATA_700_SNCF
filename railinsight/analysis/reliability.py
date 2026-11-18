@@ -22,6 +22,11 @@ déjà celui de ``nb_train_retard_arrivee`` : la SNCF publie une régularité
 import pandas as pd
 
 from railinsight.data.preprocessing import LIAISON
+from railinsight.exceptions import (
+    ColonnesManquantesError,
+    DatasetVideError,
+    ParametreInvalideError,
+)
 
 from .causes import FAMILLES_CAUSES
 from .difficulte import VOLUME_MIN
@@ -43,7 +48,21 @@ def agreger_derniers_mois(data: pd.DataFrame, n_mois: int = 12) -> pd.DataFrame:
 
     Returns:
         Les lignes dont la date fait partie des `n_mois` derniers mois disponibles.
+
+    Raises:
+        ParametreInvalideError: Si `n_mois` n'est pas strictement positif.
+        ColonnesManquantesError: Si la colonne ``date`` est absente de `data`.
+        DatasetVideError: Si `data` est vide.
     """
+    if n_mois <= 0:
+        raise ParametreInvalideError(
+            "n_mois", n_mois, "le nombre de mois doit être strictement positif."
+        )
+    if "date" not in data.columns:
+        raise ColonnesManquantesError(["date"], contexte="agreger_derniers_mois")
+    if data.empty:
+        raise DatasetVideError("Le DataFrame fourni à 'agreger_derniers_mois' est vide.")
+
     derniers = sorted(data["date"].unique())[-n_mois:]
     return data[data["date"].isin(derniers)].copy()
 
@@ -68,13 +87,37 @@ def composantes_fiabilite(
     Returns:
         Un DataFrame indexé par liaison (et par `par`) avec ``classe_duree``,
         ``internationale`` et les colonnes de `COMPOSANTES_FIABILITE`.
+
+    Raises:
+        ParametreInvalideError: Si `volume_min` est négatif.
+        ColonnesManquantesError: Si une colonne requise est absente de `data`.
+        DatasetVideError: Si aucune liaison n'atteint `volume_min`.
     """
+    if volume_min < 0:
+        raise ParametreInvalideError(
+            "volume_min", volume_min, "le volume minimal doit être positif ou nul."
+        )
+
+    cles = LIAISON + ([par] if par else [])
+    requis = {
+        *cles,
+        "classe_duree",
+        "internationale",
+        "nb_train_prevu",
+        "nb_train_circule",
+        "nb_annulation",
+        "nb_train_retard_arrivee",
+        "retard_moyen_tous_trains_arrivee",
+    }
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="composantes_fiabilite")
+
     data = data.copy()
     data["retard_pondere"] = (
         data["retard_moyen_tous_trains_arrivee"] * data["nb_train_circule"]
     )
 
-    cles = LIAISON + ([par] if par else [])
     agg = data.groupby(cles, observed=True).agg(
         classe_duree=("classe_duree", "first"),
         internationale=("internationale", "first"),
@@ -85,6 +128,10 @@ def composantes_fiabilite(
         retard_pondere=("retard_pondere", "sum"),
     )
     agg = agg[agg["nb_train_circule"] >= volume_min]
+    if agg.empty:
+        raise DatasetVideError(
+            f"Aucune liaison ne dépasse le volume minimal de {volume_min} trains circulés."
+        )
 
     agg["part_retard"] = agg["nb_train_retard_arrivee"] / agg["nb_train_circule"]
     agg["taux_annulation"] = agg["nb_annulation"] / agg["nb_train_prevu"]
@@ -115,12 +162,21 @@ def score_fiabilite(
         ``score_fiabilite``.
 
     Raises:
-        ValueError: Si la colonne ``classe_duree`` est absente de `data`.
+        ParametreInvalideError: Si `composantes` est vide.
+        ColonnesManquantesError: Si ``classe_duree`` ou une composante est
+            absente de `data`.
     """
-    if "classe_duree" not in data.columns:
-        raise ValueError(
-            "La colonne 'classe_duree' est requise pour normaliser par classe."
+    if not composantes:
+        raise ParametreInvalideError(
+            "composantes",
+            composantes,
+            "la liste des composantes du score ne peut pas être vide.",
         )
+
+    requis = {"classe_duree", *composantes}
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="score_fiabilite")
 
     data = data.copy()
     comparables = data
@@ -156,9 +212,23 @@ def part_origine_interne(
 
     Returns:
         Série indexée par liaison, part (0-1) des retards d'origine interne.
+
+    Raises:
+        ColonnesManquantesError: Si une colonne requise est absente de `data`.
+        DatasetVideError: Si aucune observation fiable n'est disponible.
     """
-    data_ok = data[data["cause_fiable"]]
     colonnes_nb_retard = {f"nb_retard_{famille}": famille for famille in familles}
+    requis = {*liaison_cols, "cause_fiable", *colonnes_nb_retard}
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="part_origine_interne")
+
+    data_ok = data[data["cause_fiable"]]
+    if data_ok.empty:
+        raise DatasetVideError(
+            "Aucune observation avec 'cause_fiable=True' pour calculer la part d'origine interne."
+        )
+
     agg = data_ok.groupby(liaison_cols)[list(colonnes_nb_retard)].sum()
 
     internes = [
@@ -185,7 +255,15 @@ def position_dans_classe(scores: pd.DataFrame) -> pd.Series:
 
     Returns:
         Série indexée par liaison, de 0 (la moins fiable) à près de 1.
+
+    Raises:
+        ColonnesManquantesError: Si ``classe_duree`` ou ``score_fiabilite`` est
+            absente de `scores`.
     """
+    manquantes = {"classe_duree", "score_fiabilite"} - set(scores.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="position_dans_classe")
+
     rang = scores.groupby("classe_duree", observed=True)["score_fiabilite"].rank(
         pct=True
     )
@@ -224,7 +302,15 @@ def medianes_par_classe(
 
     Returns:
         Un DataFrame indexé par classe de durée, une colonne par composante.
+
+    Raises:
+        ColonnesManquantesError: Si ``classe_duree`` ou une composante est
+            absente de `scores`.
     """
+    manquantes = {"classe_duree", *composantes} - set(scores.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="medianes_par_classe")
+
     comparables = scores
     if "internationale" in scores.columns:
         comparables = scores[~scores["internationale"]]

@@ -13,6 +13,13 @@ validées par le groupe (``documentation/arbitrages_phase2.pdf``) :
 import pandas as pd
 
 from railinsight.data.preprocessing import LIAISON
+from railinsight.exceptions import (
+    ColonnesManquantesError,
+    DatasetVideError,
+    DonneesInvalidesError,
+    ParametreInvalideError,
+    PeriodeInvalideError,
+)
 
 from .causes import contributions_par_liaison
 
@@ -39,8 +46,36 @@ def taux_par_annee(data: pd.DataFrame, volume_min: int = VOLUME_MIN) -> pd.DataF
     Returns:
         Une ligne par liaison × année, avec ``classe_duree``,
         ``nb_train_circule``, ``nb_train_retard_arrivee`` et ``taux_retard``.
+
+    Raises:
+        ParametreInvalideError: Si `volume_min` est négatif.
+        ColonnesManquantesError: Si une colonne requise est absente de `data`.
+        DatasetVideError: Si aucune liaison nationale n'est présente dans `data`.
     """
+    if volume_min < 0:
+        raise ParametreInvalideError(
+            "volume_min", volume_min, "le volume minimal doit être positif ou nul."
+        )
+
+    requis = {
+        *LIAISON,
+        "internationale",
+        "annee",
+        "classe_duree",
+        "nb_train_circule",
+        "nb_train_retard_arrivee",
+        "date",
+    }
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="taux_par_annee")
+
     nationales = data[~data["internationale"]]
+    if nationales.empty:
+        raise DatasetVideError(
+            "Aucune liaison nationale disponible pour calculer les taux annuels."
+        )
+
     par_an = (
         nationales.groupby([*LIAISON, "annee"], observed=True)
         .agg(
@@ -73,8 +108,32 @@ def seuils_par_classe(
 
     Returns:
         Série indexée par classe de durée, avec le seuil de taux de retard.
+
+    Raises:
+        ParametreInvalideError: Si `quantile` n'est pas dans ``]0, 1[`` ou si
+            `annees` est vide.
+        ColonnesManquantesError: Si une colonne requise est absente.
+        PeriodeInvalideError: Si aucune donnée ne correspond à `annees`.
     """
+    if not (0 < quantile < 1):
+        raise ParametreInvalideError(
+            "quantile", quantile, "le quantile doit être compris strictement entre 0 et 1."
+        )
+    if not annees:
+        raise ParametreInvalideError(
+            "annees", annees, "la liste des années de référence ne peut pas être vide."
+        )
+
+    manquantes = {"annee", "classe_duree", "taux_retard"} - set(par_an.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="seuils_par_classe")
+
     reference = par_an[par_an["annee"].isin(annees)]
+    if reference.empty:
+        raise PeriodeInvalideError(
+            f"Aucune donnée disponible pour les années de référence {annees}."
+        )
+
     return reference.groupby("classe_duree", observed=True)["taux_retard"].quantile(
         quantile
     )
@@ -104,7 +163,33 @@ def liaisons_en_difficulte(
         ``en_difficulte``, ``taux_reference``, ``taux_suivi``, ``evolution``
         (en points de taux) et ``evolution_relative`` (écart à l'évolution
         médiane des liaisons non sélectionnées).
+
+    Raises:
+        ParametreInvalideError: Si `min_annees` n'est pas compris entre 1 et
+            ``len(annees_reference)``.
+        ColonnesManquantesError: Si une colonne requise est absente.
+        PeriodeInvalideError: Si la période de référence ou l'année de suivi est
+            absente de `par_an`.
     """
+    if not (1 <= min_annees <= len(annees_reference)):
+        raise ParametreInvalideError(
+            "min_annees",
+            min_annees,
+            f"doit être compris entre 1 et {len(annees_reference)}.",
+        )
+
+    requis = {
+        *LIAISON,
+        "annee",
+        "classe_duree",
+        "taux_retard",
+        "nb_train_circule",
+        "nb_train_retard_arrivee",
+    }
+    manquantes = requis - set(par_an.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="liaisons_en_difficulte")
+
     seuils = seuils_par_classe(par_an, annees_reference)
     reference = par_an[par_an["annee"].isin(annees_reference)].copy()
     reference["au_dessus"] = reference["taux_retard"] > reference["classe_duree"].map(
@@ -123,6 +208,11 @@ def liaisons_en_difficulte(
     )
 
     suivi = par_an[par_an["annee"] == annee_suivi].set_index(LIAISON)
+    if suivi.empty:
+        raise PeriodeInvalideError(
+            f"Aucune donnée disponible pour l'année de suivi {annee_suivi}."
+        )
+
     bilan["taux_suivi"] = suivi["taux_retard"]
     bilan["evolution"] = bilan["taux_suivi"] - bilan["taux_reference"]
     tendance = bilan.loc[~bilan["en_difficulte"], "evolution"].median()
@@ -147,15 +237,38 @@ def evolution_causes(
     Returns:
         Une ligne par liaison nationale, avec une colonne ``contrib_<famille>``
         (contribution de suivi − contribution de référence, en taux).
+
+    Raises:
+        ColonnesManquantesError: Si une colonne requise est absente.
+        PeriodeInvalideError: Si les données de référence ou de suivi sont absentes.
     """
+    requis = {*LIAISON, "internationale", "annee", "cause_fiable", "nb_train_circule"}
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="evolution_causes")
+
     nationales = data[~data["internationale"]].copy()
     nationales["periode"] = None
     nationales.loc[nationales["annee"].isin(annees_reference), "periode"] = "reference"
     nationales.loc[nationales["annee"] == annee_suivi, "periode"] = "suivi"
 
-    contrib = contributions_par_liaison(
-        nationales[nationales["periode"].notna()], par="periode"
-    )
+    avec_periode = nationales[nationales["periode"].notna()]
+    if avec_periode.empty:
+        raise PeriodeInvalideError(
+            f"Aucune donnée disponible pour {annees_reference} ou {annee_suivi}."
+        )
+
+    contrib = contributions_par_liaison(avec_periode, par="periode")
+    periodes_presentes = set(contrib.index.get_level_values("periode"))
+    if "reference" not in periodes_presentes:
+        raise PeriodeInvalideError(
+            f"Aucune donnée fiable disponible pour la période de référence {annees_reference}."
+        )
+    if "suivi" not in periodes_presentes:
+        raise PeriodeInvalideError(
+            f"Aucune donnée fiable disponible pour l'année de suivi {annee_suivi}."
+        )
+
     reference = contrib.xs("reference", level="periode")
     suivi = contrib.xs("suivi", level="periode")
     return (suivi - reference).dropna()
@@ -174,8 +287,20 @@ def cause_de_l_evolution(delta: pd.DataFrame, en_difficulte: pd.Series) -> pd.Se
 
     Returns:
         Série indexée par liaison sélectionnée, avec le nom de la famille.
+
+    Raises:
+        DatasetVideError: Si `delta` est vide ou si aucune liaison n'est en
+            difficulté.
     """
+    if delta.empty:
+        raise DatasetVideError("Le DataFrame d'évolution des causes est vide.")
+
     selection = en_difficulte.reindex(delta.index, fill_value=False)
+    if not selection.any():
+        raise DatasetVideError(
+            "Aucune liaison en difficulté sélectionnée pour analyser l'évolution."
+        )
+
     tendance = delta[~selection].median()
     ecart = delta[selection] - tendance
     return ecart.idxmax(axis=1).str.removeprefix("contrib_")
@@ -192,7 +317,15 @@ def ajouter_axe(bilan: pd.DataFrame) -> pd.DataFrame:
 
     Returns:
         Copie de `bilan` avec ``axe`` (ex. ``"LYON ↔ PARIS"``, gares triées).
+
+    Raises:
+        DonneesInvalidesError: Si l'index de `bilan` n'a pas deux niveaux.
     """
+    if bilan.index.nlevels != 2:
+        raise DonneesInvalidesError(
+            "L'index de 'bilan' doit contenir deux niveaux (gare_depart, gare_arrivee)."
+        )
+
     bilan = bilan.copy()
     bilan["axe"] = [" ↔ ".join(sorted(liaison)) for liaison in bilan.index]
     return bilan
@@ -215,7 +348,20 @@ def classer_evolution(bilan: pd.DataFrame, seuil: float = 0.01) -> pd.DataFrame:
 
     Returns:
         Copie de `bilan` avec la colonne ``tendance`` (une valeur de `TENDANCES`).
+
+    Raises:
+        ParametreInvalideError: Si `seuil` est négatif.
+        ColonnesManquantesError: Si ``evolution_relative`` est absente de `bilan`.
     """
+    if seuil < 0:
+        raise ParametreInvalideError(
+            "seuil", seuil, "le seuil d'évolution doit être positif ou nul."
+        )
+    if "evolution_relative" not in bilan.columns:
+        raise ColonnesManquantesError(
+            ["evolution_relative"], contexte="classer_evolution"
+        )
+
     bilan = bilan.copy()
     relative = bilan["evolution_relative"]
     bilan["tendance"] = TENDANCES[1]
@@ -232,7 +378,15 @@ def gares_concernees(bilan: pd.DataFrame) -> pd.Series:
 
     Returns:
         Série indexée par gare, de la plus concernée à la moins concernée.
+
+    Raises:
+        ColonnesManquantesError: Si ``en_difficulte`` est absente de `bilan`.
     """
+    if "en_difficulte" not in bilan.columns:
+        raise ColonnesManquantesError(["en_difficulte"], contexte="gares_concernees")
+
     selection = bilan[bilan["en_difficulte"]]
-    gares = pd.Series([gare for liaison in selection.index for gare in liaison])
+    gares = pd.Series(
+        [gare for liaison in selection.index for gare in liaison], dtype="object"
+    )
     return gares.value_counts()

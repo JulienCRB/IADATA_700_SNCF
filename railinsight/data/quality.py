@@ -2,6 +2,8 @@
 
 import pandas as pd
 
+from railinsight.exceptions import ColonnesManquantesError
+
 
 def normaliser_noms(s: pd.Series) -> pd.Series:
     """Majuscules, sans accents, tirets remplacés par des espaces.
@@ -12,7 +14,8 @@ def normaliser_noms(s: pd.Series) -> pd.Series:
     en entier ou abrégé, suffixe "TGV"...).
     """
     return (
-        s.str.upper()
+        s.astype("string")
+        .str.upper()
         .str.normalize("NFKD")  # sépare la lettre de son accent : É -> E + ´
         .str.encode("ascii", errors="ignore")  # supprime les accents
         .str.decode("ascii")
@@ -34,7 +37,16 @@ def garder_gares_tgv_si_doublon(df: pd.DataFrame) -> pd.DataFrame:
 
     Le DataFrame doit contenir la colonne d'origine "libelle" et la colonne
     normalisée "gare".
+
+    Raises:
+        ColonnesManquantesError: Si ``libelle`` ou ``gare`` est absente.
     """
+    manquantes = {"libelle", "gare"} - set(df.columns)
+    if manquantes:
+        raise ColonnesManquantesError(
+            manquantes, contexte="garder_gares_tgv_si_doublon"
+        )
+
     df = df.copy()
     est_tgv = df["libelle"].str.upper().str.contains(r"\bTGV\b", regex=True, na=False)
 
@@ -57,12 +69,20 @@ def gares_uniques(df: pd.DataFrame) -> pd.DataFrame:
     chemin de fer) : une gare desservie par trois lignes apparaît trois fois.
     On ne garde ici qu'une ligne par code UIC, et seulement les colonnes
     d'identification et de localisation.
+
+    Raises:
+        ColonnesManquantesError: Si une colonne d'identification ou de
+            localisation est absente.
     """
     df = df.rename(columns=str.lower)  # accepte CODE_UIC comme code_uic
 
     # Selon la source, la colonne s'appelle "departemen" (API) ou "departement"
     col_dep = "departemen" if "departemen" in df.columns else "departement"
     colonnes = ["code_uic", "libelle", col_dep, "commune", "x_wgs84", "y_wgs84"]
+
+    manquantes = set(colonnes) - set(df.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="gares_uniques")
 
     return (
         df[colonnes]
@@ -80,11 +100,23 @@ def ajouter_gares(df: pd.DataFrame, nouvelles_gares: list[dict]) -> pd.DataFrame
     les gares étrangères). Chaque gare est un dictionnaire dont les clés sont
     les colonnes du DataFrame ("code_uic", "libelle", "departement", ...).
     Si un code UIC existe déjà, la ligne d'origine est conservée.
+
+    Raises:
+        ColonnesManquantesError: Si ``code_uic`` est absent de `df` ou des
+            nouvelles gares fournies.
     """
     if not nouvelles_gares:
         return df
 
+    if "code_uic" not in df.columns:
+        raise ColonnesManquantesError(["code_uic"], contexte="ajouter_gares")
+
     df_nouvelles = pd.DataFrame(nouvelles_gares)
+    if "code_uic" not in df_nouvelles.columns:
+        raise ColonnesManquantesError(
+            ["code_uic"], contexte="ajouter_gares (nouvelles_gares)"
+        )
+
     return (
         pd.concat([df, df_nouvelles], ignore_index=True)
         .drop_duplicates(subset="code_uic")
