@@ -91,4 +91,4 @@ class ParametreInvalideError(AnalyseError):
 
 
 class PeriodeInvalideError(AnalyseError):
-    """Les années ou périodes demandées sont absentes des données disponibles."""
+    """Les périodes demandées sont absentes des données disponibles."""
