@@ -1,8 +1,11 @@
 """Figures Plotly pour les résultats des analyses RailInsight."""
 
+import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+
+from railinsight.routing import ReseauFerroviaire
 
 ROUTE_COLUMNS = ("gare_depart", "gare_arrivee")
 
@@ -25,6 +28,7 @@ PALETTE = {
     "cassis": "#a1006b",  # prune : s'aggrave
     "gris": "#9aa0ad",  # gris rail : aléas extérieurs, neutre
     "gris_clair": "#e3e6ec",  # fonds, liaisons non concernées
+    "bleu_petro": "#4C8791",  # autres liaisons sur la carte
     "vert": "#3e8e5e",  # résiste mieux, peu de retards
 }
 
@@ -209,6 +213,13 @@ TENDANCE_COULEURS = {
 }
 
 
+def _longueur_km(lats: list[float], lons: list[float]) -> float:
+    """Longueur approximative d'un tracé, en kilomètres."""
+    dlat = np.diff(lats)
+    dlon = np.diff(lons) * np.cos(np.radians(np.mean(lats)))
+    return float(np.hypot(dlat, dlon).sum() * 111.2)
+
+
 def evolution_avant_apres(bilan: pd.DataFrame) -> go.Figure:
     """Taux de retard avant (2023-2025) et en 2026, pour chaque liaison en difficulté.
 
@@ -286,7 +297,11 @@ def evolution_avant_apres(bilan: pd.DataFrame) -> go.Figure:
     )
 
 
-def carte_difficulte(bilan: pd.DataFrame, stations: pd.DataFrame) -> go.Figure:
+def carte_difficulte(
+    bilan: pd.DataFrame,
+    stations: pd.DataFrame,
+    reseau: ReseauFerroviaire | None = None,
+) -> go.Figure:
     """Carte des liaisons en difficulté, colorées selon leur tendance en 2026.
 
     Toutes les liaisons du bilan sont tracées en fond, en gris clair ; les
@@ -297,6 +312,8 @@ def carte_difficulte(bilan: pd.DataFrame, stations: pd.DataFrame) -> go.Figure:
         bilan: Résultat de ``Regularite.liaisons_en_difficulte`` (indexé par
             liaison, colonnes ``en_difficulte`` et ``tendance``).
         stations: Gares avec les colonnes ``gare``, ``latitude``, ``longitude``.
+        reseau: Réseau ferré pour tracer les liaisons le long des voies ; sans
+            lui, elles sont tracées en ligne droite.
 
     Returns:
         Une carte, une ligne par liaison.
@@ -308,48 +325,81 @@ def carte_difficulte(bilan: pd.DataFrame, stations: pd.DataFrame) -> go.Figure:
 
     coords = stations.set_index("gare")[["latitude", "longitude"]]
 
-    def segments(liaisons: pd.Index) -> tuple[list, list, list]:
-        """Coordonnées des liaisons, séparées par None pour couper les lignes."""
-        lats, lons, noms = [], [], []
-        for depart, arrivee in liaisons:
-            if depart in coords.index and arrivee in coords.index:
-                nom = f"{depart} → {arrivee}"
-                lats += [coords.at[depart, "latitude"], coords.at[arrivee, "latitude"]]
-                lons += [
-                    coords.at[depart, "longitude"],
-                    coords.at[arrivee, "longitude"],
-                ]
-                lats.append(None)
-                lons.append(None)
-                noms += [nom, nom, None]
-        return lats, lons, noms
+    def point(gare: str) -> tuple[float, float]:
+        return (float(coords.at[gare, "latitude"]), float(coords.at[gare, "longitude"]))
 
-    lats, lons, _ = segments(bilan.index)
+    def trace_liaison(depart: str, arrivee: str) -> tuple[list, list]:
+        """Latitudes et longitudes d'une liaison, le long des voies si possible."""
+        if reseau is None:
+            lats, lons = zip(point(depart), point(arrivee))
+        else:
+            lats, lons = reseau.tracer(point(depart), point(arrivee))
+        return list(lats), list(lons)
+
+    def liaisons_connues(liaisons: pd.Index) -> list[tuple[str, str]]:
+        return [
+            (depart, arrivee)
+            for depart, arrivee in liaisons
+            if depart in coords.index and arrivee in coords.index
+        ]
+
+    lats, lons = [], []
+    for depart, arrivee in liaisons_connues(bilan.index):
+        trace_lats, trace_lons = trace_liaison(depart, arrivee)
+        lats += [*trace_lats, None]
+        lons += [*trace_lons, None]
     traces = [
         go.Scattermap(
             lat=lats,
             lon=lons,
             mode="lines",
-            line={"width": 1, "color": PALETTE["gris_clair"]},
+            line={"width": 1, "color": PALETTE["bleu_petro"]},
             hoverinfo="skip",
             name="Autres liaisons",
         )
     ]
     selection = bilan[bilan["en_difficulte"]]
-    for tendance, couleur in TENDANCE_COULEURS.items():
-        groupe = selection[selection["tendance"] == tendance]
-        lats, lons, noms = segments(groupe.index)
+    liaisons = []
+    for depart, arrivee in liaisons_connues(selection.index):
+        trace_lats, trace_lons = trace_liaison(depart, arrivee)
+        longueur = _longueur_km(trace_lats, trace_lons)
+        tendance = selection.loc[(depart, arrivee), "tendance"]
+        liaisons.append((longueur, depart, arrivee, tendance, trace_lats, trace_lons))
+    # Les plus longues d'abord : les plus courtes sont dessinées par-dessus.
+    liaisons.sort(key=lambda liaison: liaison[0], reverse=True)
+    ordre = list(TENDANCE_COULEURS)
+    legendes_vues = set()
+    for _, depart, arrivee, tendance, trace_lats, trace_lons in liaisons:
+        nom = f"{depart} → {arrivee}"
         traces.append(
             go.Scattermap(
-                lat=lats,
-                lon=lons,
+                lat=trace_lats,
+                lon=trace_lons,
                 mode="lines",
-                line={"width": 4, "color": couleur},
-                text=noms,
+                line={"width": 4, "color": TENDANCE_COULEURS[tendance]},
+                text=[nom] * len(trace_lats),
                 hovertemplate="%{text}<extra></extra>",
+                legendgroup=tendance,
+                legendrank=ordre.index(tendance),
+                showlegend=tendance not in legendes_vues,
                 name=tendance,
             )
         )
+        legendes_vues.add(tendance)
+    # Tendance sans liaison : on garde son entrée de légende.
+    for tendance, couleur in TENDANCE_COULEURS.items():
+        if tendance not in legendes_vues:
+            traces.append(
+                go.Scattermap(
+                    lat=[],
+                    lon=[],
+                    mode="lines",
+                    line={"width": 4, "color": couleur},
+                    legendgroup=tendance,
+                    legendrank=ordre.index(tendance),
+                    name=tendance,
+                )
+            )
     gares = sorted({gare for liaison in selection.index for gare in liaison})
     gares = [gare for gare in gares if gare in coords.index]
     traces.append(
