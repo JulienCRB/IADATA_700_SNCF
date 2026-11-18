@@ -344,11 +344,11 @@ def test_preprocess_fq(monkeypatch):
 
     # Vérifier que le bon dataset a été demandé sans appel API
     assert appels == [preprocessing.FREQUENTATION]
-    assert "gare" in resultat.columns
+    assert "nom_gare" in resultat.columns
     assert len(resultat) == len(df_brut)
 
     # Vérifier la normalisation des noms
-    noms_attendus = preprocessing.normaliser_noms(df_brut["gare"])
+    noms_attendus = preprocessing.normaliser_noms(df_brut["nom_gare"])
     assert resultat["gare"].tolist() == noms_attendus.tolist()
 
 
