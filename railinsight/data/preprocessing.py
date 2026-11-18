@@ -337,15 +337,13 @@ def preprocess_fq() -> pd.DataFrame:
 
     Raises:
         ChargementDonneesError: En cas d'échec de téléchargement ou de lecture.
-        ColonnesManquantesError: Si la colonne ``gare`` est absente.
+        ColonnesManquantesError: Si la colonne ``nom_gare`` est absente.
     """
     df = load(FREQUENTATION)
-    if "gare" not in df.columns:
-        raise ColonnesManquantesError(["gare"], contexte="preprocess_fq")
-
-    # Normaliser les noms de gares pour les jointures
-    df["gare"] = normaliser_noms(df["gare"])
-
+    if "nom_gare" not in df.columns:
+        raise ColonnesManquantesError(["nom_gare"], contexte="preprocess_fq")
+    df = df.copy()
+    df["gare"] = normaliser_noms(df["nom_gare"])
     return df
 
 

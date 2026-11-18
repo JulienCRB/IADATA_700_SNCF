@@ -4,6 +4,7 @@ Aucun fichier n'est créé : les données restent en mémoire.
 """
 
 import io
+from pathlib import Path
 
 import pandas as pd
 import requests
@@ -25,6 +26,8 @@ REGULARITE = "regularite-mensuelle-tgv-aqst"
 GARES = "liste-des-gares"
 LIGNES = "lignes-lgv-et-par-ecartement"
 FREQUENTATION = "frequentation-gares"
+
+TOUS_DATASETS: list[str] = [REGULARITE, GARES, LIGNES, FREQUENTATION]
 
 
 def load(dataset: str) -> pd.DataFrame:
@@ -85,3 +88,22 @@ def load(dataset: str) -> pd.DataFrame:
 
     log.info("Dataset %s chargé : %d lignes, %d colonnes", dataset, *data.shape)
     return data
+
+
+def exporter_donnees_test(dossier: str | Path = "test/data_test") -> None:
+    """Télécharge les datasets SNCF et les enregistre en CSV pour les tests.
+
+    À exécuter une seule fois pour créer les fichiers locaux dans ``test/data_test``.
+    """
+    chemin_dossier = Path(dossier)
+    chemin_dossier.mkdir(parents=True, exist_ok=True)
+
+    for dataset in TOUS_DATASETS:
+        df = load(dataset)
+        fichier_csv = chemin_dossier / f"{dataset}.csv"
+        df.to_csv(fichier_csv, index=False)
+        log.info("Fichier de test enregistré : %s", fichier_csv)
+
+
+if __name__ == "__main__":
+    exporter_donnees_test()

@@ -148,3 +148,19 @@ def test_load_dataframe_sans_lignes(monkeypatch):
 
     with pytest.raises(DatasetVideError):
         load("regularite")
+
+def test_exporter_donnees_test(tmp_path, monkeypatch):
+    """Vérifie la création des fichiers CSV dans le dossier cible sans appel API."""
+
+    def fake_load(dataset):
+        return pd.DataFrame({"dataset": [dataset], "valeur": [1]})
+
+    monkeypatch.setattr(loader, "load", fake_load)
+
+    loader.exporter_donnees_test(dossier=tmp_path)
+
+    for dataset in loader.TOUS_DATASETS:
+        fichier = tmp_path / f"{dataset}.csv"
+        assert fichier.exists()
+        df_lu = pd.read_csv(fichier)
+        assert df_lu["dataset"].tolist() == [dataset]

@@ -1,13 +1,22 @@
 """Tests de la classe Regularite (point d'entrée des analyses)."""
 
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
 import railinsight.regularite as module_regularite
+from railinsight.data.loader import REGULARITE
 from railinsight.regularite import Regularite
+
+DATA_TEST_DIR = Path(__file__).parent / "data_test"
 
 #: Taux de retard de chaque liaison de test (la dernière est internationale).
 TAUX_PAR_LIAISON = {"A": 0.40, "B": 0.10, "C": 0.12, "D": 0.08, "GENEVE": 0.50}
+
+
+def _charger_csv_test(dataset: str) -> pd.DataFrame:
+    return pd.read_csv(DATA_TEST_DIR / f"{dataset}.csv")
 
 
 def _jeu_brut() -> pd.DataFrame:
@@ -58,12 +67,15 @@ def test_data_renvoie_une_copie(regularite):
 
 
 def test_depuis_sncf_telecharge_puis_prepare(monkeypatch):
-    """Pas de réseau dans les tests : le téléchargement est remplacé."""
-    monkeypatch.setattr(module_regularite, "load", lambda dataset: _jeu_brut())
+    """Pas de réseau dans les tests : lecture depuis le fichier CSV de test."""
+    monkeypatch.setattr(module_regularite, "load", _charger_csv_test)
 
-    regularite = Regularite.depuis_sncf()
+    reg = Regularite.depuis_sncf()
 
-    assert len(regularite.data) == len(_jeu_brut())
+    df_attendu = _charger_csv_test(REGULARITE)
+    assert len(reg.data) == len(df_attendu)
+    assert "classe_duree" in reg.data.columns
+    assert "cause_fiable" in reg.data.columns
 
 
 def test_contributions_par_liaison_sans_internationales(regularite):

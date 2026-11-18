@@ -1,7 +1,10 @@
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
 from railinsight.data import preprocessing
+from railinsight.data.loader import FREQUENTATION, REGULARITE
 from railinsight.data.preprocessing import (
     preparer_regularite,
     preprocess_dates,
@@ -14,6 +17,12 @@ from railinsight.exceptions import (
     DatasetVideError,
     FormatDateInvalideError,
 )
+
+DATA_TEST_DIR = Path(__file__).parent / "data_test"
+
+
+def _charger_csv_test(dataset: str) -> pd.DataFrame:
+    return pd.read_csv(DATA_TEST_DIR / f"{dataset}.csv")
 
 
 def test_preprocess_gare():
@@ -320,59 +329,27 @@ def test_preprocess_dates_colonne_absente():
 
 
 def test_preprocess_fq(monkeypatch):
-    """Vérifie le chargement et la normalisation de la fréquentation."""
+    """Vérifie le chargement et la normalisation de la fréquentation depuis le CSV local."""
 
-    df_brut = pd.DataFrame(
-        {
-            "gare": ["PARIS", "Lyon", "Marseille"],
-            "frequentation": [1000, 800, 600],
-        }
-    )
+    df_brut = _charger_csv_test(FREQUENTATION)
+    appels = []
 
     def fake_load(dataset):
-        assert dataset == preprocessing.FREQUENTATION
-        return df_brut.copy()
+        appels.append(dataset)
+        return _charger_csv_test(dataset)
 
     monkeypatch.setattr(preprocessing, "load", fake_load)
 
     resultat = preprocess_fq()
 
-    # Vérifier les colonnes et le nombre de lignes
+    # Vérifier que le bon dataset a été demandé sans appel API
+    assert appels == [preprocessing.FREQUENTATION]
     assert "gare" in resultat.columns
-    assert "frequentation" in resultat.columns
     assert len(resultat) == len(df_brut)
 
-    # Vérifier que les données numériques restent inchangées
-    assert resultat["frequentation"].tolist() == [1000, 800, 600]
-
     # Vérifier la normalisation des noms
-    noms_attendus = preprocessing.normaliser_noms(
-        pd.Series(["PARIS", "Lyon", "Marseille"])
-    )
-
+    noms_attendus = preprocessing.normaliser_noms(df_brut["gare"])
     assert resultat["gare"].tolist() == noms_attendus.tolist()
-
-
-def test_preprocess_fq_appelle_load(monkeypatch):
-    """Vérifie que le dataset de fréquentation est chargé."""
-
-    appels = []
-
-    def fake_load(dataset):
-        appels.append(dataset)
-
-        return pd.DataFrame(
-            {
-                "gare": ["PARIS"],
-                "frequentation": [1000],
-            }
-        )
-
-    monkeypatch.setattr(preprocessing, "load", fake_load)
-
-    preprocess_fq()
-
-    assert appels == [preprocessing.FREQUENTATION]
 
 
 def test_preprocess_fq_colonne_manquante(monkeypatch):
@@ -443,6 +420,17 @@ def test_preparer_regularite_marque_les_internationales_et_les_circules():
     assert resultat["gare_depart"].tolist() == ["PARIS LYON", "PARIS LYON"]
     assert resultat["internationale"].tolist() == [False, True]
     assert resultat["nb_train_circule"].tolist() == [90, 90]
+
+
+def test_preparer_regularite_sur_donnees_test():
+    """Vérifie preparer_regularite sur le CSV de régularité enregistré en local."""
+
+    df_reg = _charger_csv_test(REGULARITE)
+    resultat = preparer_regularite(df_reg)
+
+    assert len(resultat) == len(df_reg)
+    for col in ["annee", "saison", "classe_duree", "internationale", "nb_train_circule"]:
+        assert col in resultat.columns
 
 
 def test_preparer_regularite_erreurs():
