@@ -16,11 +16,12 @@ Application web interactive qui explore la ponctualité du réseau TGV français
 4. [Lancer l'application](#lancer-lapplication)
 5. [Utiliser le package `railinsight`](#utiliser-le-package-railinsight)
 6. [Tests et qualité du code](#tests-et-qualité-du-code)
-7. [Logs](#logs)
-8. [Déploiement](#déploiement)
-9. [Structure du projet](#structure-du-projet)
-10. [Méthodologie et limites](#méthodologie-et-limites)
-11. [Travail en équipe](#travail-en-équipe)
+7. [Documentation technique (Sphinx)](#documentation-technique-sphinx)
+8. [Logs](#logs)
+9. [Déploiement](#déploiement)
+10. [Structure du projet](#structure-du-projet)
+11. [Méthodologie et limites](#méthodologie-et-limites)
+12. [Travail en équipe](#travail-en-équipe)
 
 ---
 
@@ -127,6 +128,25 @@ La configuration (seuil de couverture, règles ruff) est dans `pyproject.toml`. 
 
 Le pipeline GitHub Actions (`.github/workflows/ci.yml`) s'exécute à chaque Pull Request et à chaque push sur `develop` et `main`. Il installe l'environnement avec `uv sync --locked`, puis lance `ruff check`, `ruff format --check` et `pytest` avec le contrôle de couverture. Une Pull Request ne peut être fusionnée que si la CI passe et qu'au moins un membre de l'équipe l'a approuvée.
 
+## Documentation technique (Sphinx)
+
+La documentation technique (classes, méthodes, paramètres, valeurs de retour) est générée à partir des docstrings du code avec **Sphinx**. Elle couvre le package `railinsight` (chargement des données, analyses, visualisations, exceptions, logs) ainsi que `app/utils.py`.
+
+Elle n'est pas hébergée en ligne : il faut la générer localement après avoir cloné le dépôt et installé les dépendances (`uv sync`, voir [Installation](#installation)).
+
+```bash
+# Générer la documentation HTML
+uv run sphinx-build -b html docs/source docs/build/html
+
+# Ouvrir la page d'accueil générée
+open docs/build/html/index.html        # macOS
+xdg-open docs/build/html/index.html    # Linux
+```
+
+Les fichiers sources de la documentation (`docs/source/`) sont versionnés dans le dépôt ; le résultat HTML généré dans `docs/build/` ne l'est pas (il est reproductible en une commande).
+
+> Les pages de l'application Streamlit (`app/vues/`) ne sont pas incluses dans cette documentation technique : elles s'exécutent uniquement via `streamlit run` et ne peuvent pas être importées isolément par Sphinx. Elles restent cependant documentées par leurs docstrings, lisibles directement dans le code source.
+
 ## Logs
 
 Le module `railinsight.logger` écrit deux fichiers dans le dossier `logs/` (créé automatiquement, non versionné) :
@@ -168,6 +188,7 @@ IADATA_700_SNCF/
 ├── test/                    # Tests unitaires (pytest)
 ├── notebook/                # Notebooks d'exploration (phases 1 et 2)
 ├── documentation/           # Cadrage et arbitrages
+├── docs/                    # Documentation technique Sphinx (source/, générée dans build/)
 ├── .github/workflows/       # Pipeline CI
 ├── .streamlit/config.toml   # Thème de l'application
 ├── pyproject.toml           # Dépendances et configuration des outils

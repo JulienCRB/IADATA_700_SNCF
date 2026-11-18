@@ -43,8 +43,7 @@ from railinsight.data.preprocessing import preparer_regularite
 class Regularite:
     """Jeu de régularité mensuelle TGV, préparé pour toutes les analyses.
 
-    Attributes:
-        data: Copie du jeu préparé (une liaison × un mois par ligne).
+    Voir la propriété :attr:`data` pour accéder au jeu de données préparé.
     """
 
     def __init__(self, brut: pd.DataFrame) -> None:

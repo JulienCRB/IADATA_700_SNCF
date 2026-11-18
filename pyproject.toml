@@ -29,9 +29,12 @@ module-root = ""
 # `uv sync` installs this group by default, so CI gets
 # these tools automatically.
 dev = [
+    "myst-parser>=5.2.0",
     "pytest>=9.1.1",
     "pytest-cov>=7.1.0",
     "ruff>=0.17.0",
+    "sphinx>=9.2.0",
+    "sphinx-rtd-theme>=3.1.0",
 ]
 
 [tool.pytest.ini_options]
@@ -50,7 +53,7 @@ fail_under = 90
 # Default max line length
 line-length = 88
 # Exploration, not delivered code
-extend-exclude = ["notebook"]
+extend-exclude = ["notebook", "docs"]
 
 [tool.ruff.lint]
 # E/W: pycodestyle (PEP 8 style) | F: Pyflakes (bugs, unused code)
