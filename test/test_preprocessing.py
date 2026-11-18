@@ -1,7 +1,10 @@
+from pathlib import Path
+
 import pandas as pd
 import pytest
 
 from railinsight.data import preprocessing
+from railinsight.data.loader import FREQUENTATION, REGULARITE
 from railinsight.data.preprocessing import (
     preparer_regularite,
     preprocess_dates,
@@ -9,6 +12,17 @@ from railinsight.data.preprocessing import (
     preprocess_gares,
     preprocess_regularite,
 )
+from railinsight.exceptions import (
+    ColonnesManquantesError,
+    DatasetVideError,
+    FormatDateInvalideError,
+)
+
+DATA_TEST_DIR = Path(__file__).parent / "data_test"
+
+
+def _charger_csv_test(dataset: str) -> pd.DataFrame:
+    return pd.read_csv(DATA_TEST_DIR / f"{dataset}.csv")
 
 
 def test_preprocess_gare():
@@ -37,6 +51,20 @@ def test_preprocess_gare():
 
     # Vérifier que le DataFrame d'origine n'a pas été modifié
     pd.testing.assert_frame_equal(df_brut, df_original)
+
+
+def test_preprocess_gares_vide():
+    """Vérifie qu'un DataFrame vide de gares lève une erreur."""
+
+    with pytest.raises(DatasetVideError):
+        preprocess_gares(pd.DataFrame())
+
+
+def test_preprocess_gares_colonne_manquante():
+    """Vérifie qu'une colonne manquante dans les gares lève une erreur."""
+
+    with pytest.raises(ColonnesManquantesError):
+        preprocess_gares(pd.DataFrame({"code_uic": [123]}))
 
 
 def test_preprocess_regularite():
@@ -99,6 +127,25 @@ def test_preprocess_regularite():
     ).drop_duplicates()
 
     assert correspondances.groupby("uic")["gare"].nunique().max() == 1
+
+
+def test_preprocess_regularite_erreurs():
+    """Vérifie les erreurs sur DataFrame vide ou colonnes manquantes."""
+
+    df_reg = pd.DataFrame({"gare_depart": ["PARIS"], "gare_arrivee": ["LYON"]})
+    df_gares = pd.DataFrame({"gare": ["PARIS"], "code_uic": [123]})
+
+    with pytest.raises(DatasetVideError):
+        preprocess_regularite(pd.DataFrame(), df_gares)
+
+    with pytest.raises(DatasetVideError):
+        preprocess_regularite(df_reg, pd.DataFrame())
+
+    with pytest.raises(ColonnesManquantesError):
+        preprocess_regularite(pd.DataFrame({"gare_depart": ["PARIS"]}), df_gares)
+
+    with pytest.raises(ColonnesManquantesError):
+        preprocess_regularite(df_reg, pd.DataFrame({"gare": ["PARIS"]}))
 
 
 def test_preprocess_regularite_noms_ambigus():
@@ -259,7 +306,16 @@ def test_preprocess_dates_format_invalide():
 
     df_regularite = pd.DataFrame({"date": ["2025-01", "date_invalide"]})
 
-    with pytest.raises(ValueError):
+    with pytest.raises(FormatDateInvalideError):
+        preprocess_dates(df_regularite)
+
+
+def test_preprocess_dates_vides():
+    """Vérifie qu'une colonne ne contenant que des valeurs nulles lève une erreur."""
+
+    df_regularite = pd.DataFrame({"date": [None, None]})
+
+    with pytest.raises(FormatDateInvalideError):
         preprocess_dates(df_regularite)
 
 
@@ -268,64 +324,45 @@ def test_preprocess_dates_colonne_absente():
 
     df_regularite = pd.DataFrame({"mois": ["2025-01", "2025-02"]})
 
-    with pytest.raises(KeyError):
+    with pytest.raises(ColonnesManquantesError):
         preprocess_dates(df_regularite)
 
 
 def test_preprocess_fq(monkeypatch):
-    """Vérifie le chargement et la normalisation de la fréquentation."""
+    """Vérifie le chargement et la normalisation
+    de la fréquentation depuis le CSV local."""
 
-    df_brut = pd.DataFrame(
-        {
-            "gare": ["PARIS", "Lyon", "Marseille"],
-            "frequentation": [1000, 800, 600],
-        }
-    )
+    df_brut = _charger_csv_test(FREQUENTATION)
+    appels = []
 
     def fake_load(dataset):
-        assert dataset == preprocessing.FREQUENTATION
-        return df_brut.copy()
+        appels.append(dataset)
+        return _charger_csv_test(dataset)
 
     monkeypatch.setattr(preprocessing, "load", fake_load)
 
     resultat = preprocess_fq()
 
-    # Vérifier les colonnes et le nombre de lignes
-    assert "gare" in resultat.columns
-    assert "frequentation" in resultat.columns
+    # Vérifier que le bon dataset a été demandé sans appel API
+    assert appels == [preprocessing.FREQUENTATION]
+    assert "nom_gare" in resultat.columns
     assert len(resultat) == len(df_brut)
 
-    # Vérifier que les données numériques restent inchangées
-    assert resultat["frequentation"].tolist() == [1000, 800, 600]
-
     # Vérifier la normalisation des noms
-    noms_attendus = preprocessing.normaliser_noms(
-        pd.Series(["PARIS", "Lyon", "Marseille"])
-    )
-
+    noms_attendus = preprocessing.normaliser_noms(df_brut["nom_gare"])
     assert resultat["gare"].tolist() == noms_attendus.tolist()
 
 
-def test_preprocess_fq_appelle_load(monkeypatch):
-    """Vérifie que le dataset de fréquentation est chargé."""
-
-    appels = []
+def test_preprocess_fq_colonne_manquante(monkeypatch):
+    """Vérifie qu'une erreur est levée si la colonne gare est absente."""
 
     def fake_load(dataset):
-        appels.append(dataset)
-
-        return pd.DataFrame(
-            {
-                "gare": ["PARIS"],
-                "frequentation": [1000],
-            }
-        )
+        return pd.DataFrame({"frequentation": [1000]})
 
     monkeypatch.setattr(preprocessing, "load", fake_load)
 
-    preprocess_fq()
-
-    assert appels == [preprocessing.FREQUENTATION]
+    with pytest.raises(ColonnesManquantesError):
+        preprocess_fq()
 
 
 def _brut(date="2024-01", depart="Paris-Lyon", arrivee="Lyon", duree=120, prevus=100):
@@ -384,3 +421,33 @@ def test_preparer_regularite_marque_les_internationales_et_les_circules():
     assert resultat["gare_depart"].tolist() == ["PARIS LYON", "PARIS LYON"]
     assert resultat["internationale"].tolist() == [False, True]
     assert resultat["nb_train_circule"].tolist() == [90, 90]
+
+
+def test_preparer_regularite_sur_donnees_test():
+    """Vérifie preparer_regularite sur le CSV de régularité enregistré en local."""
+
+    df_reg = _charger_csv_test(REGULARITE)
+    resultat = preparer_regularite(df_reg)
+
+    assert len(resultat) == len(df_reg)
+    for col in [
+        "annee",
+        "saison",
+        "classe_duree",
+        "internationale",
+        "nb_train_circule",
+    ]:
+        assert col in resultat.columns
+
+
+def test_preparer_regularite_erreurs():
+    """Vérifie les erreurs levées par preparer_regularite."""
+
+    with pytest.raises(DatasetVideError):
+        preparer_regularite(pd.DataFrame())
+
+    with pytest.raises(ColonnesManquantesError):
+        preparer_regularite(pd.DataFrame({"date": ["2024-01"]}))
+
+    with pytest.raises(FormatDateInvalideError):
+        preparer_regularite(pd.DataFrame([_brut(date="invalide")]))

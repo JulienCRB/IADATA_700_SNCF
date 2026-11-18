@@ -2,6 +2,11 @@
 
 import pandas as pd
 
+from railinsight.exceptions import ColonnesManquantesError
+from railinsight.logger import get_logger
+
+log = get_logger(__name__)
+
 
 def normaliser_noms(s: pd.Series) -> pd.Series:
     """Majuscules, sans accents, tirets remplacés par des espaces.
@@ -12,7 +17,8 @@ def normaliser_noms(s: pd.Series) -> pd.Series:
     en entier ou abrégé, suffixe "TGV"...).
     """
     return (
-        s.str.upper()
+        s.astype("string")
+        .str.upper()
         .str.normalize("NFKD")  # sépare la lettre de son accent : É -> E + ´
         .str.encode("ascii", errors="ignore")  # supprime les accents
         .str.decode("ascii")
@@ -34,7 +40,16 @@ def garder_gares_tgv_si_doublon(df: pd.DataFrame) -> pd.DataFrame:
 
     Le DataFrame doit contenir la colonne d'origine "libelle" et la colonne
     normalisée "gare".
+
+    Raises:
+        ColonnesManquantesError: Si ``libelle`` ou ``gare`` est absente.
     """
+    manquantes = {"libelle", "gare"} - set(df.columns)
+    if manquantes:
+        raise ColonnesManquantesError(
+            manquantes, contexte="garder_gares_tgv_si_doublon"
+        )
+
     df = df.copy()
     est_tgv = df["libelle"].str.upper().str.contains(r"\bTGV\b", regex=True, na=False)
 
@@ -47,6 +62,7 @@ def garder_gares_tgv_si_doublon(df: pd.DataFrame) -> pd.DataFrame:
     # À retirer : gare en doublon, avec une variante TGV, et qui n'est pas la TGV
     a_supprimer = (nb_libelles > 1) & groupe_a_un_tgv & ~est_tgv
 
+    log.debug("Doublons non-TGV écartés : %d lignes", int(a_supprimer.sum()))
     return df[~a_supprimer]
 
 
@@ -57,6 +73,10 @@ def gares_uniques(df: pd.DataFrame) -> pd.DataFrame:
     chemin de fer) : une gare desservie par trois lignes apparaît trois fois.
     On ne garde ici qu'une ligne par code UIC, et seulement les colonnes
     d'identification et de localisation.
+
+    Raises:
+        ColonnesManquantesError: Si une colonne d'identification ou de
+            localisation est absente.
     """
     df = df.rename(columns=str.lower)  # accepte CODE_UIC comme code_uic
 
@@ -64,13 +84,19 @@ def gares_uniques(df: pd.DataFrame) -> pd.DataFrame:
     col_dep = "departemen" if "departemen" in df.columns else "departement"
     colonnes = ["code_uic", "libelle", col_dep, "commune", "x_wgs84", "y_wgs84"]
 
-    return (
+    manquantes = set(colonnes) - set(df.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="gares_uniques")
+
+    resultat = (
         df[colonnes]
         .rename(columns={col_dep: "departement"})
         .dropna(subset=["code_uic"])  # écarte les lignes sans code UIC
         .drop_duplicates(subset="code_uic")  # garde la première ligne de chaque gare
         .reset_index(drop=True)
     )
+    log.debug("Déduplication des gares : %d -> %d lignes", len(df), len(resultat))
+    return resultat
 
 
 def ajouter_gares(df: pd.DataFrame, nouvelles_gares: list[dict]) -> pd.DataFrame:
@@ -80,13 +106,30 @@ def ajouter_gares(df: pd.DataFrame, nouvelles_gares: list[dict]) -> pd.DataFrame
     les gares étrangères). Chaque gare est un dictionnaire dont les clés sont
     les colonnes du DataFrame ("code_uic", "libelle", "departement", ...).
     Si un code UIC existe déjà, la ligne d'origine est conservée.
+
+    Raises:
+        ColonnesManquantesError: Si ``code_uic`` est absent de `df` ou des
+            nouvelles gares fournies.
     """
     if not nouvelles_gares:
         return df
 
+    if "code_uic" not in df.columns:
+        raise ColonnesManquantesError(["code_uic"], contexte="ajouter_gares")
+
     df_nouvelles = pd.DataFrame(nouvelles_gares)
-    return (
+    if "code_uic" not in df_nouvelles.columns:
+        raise ColonnesManquantesError(
+            ["code_uic"], contexte="ajouter_gares (nouvelles_gares)"
+        )
+
+    resultat = (
         pd.concat([df, df_nouvelles], ignore_index=True)
         .drop_duplicates(subset="code_uic")
         .reset_index(drop=True)
     )
+    log.debug(
+        "Ajout de gares complémentaires : %d gares ajoutées",
+        len(resultat) - len(df),
+    )
+    return resultat

@@ -1,5 +1,5 @@
 import railinsight.logger as logger
-from railinsight.logger import get_logger
+from railinsight.logger import get_logger, get_user_logger
 
 
 def test_logger_writes_to_both_files(tmp_path, monkeypatch):
@@ -28,3 +28,28 @@ def test_logger_called_twice_returns_same_instance(tmp_path, monkeypatch):
 
     assert first is second
     assert len(second.handlers) == 2
+
+
+def test_user_logger_writes_to_users_file(tmp_path, monkeypatch):
+    """Test that user actions are written only to users.log."""
+    monkeypatch.setattr(logger, "LOG_DIR", tmp_path)
+
+    user_log = get_user_logger("test_users_files")
+    user_log.info("Page consultée : Accueil")
+
+    users = (tmp_path / "users.log").read_text(encoding="utf-8")
+
+    assert "Page consultée : Accueil" in users
+    assert not (tmp_path / "debug.log").exists()
+    assert not (tmp_path / "errors.log").exists()
+
+
+def test_user_logger_called_twice_returns_same_instance(tmp_path, monkeypatch):
+    """Test that calling get_user_logger twice reuses the same logger and handler."""
+    monkeypatch.setattr(logger, "LOG_DIR", tmp_path)
+
+    first = get_user_logger("test_users_double")
+    second = get_user_logger("test_users_double")
+
+    assert first is second
+    assert len(second.handlers) == 1

@@ -10,8 +10,13 @@ import streamlit as st
 from railinsight.data.loader import GARES, REGULARITE, load
 from railinsight.data.preprocessing import preprocess_gares, preprocess_regularite
 from railinsight.data.quality import normaliser_noms
+from railinsight.exceptions import RailInsightError
+from railinsight.logger import get_logger, get_user_logger
 from railinsight.regularite import Regularite
 from railinsight.viz.charts import ROUTE_COLUMNS
+
+log = get_logger(__name__)
+user_log = get_user_logger()
 
 #: Jeu de données utilisé et sa licence, cités par les pages.
 SOURCE_URL = (
@@ -27,6 +32,18 @@ LIBELLES_FAMILLES = {
 }
 
 
+def tracer_page(nom_page: str) -> None:
+    """Enregistre la visite d'une page une seule fois lors de son ouverture."""
+    if st.session_state.get("page_courante") != nom_page:
+        st.session_state["page_courante"] = nom_page
+        user_log.info("Page consultée : %s", nom_page)
+
+
+def log_action(message: str, *args: object) -> None:
+    """Enregistre une action utilisateur dans ``logs/users.log``."""
+    user_log.info(message, *args)
+
+
 @st.cache_data(show_spinner="Téléchargement des données SNCF…")
 def get_data() -> pd.DataFrame:
     """Charge les données de régularité TGV brutes (mises en cache)."""
@@ -34,14 +51,22 @@ def get_data() -> pd.DataFrame:
 
 
 @st.cache_data(show_spinner="Préparation des analyses…")
-def get_regularite() -> Regularite:
-    """Jeu de régularité préparé, point d'entrée de toutes les analyses."""
+def _preparer_regularite() -> Regularite:
     return Regularite(get_data())
 
 
+def get_regularite() -> Regularite:
+    """Jeu de régularité préparé, point d'entrée de toutes les analyses."""
+    try:
+        return _preparer_regularite()
+    except RailInsightError as err:
+        log.error("Erreur lors du chargement des données : %s", err)
+        st.error(f"Impossible de charger les données SNCF : {err}")
+        st.stop()
+
+
 @st.cache_data(show_spinner="Chargement de la carte…")
-def get_gares() -> pd.DataFrame:
-    """Coordonnées des gares des liaisons, via le preprocessing commun."""
+def _preparer_gares() -> pd.DataFrame:
     gares = preprocess_gares(load(GARES))
     regularite = preprocess_regularite(get_data(), gares)
 
@@ -61,6 +86,16 @@ def get_gares() -> pd.DataFrame:
         on="code_uic",
     ).rename(columns={"x_wgs84": "longitude", "y_wgs84": "latitude"})
     return stations.drop_duplicates(subset="gare")
+
+
+def get_gares() -> pd.DataFrame:
+    """Coordonnées des gares des liaisons, via le preprocessing commun."""
+    try:
+        return _preparer_gares()
+    except RailInsightError as err:
+        log.error("Erreur lors du chargement des gares : %s", err)
+        st.error(f"Impossible de charger les coordonnées des gares : {err}")
+        st.stop()
 
 
 def etoiles_texte(nombre: int) -> str:

@@ -13,6 +13,13 @@ from railinsight.analysis.difficulte import (
     seuils_par_classe,
     taux_par_annee,
 )
+from railinsight.exceptions import (
+    ColonnesManquantesError,
+    DatasetVideError,
+    DonneesInvalidesError,
+    ParametreInvalideError,
+    PeriodeInvalideError,
+)
 
 
 def _mois(depart="A", annee=2023, circules=100, retards=10, internationale=False):
@@ -55,6 +62,18 @@ def test_taux_par_annee_ecarte_internationales_et_petits_volumes():
     assert resultat_annee_complete["gare_depart"].tolist() == ["A"]
 
 
+def test_taux_par_annee_erreurs():
+    """Vérifie les erreurs levées par taux_par_annee."""
+    with pytest.raises(ParametreInvalideError):
+        taux_par_annee(pd.DataFrame([_mois()]), volume_min=-10)
+
+    with pytest.raises(ColonnesManquantesError):
+        taux_par_annee(pd.DataFrame({"gare_depart": ["A"]}))
+
+    with pytest.raises(DatasetVideError):
+        taux_par_annee(pd.DataFrame([_mois(internationale=True)]))
+
+
 def _par_an(depart, taux_par_annee_dict):
     """Lignes de `taux_par_annee` pour une liaison, à partir de {année: taux}."""
     return [
@@ -81,6 +100,23 @@ def test_seuils_par_classe_sur_la_periode_de_reference_seulement():
 
     # 2020 (hors référence) est ignorée : médiane de 0.10, 0.10, 0.20, 0.20
     assert seuils["> 3h"] == pytest.approx(0.15)
+
+
+def test_seuils_par_classe_erreurs():
+    """Vérifie les erreurs levées par seuils_par_classe."""
+    donnees_valides = pd.DataFrame(_par_an("A", {2023: 0.10}))
+
+    with pytest.raises(ParametreInvalideError):
+        seuils_par_classe(donnees_valides, quantile=1.2)
+
+    with pytest.raises(ParametreInvalideError):
+        seuils_par_classe(donnees_valides, annees=[])
+
+    with pytest.raises(ColonnesManquantesError):
+        seuils_par_classe(pd.DataFrame({"annee": [2023]}))
+
+    with pytest.raises(PeriodeInvalideError):
+        seuils_par_classe(donnees_valides, annees=[2099])
 
 
 @pytest.fixture
@@ -110,6 +146,21 @@ def test_liaisons_en_difficulte_evolution_relative_a_la_tendance(par_an):
     assert mauvaise["evolution"] == pytest.approx(0.10)
     # Évolutions des autres : -0.10 (LIMITE), +0.02, +0.03 → médiane +0.02
     assert mauvaise["evolution_relative"] == pytest.approx(0.08)
+
+
+def test_liaisons_en_difficulte_erreurs(par_an):
+    """Vérifie les erreurs levées par liaisons_en_difficulte."""
+    with pytest.raises(ParametreInvalideError):
+        liaisons_en_difficulte(par_an, annees_reference=[2023, 2024], min_annees=0)
+
+    with pytest.raises(ParametreInvalideError):
+        liaisons_en_difficulte(par_an, annees_reference=[2023, 2024], min_annees=5)
+
+    with pytest.raises(ColonnesManquantesError):
+        liaisons_en_difficulte(pd.DataFrame({"annee": [2023]}))
+
+    with pytest.raises(PeriodeInvalideError):
+        liaisons_en_difficulte(par_an, annee_suivi=2099)
 
 
 def _mois_causes(depart, annee, reseau, voyageurs=0, externe=0):
@@ -153,6 +204,42 @@ def test_evolution_causes_et_cause_de_l_evolution():
     assert causes.to_dict() == {("A", "PARIS"): "reseau"}
 
 
+def test_evolution_causes_erreurs():
+    """Vérifie les erreurs levées par evolution_causes."""
+    with pytest.raises(ColonnesManquantesError):
+        evolution_causes(pd.DataFrame({"annee": [2024]}))
+
+    # Ni la période de référence ni l'année de suivi ne sont présentes
+    data_autre_annee = pd.DataFrame([_mois_causes("A", 2020, reseau=10)])
+    with pytest.raises(PeriodeInvalideError):
+        evolution_causes(data_autre_annee, annees_reference=[2024], annee_suivi=2026)
+
+    # Uniquement l'année de suivi présente (référence manquante)
+    data_suivi_seul = pd.DataFrame([_mois_causes("A", 2026, reseau=10)])
+    with pytest.raises(PeriodeInvalideError):
+        evolution_causes(data_suivi_seul, annees_reference=[2024], annee_suivi=2026)
+
+    # Uniquement l'année de référence présente (suivi manquant)
+    data_ref_seule = pd.DataFrame([_mois_causes("A", 2024, reseau=10)])
+    with pytest.raises(PeriodeInvalideError):
+        evolution_causes(data_ref_seule, annees_reference=[2024], annee_suivi=2026)
+
+
+def test_cause_de_l_evolution_erreurs():
+    """Vérifie les erreurs levées par cause_de_l_evolution."""
+    index = pd.MultiIndex.from_tuples(
+        [("A", "PARIS")], names=["gare_depart", "gare_arrivee"]
+    )
+    en_difficulte_vide = pd.Series([False], index=index)
+
+    with pytest.raises(DatasetVideError):
+        cause_de_l_evolution(pd.DataFrame(), en_difficulte_vide)
+
+    delta = pd.DataFrame({"contrib_reseau": [0.10]}, index=index)
+    with pytest.raises(DatasetVideError):
+        cause_de_l_evolution(delta, en_difficulte_vide)
+
+
 def test_ajouter_axe_regroupe_les_deux_sens():
     index = pd.MultiIndex.from_tuples(
         [("PARIS", "LYON"), ("LYON", "PARIS")], names=["gare_depart", "gare_arrivee"]
@@ -163,6 +250,14 @@ def test_ajouter_axe_regroupe_les_deux_sens():
 
     assert resultat["axe"].tolist() == ["LYON ↔ PARIS", "LYON ↔ PARIS"]
     assert "axe" not in bilan.columns
+
+
+def test_ajouter_axe_index_invalide():
+    """Vérifie qu'un index à un seul niveau lève une DonneesInvalidesError."""
+    bilan_index_simple = pd.DataFrame({"en_difficulte": [True]}, index=["PARIS"])
+
+    with pytest.raises(DonneesInvalidesError):
+        ajouter_axe(bilan_index_simple)
 
 
 def test_classer_evolution_a_un_point_pres():
@@ -178,6 +273,15 @@ def test_classer_evolution_a_un_point_pres():
     ]
 
 
+def test_classer_evolution_erreurs():
+    """Vérifie les erreurs levées par classer_evolution."""
+    with pytest.raises(ParametreInvalideError):
+        classer_evolution(pd.DataFrame({"evolution_relative": [0.01]}), seuil=-0.01)
+
+    with pytest.raises(ColonnesManquantesError):
+        classer_evolution(pd.DataFrame({"autre_colonne": [0.01]}))
+
+
 def test_gares_concernees_compte_les_deux_extremites():
     index = pd.MultiIndex.from_tuples(
         [("LYON", "PARIS"), ("PARIS", "LILLE"), ("NICE", "LYON")],
@@ -189,3 +293,9 @@ def test_gares_concernees_compte_les_deux_extremites():
 
     # NICE → LYON n'est pas en difficulté : seules les deux premières comptent
     assert gares.to_dict() == {"PARIS": 2, "LYON": 1, "LILLE": 1}
+
+
+def test_gares_concernees_colonne_manquante():
+    """Vérifie qu'une erreur est levée si la colonne en_difficulte est absente."""
+    with pytest.raises(ColonnesManquantesError):
+        gares_concernees(pd.DataFrame({"autre_colonne": [True]}))

@@ -1,7 +1,9 @@
 """Page « Données et limites » : peut-on faire confiance aux chiffres ?"""
 
 import streamlit as st
-from utils import LICENCE_URL, SOURCE_URL, get_regularite
+from utils import LICENCE_URL, SOURCE_URL, get_regularite, tracer_page
+
+tracer_page("Données et limites")
 
 regularite = get_regularite()
 debut, fin = regularite.periode

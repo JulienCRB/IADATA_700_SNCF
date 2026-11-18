@@ -1,9 +1,18 @@
 """Page d'accueil : la question, l'essentiel en quatre chiffres, et où aller ensuite."""
 
 import streamlit as st
-from utils import LICENCE_URL, SOURCE_URL, get_regularite, libelle_famille, nom_gare
+from utils import (
+    LICENCE_URL,
+    SOURCE_URL,
+    get_regularite,
+    libelle_famille,
+    nom_gare,
+    tracer_page,
+)
 
 from railinsight.analysis.difficulte import gares_concernees
+
+tracer_page("Accueil")
 
 regularite = get_regularite()
 debut, fin = regularite.periode
