@@ -46,9 +46,7 @@ class DonneesInvalidesError(RailInsightError):
 class ColonnesManquantesError(DonneesInvalidesError):
     """Une ou plusieurs colonnes indispensables sont absentes du DataFrame."""
 
-    def __init__(
-        self, colonnes: Iterable[str], contexte: str | None = None
-    ) -> None:
+    def __init__(self, colonnes: Iterable[str], contexte: str | None = None) -> None:
         """Initialise l'erreur avec la liste triée des colonnes manquantes."""
         self.colonnes = sorted(set(colonnes))
         self.contexte = contexte
