@@ -11,6 +11,7 @@ from railinsight.analysis.causes import (
     marquer_cause_fiable,
     repartition_par_niveau,
 )
+from railinsight.exceptions import ColonnesManquantesError
 
 
 def _observation(
@@ -215,10 +216,11 @@ def test_contributions_par_saison_trie_les_saisons():
 
 
 def test_contributions_par_saison_leve_une_erreur_si_colonne_manquante():
-    """Une colonne requise manquante doit lever une `ValueError` explicite."""
+    """Une colonne requise manquante doit lever
+    une `ColonnesManquantesError` explicite."""
     data = pd.DataFrame({"saison": ["hiver"], "nb_train_circule": [100]})
 
-    with pytest.raises(ValueError, match="Colonnes manquantes"):
+    with pytest.raises(ColonnesManquantesError, match="Colonnes manquantes"):
         contributions_par_saison(data)
 
 

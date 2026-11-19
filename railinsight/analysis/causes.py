@@ -14,6 +14,14 @@ Les trois familles de causes suivent le cadrage du projet
 import pandas as pd
 
 from railinsight.data.preprocessing import LIAISON, ORDRE_SAISONS
+from railinsight.exceptions import (
+    ColonnesManquantesError,
+    DatasetVideError,
+    ParametreInvalideError,
+)
+from railinsight.logger import get_logger
+
+log = get_logger(__name__)
 
 #: Colonnes `prct_cause_*` du dataset de régularité, groupées par famille.
 FAMILLES_CAUSES: dict[str, list[str]] = {
@@ -25,6 +33,26 @@ FAMILLES_CAUSES: dict[str, list[str]] = {
     ],
     "externe": ["prct_cause_externe"],
 }
+
+
+def _verifier_colonnes_causes(
+    data: pd.DataFrame,
+    familles: dict[str, list[str]],
+    contexte: str,
+) -> list[str]:
+    """Vérifie la présence des colonnes de causes et de retards à l'arrivée."""
+    if not familles:
+        raise ParametreInvalideError(
+            "familles",
+            familles,
+            "le dictionnaire des familles de causes ne peut pas être vide.",
+        )
+    toutes_causes = [colonne for colonnes in familles.values() for colonne in colonnes]
+    requis = {"nb_train_retard_arrivee", *toutes_causes}
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte=contexte)
+    return toutes_causes
 
 
 def marquer_cause_fiable(
@@ -47,11 +75,30 @@ def marquer_cause_fiable(
 
     Returns:
         Série booléenne, `True` si l'observation est exploitable.
+
+    Raises:
+        ParametreInvalideError: Si `tolerance` est négative ou `familles` vide.
+        ColonnesManquantesError: Si une colonne requise est absente de `data`.
     """
-    toutes_causes = [colonne for colonnes in familles.values() for colonne in colonnes]
+    if tolerance < 0:
+        raise ParametreInvalideError(
+            "tolerance", tolerance, "la tolérance doit être positive ou nulle."
+        )
+    toutes_causes = _verifier_colonnes_causes(
+        data, familles, contexte="marquer_cause_fiable"
+    )
     somme_causes = data[toutes_causes].sum(axis=1)
     a_des_retards = data["nb_train_retard_arrivee"] > 0
-    return ~(a_des_retards & ((somme_causes - 100).abs() > tolerance))
+    fiable = ~(a_des_retards & ((somme_causes - 100).abs() > tolerance))
+
+    nb_non_fiables = int((~fiable).sum())
+    if nb_non_fiables > 0:
+        log.warning(
+            "%d observations avec répartition des causes non fiable (écart > %.1f pts)",
+            nb_non_fiables,
+            tolerance,
+        )
+    return fiable
 
 
 def ajouter_nb_retard_par_famille(
@@ -66,7 +113,12 @@ def ajouter_nb_retard_par_famille(
 
     Returns:
         Copie de `data` avec une colonne supplémentaire par famille.
+
+    Raises:
+        ParametreInvalideError: Si `familles` est vide.
+        ColonnesManquantesError: Si une colonne requise est absente de `data`.
     """
+    _verifier_colonnes_causes(data, familles, contexte="ajouter_nb_retard_par_famille")
     data = data.copy()
     for famille, colonnes in familles.items():
         data[f"nb_retard_{famille}"] = (
@@ -97,11 +149,25 @@ def contributions_par_liaison(
     Returns:
         Un DataFrame indexé par liaison (et par `par`), avec une colonne
         ``contrib_<famille>`` par famille.
+
+    Raises:
+        ColonnesManquantesError: Si une colonne requise est absente de `data`.
+        DatasetVideError: Si aucune observation fiable n'est disponible.
     """
     cles = LIAISON + ([par] if par else [])
     colonnes_nb_retard = [f"nb_retard_{famille}" for famille in familles]
+    requis = {*cles, "cause_fiable", "nb_train_circule", *colonnes_nb_retard}
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="contributions_par_liaison")
 
     data_ok = data[data["cause_fiable"]]
+    if data_ok.empty:
+        raise DatasetVideError(
+            """Aucune observation avec 'cause_fiable=True' disponible
+            pour calculer les contributions."""
+        )
+
     agg = data_ok.groupby(cles, observed=True)[
         ["nb_train_circule", *colonnes_nb_retard]
     ].sum()
@@ -110,6 +176,13 @@ def contributions_par_liaison(
         agg[f"contrib_{famille}"] = (
             agg[f"nb_retard_{famille}"] / agg["nb_train_circule"]
         )
+
+    log.debug(
+        "Contributions calculées sur %d/%d observations fiables (par=%s)",
+        len(data_ok),
+        len(data),
+        par,
+    )
     return agg[[f"contrib_{famille}" for famille in familles]]
 
 
@@ -122,7 +195,14 @@ def cause_dominante(contributions: pd.DataFrame) -> pd.Series:
     Returns:
         Série indexée comme `contributions`, avec le nom de la famille
         dominante (``"reseau"``, ``"voyageurs"`` ou ``"externe"``).
+
+    Raises:
+        DatasetVideError: Si `contributions` est vide.
     """
+    if contributions.empty:
+        raise DatasetVideError(
+            "Impossible de déterminer la cause dominante sur un DataFrame vide."
+        )
     return contributions.idxmax(axis=1).str.removeprefix("contrib_")
 
 
@@ -147,16 +227,32 @@ def contributions_par_saison(
         liaison médiane, toutes causes).
 
     Raises:
-        ValueError: Si une colonne requise est absente de `data`.
+        ColonnesManquantesError: Si une colonne requise est absente de `data`.
+        DatasetVideError: Si aucune liaison nationale exploitable n'est présente.
     """
-    requis = {"saison", "internationale", "nb_train_circule", "cause_fiable"}
-    if not requis.issubset(data.columns):
-        raise ValueError(f"Colonnes manquantes : {requis.difference(data.columns)}")
+    requis = {
+        *LIAISON,
+        "saison",
+        "internationale",
+        "nb_train_circule",
+        "cause_fiable",
+        *(f"nb_retard_{famille}" for famille in familles),
+    }
+    manquantes = requis - set(data.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="contributions_par_saison")
 
     nationales = data[~data["internationale"]]
+    if nationales.empty:
+        raise DatasetVideError(
+            "Aucune liaison nationale disponible pour le calcul par saison."
+        )
+
     par_liaison = contributions_par_liaison(nationales, par="saison", familles=familles)
     par_liaison["total"] = par_liaison.sum(axis=1)
     medianes = par_liaison.groupby("saison").median()
+
+    log.info("Contributions par saison calculées (%d saisons)", len(medianes))
     return medianes.reindex([s for s in ORDRE_SAISONS if s in medianes.index])
 
 
@@ -180,7 +276,21 @@ def repartition_par_niveau(
     Returns:
         Un DataFrame indexé par famille, une colonne par niveau de `NIVEAUX`
         (parts de 0 à 1, chaque ligne somme à 1).
+
+    Raises:
+        ColonnesManquantesError: Si une colonne ``contrib_<famille>`` est absente.
+        DatasetVideError: Si `contributions` est vide.
     """
+    if contributions.empty:
+        raise DatasetVideError(
+            "Impossible de calculer la répartition par niveau sur un DataFrame vide."
+        )
+
+    requis = {f"contrib_{famille}" for famille in familles}
+    manquantes = requis - set(contributions.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="repartition_par_niveau")
+
     lignes = {}
     for famille in familles:
         niveaux = pd.cut(
@@ -210,7 +320,21 @@ def liaisons_les_plus_touchees(
     Returns:
         Pour chaque famille, une série indexée par liaison (contribution en
         taux), de la plus touchée à la moins touchée.
+
+    Raises:
+        ParametreInvalideError: Si `n` n'est pas strictement positif.
+        ColonnesManquantesError: Si une colonne ``contrib_<famille>`` est absente.
     """
+    if n <= 0:
+        raise ParametreInvalideError(
+            "n", n, "le nombre de liaisons à extraire doit être strictement positif."
+        )
+
+    requis = {f"contrib_{famille}" for famille in familles}
+    manquantes = requis - set(contributions.columns)
+    if manquantes:
+        raise ColonnesManquantesError(manquantes, contexte="liaisons_les_plus_touchees")
+
     return {
         famille: contributions[f"contrib_{famille}"].nlargest(n) for famille in familles
     }

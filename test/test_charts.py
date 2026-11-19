@@ -201,3 +201,36 @@ def test_carte_difficulte_colonnes_manquantes(stations):
     bilan = pd.DataFrame({"en_difficulte": [True], "tendance": ["s'aggrave"]})
     with pytest.raises(ValueError, match="coordonnées"):
         carte_difficulte(bilan, pd.DataFrame({"gare": ["PARIS"]}))
+
+
+def test_carte_difficulte_dessine_les_courtes_au_dessus_avec_une_couleur(stations):
+    index = pd.MultiIndex.from_tuples(
+        [("PARIS", "LILLE"), ("PARIS", "LYON")], names=["gare_depart", "gare_arrivee"]
+    )
+    bilan = pd.DataFrame(
+        {"en_difficulte": [True, True], "tendance": ["s'aggrave"] * 2}, index=index
+    )
+
+    figure = carte_difficulte(bilan, stations)
+    liaisons = [t for t in figure.data if t.name == "s'aggrave" and t.lat]
+
+    # PARIS → LYON (la plus longue) d'abord, donc dessinée sous PARIS → LILLE
+    assert [t.text[0] for t in liaisons] == ["PARIS → LYON", "PARIS → LILLE"]
+    assert liaisons[0].line.color == liaisons[1].line.color
+    assert liaisons[0].line.width == liaisons[1].line.width
+    assert [t.showlegend for t in liaisons] == [True, False]
+
+
+def test_carte_difficulte_garde_une_entree_de_legende_par_tendance(stations):
+    index = pd.MultiIndex.from_tuples(
+        [("PARIS", "LYON")], names=["gare_depart", "gare_arrivee"]
+    )
+    bilan = pd.DataFrame(
+        {"en_difficulte": [True], "tendance": ["s'aggrave"]}, index=index
+    )
+
+    figure = carte_difficulte(bilan, stations)
+    legendes = [t.name for t in figure.data if t.showlegend is not False]
+
+    assert legendes.count("s'aggrave") == 1
+    assert "résiste mieux" in legendes

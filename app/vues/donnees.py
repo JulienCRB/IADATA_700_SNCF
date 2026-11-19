@@ -1,7 +1,9 @@
 """Page « Données et limites » : peut-on faire confiance aux chiffres ?"""
 
 import streamlit as st
-from utils import LICENCE_URL, SOURCE_URL, get_regularite
+from utils import LICENCE_URL, SOURCE_URL, get_regularite, tracer_page
+
+tracer_page("Données et limites")
 
 regularite = get_regularite()
 debut, fin = regularite.periode
@@ -77,6 +79,23 @@ with regles[2].container(border=True):
 
 # --- Les calculs -----------------------------------------------------------------
 st.subheader("Comment nous calculons")
+with st.expander("📍 La « liaison typique »"):
+    st.markdown("""
+- C'est la **liaison médiane** : on range toutes les liaisons françaises de la
+  meilleure à la moins bonne, et on prend celle du milieu. La moitié des liaisons
+  fait mieux, l'autre moitié moins bien.
+- **Pourquoi la médiane ?** Un total du réseau est impossible (un même TGV compte
+  dans plusieurs liaisons), et une moyenne serait tirée par quelques liaisons aux
+  chiffres extrêmes ou douteux. La médiane montre ce que vit une liaison ordinaire.
+- **Et la durée du trajet ?** Elle dit à qui l'on se compare : la note de fiabilité,
+  les liaisons en difficulté et le « trajet typique de même durée » (page *Ma
+  liaison*) se calculent à l'intérieur de chaque classe de durée.
+- Les chiffres d'ensemble (accueil, causes, saisons) mélangent les durées : c'est
+  juste, car le seuil de retard tient déjà compte de la durée du trajet (5, 10 ou 15
+  min).
+- La médiane de chaque cause est calculée séparément : les trois ne s'additionnent
+  pas exactement à la médiane du total.
+""")
 with st.expander("🧩 Les trois familles de causes"):
     st.markdown("""
 - **Réseau** (SNCF Réseau) : infrastructure (voies, caténaires, signalisation,

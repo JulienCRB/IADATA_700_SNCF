@@ -1,7 +1,7 @@
 """Page « Saisons » : quand les causes de retard pèsent-elles le plus (Phase 3) ?"""
 
 import streamlit as st
-from utils import LIBELLES_FAMILLES, get_regularite, libelle_famille
+from utils import LIBELLES_FAMILLES, get_regularite, libelle_famille, tracer_page
 
 from railinsight.viz.charts import contributions_saison_bar
 
@@ -13,6 +13,8 @@ AVEC_ARTICLE = {
     "été": "l'été",
     "automne": "l'automne",
 }
+
+tracer_page("Saisons")
 
 contributions = get_regularite().contributions_par_saison()
 familles = contributions.drop(columns="total")

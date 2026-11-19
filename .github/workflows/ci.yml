@@ -21,6 +21,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --locked
 
+      - name: Audit dependencies (known vulnerabilities)
+        run: |
+          uv export --format requirements-txt --no-emit-project --no-hashes > requirements-audit.txt
+          uvx pip-audit -r requirements-audit.txt --disable-pip --no-deps
+
       - name: Lint (PEP 8 + docstrings)
         run: uv run ruff check .
 

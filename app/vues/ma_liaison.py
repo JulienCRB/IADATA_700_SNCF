@@ -6,8 +6,10 @@ from utils import (
     LIBELLES_FAMILLES,
     etoiles_texte,
     get_regularite,
+    log_action,
     nom_gare,
     pourcent,
+    tracer_page,
 )
 
 from railinsight.analysis.reliability import medianes_par_classe
@@ -26,6 +28,8 @@ TRAJETS = {
     "> 3h": "trajets de plus de 3h",
 }
 
+tracer_page("Ma liaison")
+
 regularite = get_regularite()
 scores = regularite.score_fiabilite()
 typiques = medianes_par_classe(scores)
@@ -41,6 +45,11 @@ departs = sorted(scores.index.get_level_values("gare_depart").unique())
 depart = col1.selectbox("🚉 Je pars de", departs)
 arrivee = col2.selectbox("🏁 Je vais à", sorted(scores.loc[depart].index))
 liaison = (depart, arrivee)
+
+if st.session_state.get("derniere_liaison_consultee") != liaison:
+    st.session_state["derniere_liaison_consultee"] = liaison
+    log_action("Ma liaison — Trajet consulté : %s → %s", depart, arrivee)
+
 ligne = scores.loc[liaison]
 typique = typiques.loc[ligne["classe_duree"]]
 trajets = TRAJETS[ligne["classe_duree"]]
@@ -110,7 +119,8 @@ with col3.container(border=True):
     )
 st.caption(
     "En retard = plus de 5 min (trajet de moins de 1h30), 10 min (1h30 à 3h) ou "
-    "15 min (plus de 3h) à l'arrivée. Rouge : moins bien qu'un trajet typique ; "
+    "15 min (plus de 3h) à l'arrivée. Trajet typique : le trajet du milieu parmi "
+    "ceux de même durée. Rouge : moins bien qu'un trajet typique ; "
     "vert : mieux."
 )
 

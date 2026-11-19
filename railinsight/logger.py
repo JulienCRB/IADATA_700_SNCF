@@ -32,3 +32,23 @@ def get_logger(name: str = "railinsight") -> logging.Logger:
     logger.addHandler(error_handler)
     logger.propagate = False
     return logger
+
+
+def get_user_logger(name: str = "railinsight.users") -> logging.Logger:
+    """Retourne un logger dédié aux actions des utilisateurs dans ``logs/users.log``."""
+    logger = logging.getLogger(name)
+    if logger.handlers:
+        return logger
+
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+    formatter = logging.Formatter("%(asctime)s %(levelname)s: %(message)s")
+    user_handler = RotatingFileHandler(
+        LOG_DIR / "users.log", maxBytes=1_000_000, backupCount=3, encoding="utf-8"
+    )
+    user_handler.setLevel(logging.INFO)
+    user_handler.setFormatter(formatter)
+
+    logger.setLevel(logging.INFO)
+    logger.addHandler(user_handler)
+    logger.propagate = False
+    return logger
