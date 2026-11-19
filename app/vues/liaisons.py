@@ -4,6 +4,7 @@ import streamlit as st
 from utils import (
     get_gares,
     get_regularite,
+    get_reseau,
     libelle_famille,
     log_action,
     nom_gare,
@@ -82,7 +83,10 @@ st.subheader("Où sont-elles ?")
 gares = gares_concernees(bilan)
 stations = get_gares()
 col_carte, col_gares = st.columns([2, 1])
-col_carte.plotly_chart(carte_difficulte(bilan, stations), width="stretch")
+reseau = get_reseau()
+col_carte.plotly_chart(carte_difficulte(bilan, stations, reseau), width="stretch")
+if reseau is not None:
+    reseau.sauver_cache()
 with col_gares:
     if len(gares) >= 3:
         st.markdown(

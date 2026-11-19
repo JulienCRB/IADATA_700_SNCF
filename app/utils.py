@@ -13,6 +13,7 @@ from railinsight.data.quality import normaliser_noms
 from railinsight.exceptions import RailInsightError
 from railinsight.logger import get_logger, get_user_logger
 from railinsight.regularite import Regularite
+from railinsight.routing import ReseauFerroviaire, charger_reseau
 from railinsight.viz.charts import ROUTE_COLUMNS
 
 log = get_logger(__name__)
@@ -86,6 +87,12 @@ def _preparer_gares() -> pd.DataFrame:
         on="code_uic",
     ).rename(columns={"x_wgs84": "longitude", "y_wgs84": "latitude"})
     return stations.drop_duplicates(subset="gare")
+
+
+@st.cache_resource(show_spinner="Chargement du réseau ferré…")
+def get_reseau() -> ReseauFerroviaire | None:
+    """Réseau ferré pour tracer les liaisons, ou ``None`` (lignes droites)."""
+    return charger_reseau()
 
 
 def get_gares() -> pd.DataFrame:
