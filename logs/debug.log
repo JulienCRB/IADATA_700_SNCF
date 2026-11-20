@@ -1,0 +1,837 @@
+2026-11-01 16:43:24,595 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 16:43:26,325 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 16:43:26,340 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 16:43:27,263 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 16:43:27,273 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-01 16:43:36,847 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-01 16:43:36,854 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-01 16:43:38,532 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 3021 lignes, 27 colonnes
+2026-11-01 16:43:38,540 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-01 16:44:17,692 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 16:44:18,783 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 16:44:18,792 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 16:44:20,049 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 16:44:20,056 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-01 16:44:23,351 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-01 16:44:23,358 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-01 16:44:23,882 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 3021 lignes, 27 colonnes
+2026-11-01 16:44:23,900 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-01 16:53:15,479 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 16:53:16,980 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 16:53:17,081 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 16:53:18,199 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 17:05:06,337 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 17:05:07,892 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 17:05:07,991 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 17:05:09,503 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 17:05:10,425 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 17:05:11,792 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 17:05:11,803 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 17:05:13,420 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 17:05:13,432 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-01 17:05:17,607 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-01 17:05:17,615 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-01 17:05:18,137 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 3021 lignes, 27 colonnes
+2026-11-01 17:05:18,146 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-01 17:05:38,889 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 17:05:40,305 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 17:05:40,406 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 17:05:41,744 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 17:05:42,569 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 17:05:43,578 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 17:05:43,589 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 17:05:44,992 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 17:05:45,004 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-01 17:05:50,203 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-01 17:05:50,211 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-01 17:05:50,784 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 3021 lignes, 27 colonnes
+2026-11-01 17:05:50,793 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-01 18:43:13,866 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 18:43:15,444 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 18:43:15,538 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 18:43:16,987 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 18:43:18,216 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-01 18:43:19,454 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-01 18:43:19,461 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-01 18:43:22,749 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-01 18:43:22,759 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-01 18:43:26,740 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-01 18:43:26,748 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-01 18:43:27,202 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 3021 lignes, 27 colonnes
+2026-11-01 18:43:27,218 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-15 21:17:01,646 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-15 21:17:03,077 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-15 21:18:18,927 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-15 21:18:21,562 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:17:24,241 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:17:26,503 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:17:31,751 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:17:33,115 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:17:44,026 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:17:45,414 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:17:45,435 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:17:46,653 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:17:46,670 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 15:17:50,653 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 15:17:50,674 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 15:17:51,033 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 15:17:51,050 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 15:30:39,622 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:30:44,650 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:30:49,940 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:30:51,154 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:31:01,904 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:31:03,481 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:31:03,502 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:31:04,914 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:31:04,931 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 15:31:08,718 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 15:31:08,741 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 15:31:09,788 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 15:31:09,804 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 15:41:34,016 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:41:37,399 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:41:42,831 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:41:44,388 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:41:54,999 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:41:57,819 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:41:57,839 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:41:59,703 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:41:59,725 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 15:42:03,828 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 15:42:03,848 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 15:42:04,294 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 15:42:04,310 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 15:42:04,584 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:42:04,593 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:42:04,603 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:42:04,614 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:42:04,626 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:42:04,637 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:44:13,620 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:44:14,893 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:44:20,305 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:44:21,508 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:44:32,209 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:44:33,455 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:44:33,473 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:44:35,134 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:44:35,152 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 15:44:38,675 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 15:44:38,695 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 15:44:39,099 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 15:44:39,119 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 15:44:39,351 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:44:39,361 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:44:39,375 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:44:39,389 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:44:39,404 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:44:39,417 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:47:09,121 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:47:11,019 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:47:16,312 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:47:17,528 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:47:28,904 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 15:47:30,576 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 15:47:30,595 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 15:47:31,933 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 15:47:31,951 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 15:47:35,309 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 15:47:35,332 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 15:47:35,839 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 15:47:35,861 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 15:47:36,061 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:47:36,072 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:47:36,082 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:47:36,093 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:47:36,105 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 15:47:36,116 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:03:28,208 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:03:30,464 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:03:35,778 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 16:03:36,877 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:03:47,898 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:03:49,918 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:03:49,937 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 16:03:51,148 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:03:51,167 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 16:03:55,689 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 16:03:55,708 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 16:03:56,036 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 16:03:56,052 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 16:03:56,234 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:03:56,245 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:03:56,254 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:03:56,265 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:03:56,277 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:03:56,287 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:13:55,673 INFO __main__: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:13:56,919 INFO __main__: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:13:57,776 INFO __main__: Fichier de test enregistré : test/data_test/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 16:13:57,776 INFO __main__: Téléchargement du dataset liste-des-gares
+2026-11-18 16:13:59,542 INFO __main__: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:13:59,840 INFO __main__: Fichier de test enregistré : test/data_test/liste-des-gares.csv
+2026-11-18 16:13:59,840 INFO __main__: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 16:14:03,762 INFO __main__: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 16:14:05,219 INFO __main__: Fichier de test enregistré : test/data_test/lignes-lgv-et-par-ecartement.csv
+2026-11-18 16:14:05,219 INFO __main__: Téléchargement du dataset frequentation-gares
+2026-11-18 16:14:05,822 INFO __main__: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 16:14:05,864 INFO __main__: Fichier de test enregistré : test/data_test/frequentation-gares.csv
+2026-11-18 16:18:13,956 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:18:15,369 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:18:15,391 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 16:18:16,778 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:18:16,804 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 16:18:20,392 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 16:18:20,412 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 16:18:20,781 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 16:18:20,797 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 16:18:20,989 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:18:21,000 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:18:21,011 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:18:21,022 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:18:21,033 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:18:21,043 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:18:21,074 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-6/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 16:18:21,080 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-6/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 16:18:21,085 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-6/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 16:18:21,090 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-6/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 16:25:13,572 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:25:16,235 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:25:16,254 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 16:25:17,894 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:25:17,912 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 16:25:24,347 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 16:25:24,368 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 16:25:25,018 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 16:25:25,036 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 16:25:25,309 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:25:25,318 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:25:25,328 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:25:25,337 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:25:25,349 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:25:25,359 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:25:25,388 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-7/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 16:25:25,394 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-7/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 16:25:25,400 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-7/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 16:25:25,405 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-7/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 16:27:33,798 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:27:35,275 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:27:35,294 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 16:27:36,744 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:27:36,761 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 16:27:40,315 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 16:27:40,337 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 16:27:40,655 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 16:27:40,671 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 16:27:40,871 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:27:40,883 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:27:40,893 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:27:40,904 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:27:40,917 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:27:40,927 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:27:40,958 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-8/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 16:27:40,964 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-8/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 16:27:40,969 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-8/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 16:27:40,974 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-8/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 16:29:30,471 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:29:33,318 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:29:33,337 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 16:29:35,158 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:29:35,176 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 16:29:38,857 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 16:29:38,878 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 16:29:39,271 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 16:29:39,287 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 16:29:39,486 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:29:39,497 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:29:39,507 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:29:39,518 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:29:39,529 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:29:39,539 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:29:39,569 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-9/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 16:29:39,574 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-9/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 16:29:39,579 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-9/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 16:29:39,585 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-9/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 16:31:19,277 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 16:31:21,064 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 16:31:21,083 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 16:31:22,433 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 16:31:22,452 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 16:31:25,786 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 16:31:25,809 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 16:31:26,135 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 16:31:26,151 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 16:31:26,342 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:31:26,352 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:31:26,362 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:31:26,373 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:31:26,383 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:31:26,393 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 16:31:26,425 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-10/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 16:31:26,431 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-10/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 16:31:26,435 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-10/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 16:31:26,441 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-10/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 17:09:25,056 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:09:25,082 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:09:25,206 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:09:25,281 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:09:25,394 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:25,499 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:25,568 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:09:25,588 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:09:25,685 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:09:25,699 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:09:26,975 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:09:27,035 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:09:27,124 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:27,223 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:27,289 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:09:27,311 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:09:27,418 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:09:27,434 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:09:29,822 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:29,925 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:29,999 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:09:30,020 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:09:30,353 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 5 lignes
+2026-11-18 17:09:30,386 DEBUG railinsight.data.quality: Déduplication des gares : 6464 -> 6057 lignes
+2026-11-18 17:09:30,399 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 17:09:30,474 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 6065 gares uniques
+2026-11-18 17:09:30,792 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:09:33,111 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:09:33,181 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 121 liaisons (volume_min=100, par=None)
+2026-11-18 17:09:33,215 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 107 liaisons comparables
+2026-11-18 17:09:33,317 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:09:33,411 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1116 liaisons (volume_min=0, par=annee)
+2026-11-18 17:09:33,497 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:33,586 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:33,652 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:09:33,674 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:09:35,642 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:09:35,695 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:09:37,630 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:09:37,647 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:09:37,981 WARNING railinsight.analysis.causes: 1 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:09:38,153 DEBUG railinsight.analysis.causes: Contributions calculées sur 2/2 observations fiables (par=None)
+2026-11-18 17:09:38,204 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/2 observations fiables (par=None)
+2026-11-18 17:09:38,270 DEBUG railinsight.analysis.causes: Contributions calculées sur 3/3 observations fiables (par=saison)
+2026-11-18 17:09:38,284 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 17:09:38,331 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=saison)
+2026-11-18 17:09:38,344 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 17:09:38,389 DEBUG railinsight.analysis.causes: Contributions calculées sur 4/4 observations fiables (par=saison)
+2026-11-18 17:09:38,403 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:09:38,571 DEBUG railinsight.analysis.causes: Contributions calculées sur 3/3 observations fiables (par=saison)
+2026-11-18 17:09:38,587 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 17:09:40,491 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 1 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:40,578 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 2 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:40,644 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 1 liaisons-années retenues (volume_min=1200)
+2026-11-18 17:09:40,819 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:40,933 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:41,090 DEBUG railinsight.analysis.causes: Contributions calculées sur 4/4 observations fiables (par=periode)
+2026-11-18 17:09:41,107 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 2 liaisons
+2026-11-18 17:09:41,210 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=periode)
+2026-11-18 17:09:41,255 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=periode)
+2026-11-18 17:09:41,464 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:09:42,818 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:09:42,837 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 17:09:44,065 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 17:09:44,082 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 17:09:47,887 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 17:09:47,909 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 17:09:48,354 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 17:09:48,370 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 17:09:48,572 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:09:48,588 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:09:48,604 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:09:48,620 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:09:48,637 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:09:48,653 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:09:48,689 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-11/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 17:09:48,694 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-11/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 17:09:48,699 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-11/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 17:09:48,706 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-11/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 17:09:48,796 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 1 lignes
+2026-11-18 17:09:48,818 DEBUG railinsight.data.quality: Déduplication des gares : 2 -> 2 lignes
+2026-11-18 17:09:48,826 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 17:09:48,840 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 10 gares uniques
+2026-11-18 17:09:48,940 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:09:49,047 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:09:49,111 DEBUG railinsight.data.preprocessing: Table de dates générée : 2025-01 à 2025-04 (4 mois)
+2026-11-18 17:09:49,155 DEBUG railinsight.data.preprocessing: Table de dates générée : 2024-12 à 2025-02 (3 mois)
+2026-11-18 17:09:49,197 DEBUG railinsight.data.preprocessing: Table de dates générée : 2025-01 à 2025-02 (2 mois)
+2026-11-18 17:09:49,341 INFO railinsight.data.preprocessing: Dataset de fréquentation prétraité : 2998 lignes
+2026-11-18 17:09:49,472 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 2 lignes (0 observations internationales)
+2026-11-18 17:09:49,545 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 6 lignes (0 observations internationales)
+2026-11-18 17:09:49,617 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 2 lignes (1 observations internationales)
+2026-11-18 17:09:50,050 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:09:50,138 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 1 lignes
+2026-11-18 17:09:50,175 DEBUG railinsight.data.quality: Déduplication des gares : 4 -> 2 lignes
+2026-11-18 17:09:50,196 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 1 gares ajoutées
+2026-11-18 17:09:50,297 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:50,419 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:50,913 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:09:50,926 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:09:51,182 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:51,268 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=None)
+2026-11-18 17:09:51,387 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:51,512 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 16 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:51,622 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:51,669 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=periode)
+2026-11-18 17:09:51,695 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 4 liaisons
+2026-11-18 17:09:51,847 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:51,928 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=saison)
+2026-11-18 17:09:51,948 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:09:52,044 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:52,091 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:09:52,170 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 17:09:52,207 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 17:09:52,333 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:52,462 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:52,587 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 16 liaisons-années retenues (volume_min=100)
+2026-11-18 17:09:52,691 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:09:52,732 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=periode)
+2026-11-18 17:09:52,749 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 4 liaisons
+2026-11-18 17:09:52,868 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:52,986 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 20 liaisons (volume_min=0, par=annee)
+2026-11-18 17:09:53,080 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:53,154 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=None)
+2026-11-18 17:09:53,246 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:53,289 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:09:53,356 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 17:09:53,390 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 17:09:53,516 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:09:53,562 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:09:53,635 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 17:09:53,669 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 17:09:53,726 DEBUG railinsight.analysis.reliability: Filtrage sur les 2 derniers mois : ['2024-03', '2024-04']
+2026-11-18 17:09:53,742 DEBUG railinsight.analysis.reliability: Filtrage sur les 1 derniers mois : ['2024-02']
+2026-11-18 17:09:53,833 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 17:09:53,929 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 17:09:54,028 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 17:09:54,074 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 17:09:54,114 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 17:09:54,156 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 17:09:54,350 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 2 liaisons (volume_min=0, par=annee)
+2026-11-18 17:11:37,535 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:11:39,332 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:11:43,883 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 17:11:45,251 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 17:11:45,265 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 17:11:48,780 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 17:11:48,843 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 17:11:49,291 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 17:12:36,951 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:12:38,523 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:13:11,051 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:13:12,333 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:13:12,755 DEBUG railinsight.data.preprocessing: Table de dates générée : 2018-01 à 2026-09 (105 mois)
+2026-11-18 17:13:13,030 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:13:14,273 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:13:14,508 DEBUG railinsight.data.preprocessing: Table de dates générée : 2018-01 à 2026-09 (105 mois)
+2026-11-18 17:13:15,038 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:13:16,301 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:13:40,889 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 17:13:44,030 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 17:13:44,033 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:13:45,645 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:13:45,747 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 5 lignes
+2026-11-18 17:13:45,771 DEBUG railinsight.data.quality: Déduplication des gares : 6464 -> 6057 lignes
+2026-11-18 17:13:45,779 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 17:13:45,827 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 6065 gares uniques
+2026-11-18 17:13:46,053 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:14:00,969 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:14:02,309 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:14:02,701 DEBUG railinsight.data.preprocessing: Table de dates générée : 2018-01 à 2026-09 (105 mois)
+2026-11-18 17:14:02,982 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:14:04,318 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:14:04,552 DEBUG railinsight.data.preprocessing: Table de dates générée : 2018-01 à 2026-09 (105 mois)
+2026-11-18 17:14:05,092 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:14:07,322 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:27:40,762 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:27:40,767 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:27:40,805 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:40,823 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:40,856 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:40,887 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:40,909 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:27:40,916 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:27:40,946 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:27:40,950 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:27:40,983 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:41,000 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:41,030 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:41,061 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:41,083 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:27:41,089 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:27:41,119 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:27:41,124 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:27:41,562 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:41,579 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:41,610 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:41,643 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:41,667 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:27:41,674 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:27:41,707 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:27:41,712 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:27:41,745 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:41,763 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:41,794 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:41,827 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:41,850 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:27:41,856 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:27:41,887 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:27:41,893 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:27:42,775 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:42,812 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:42,839 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:27:42,847 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:27:42,971 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 5 lignes
+2026-11-18 17:27:42,982 DEBUG railinsight.data.quality: Déduplication des gares : 6464 -> 6057 lignes
+2026-11-18 17:27:42,985 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 17:27:43,010 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 6065 gares uniques
+2026-11-18 17:27:43,117 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:27:43,904 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:27:43,930 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 121 liaisons (volume_min=100, par=None)
+2026-11-18 17:27:43,944 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 107 liaisons comparables
+2026-11-18 17:27:43,985 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:44,014 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1116 liaisons (volume_min=0, par=annee)
+2026-11-18 17:27:44,041 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:44,075 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:44,099 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:27:44,105 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:27:44,751 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:44,770 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:27:45,388 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:27:45,393 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:27:45,505 WARNING railinsight.analysis.causes: 1 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:27:45,562 DEBUG railinsight.analysis.causes: Contributions calculées sur 2/2 observations fiables (par=None)
+2026-11-18 17:27:45,578 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/2 observations fiables (par=None)
+2026-11-18 17:27:45,600 DEBUG railinsight.analysis.causes: Contributions calculées sur 3/3 observations fiables (par=saison)
+2026-11-18 17:27:45,605 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 17:27:45,623 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=saison)
+2026-11-18 17:27:45,628 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 17:27:45,644 DEBUG railinsight.analysis.causes: Contributions calculées sur 4/4 observations fiables (par=saison)
+2026-11-18 17:27:45,649 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:27:45,707 DEBUG railinsight.analysis.causes: Contributions calculées sur 3/3 observations fiables (par=saison)
+2026-11-18 17:27:45,712 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 17:27:46,358 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 1 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:46,385 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 2 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:46,409 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 1 liaisons-années retenues (volume_min=1200)
+2026-11-18 17:27:46,501 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:46,554 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:46,619 DEBUG railinsight.analysis.causes: Contributions calculées sur 4/4 observations fiables (par=periode)
+2026-11-18 17:27:46,629 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 2 liaisons
+2026-11-18 17:27:46,672 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=periode)
+2026-11-18 17:27:46,689 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=periode)
+2026-11-18 17:27:46,756 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:27:49,907 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:27:49,915 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 17:27:52,645 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 17:27:52,653 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 17:27:56,733 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 17:27:56,741 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 17:27:57,039 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 17:27:57,054 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 17:27:57,243 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:27:57,253 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:27:57,264 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:27:57,275 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:27:57,286 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:27:57,296 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 17:27:57,325 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-12/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 17:27:57,328 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-12/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 17:27:57,331 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-12/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 17:27:57,333 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-12/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 17:27:57,384 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 1 lignes
+2026-11-18 17:27:57,396 DEBUG railinsight.data.quality: Déduplication des gares : 2 -> 2 lignes
+2026-11-18 17:27:57,401 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 17:27:57,409 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 10 gares uniques
+2026-11-18 17:27:57,447 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:27:57,488 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:27:57,511 DEBUG railinsight.data.preprocessing: Table de dates générée : 2025-01 à 2025-04 (4 mois)
+2026-11-18 17:27:57,528 DEBUG railinsight.data.preprocessing: Table de dates générée : 2024-12 à 2025-02 (3 mois)
+2026-11-18 17:27:57,544 DEBUG railinsight.data.preprocessing: Table de dates générée : 2025-01 à 2025-02 (2 mois)
+2026-11-18 17:27:57,597 INFO railinsight.data.preprocessing: Dataset de fréquentation prétraité : 2998 lignes
+2026-11-18 17:27:57,642 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 2 lignes (0 observations internationales)
+2026-11-18 17:27:57,666 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 6 lignes (0 observations internationales)
+2026-11-18 17:27:57,691 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 2 lignes (1 observations internationales)
+2026-11-18 17:27:57,853 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:27:57,884 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 1 lignes
+2026-11-18 17:27:57,896 DEBUG railinsight.data.quality: Déduplication des gares : 4 -> 2 lignes
+2026-11-18 17:27:57,904 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 1 gares ajoutées
+2026-11-18 17:27:57,939 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:57,982 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,161 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:27:58,165 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:27:58,289 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,318 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=None)
+2026-11-18 17:27:58,352 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,387 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 16 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:58,418 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:58,432 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=periode)
+2026-11-18 17:27:58,438 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 4 liaisons
+2026-11-18 17:27:58,480 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,505 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=saison)
+2026-11-18 17:27:58,509 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:27:58,538 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,552 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:27:58,576 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 17:27:58,589 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 17:27:58,631 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,675 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,709 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 16 liaisons-années retenues (volume_min=100)
+2026-11-18 17:27:58,741 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:27:58,756 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=periode)
+2026-11-18 17:27:58,762 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 4 liaisons
+2026-11-18 17:27:58,803 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,840 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 20 liaisons (volume_min=0, par=annee)
+2026-11-18 17:27:58,871 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,894 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=None)
+2026-11-18 17:27:58,924 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:58,939 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:27:58,962 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 17:27:58,974 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 17:27:59,017 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 17:27:59,031 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:27:59,055 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 17:27:59,066 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 17:27:59,086 DEBUG railinsight.analysis.reliability: Filtrage sur les 2 derniers mois : ['2024-03', '2024-04']
+2026-11-18 17:27:59,092 DEBUG railinsight.analysis.reliability: Filtrage sur les 1 derniers mois : ['2024-02']
+2026-11-18 17:27:59,121 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 17:27:59,151 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 17:27:59,181 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 17:27:59,195 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 17:27:59,208 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 17:27:59,222 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 17:27:59,286 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 2 liaisons (volume_min=0, par=annee)
+2026-11-18 17:30:15,138 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:30:16,838 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:30:16,914 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:30:16,918 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:30:16,946 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:30:16,959 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:30:16,979 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:30:16,997 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:30:17,013 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:30:17,016 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:30:17,036 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:30:17,039 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:30:17,062 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:30:17,076 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:30:17,097 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:30:17,136 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:30:17,153 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:30:17,156 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:30:17,177 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:30:17,180 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:33:14,742 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:33:14,787 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:33:48,895 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:33:48,954 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:33:48,979 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:33:48,983 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:33:49,001 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 17:33:50,077 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 17:33:50,106 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 5 lignes
+2026-11-18 17:33:50,114 DEBUG railinsight.data.quality: Déduplication des gares : 6464 -> 6057 lignes
+2026-11-18 17:33:50,116 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 17:33:50,133 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 6065 gares uniques
+2026-11-18 17:33:50,205 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 17:33:55,751 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:33:55,762 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:34:03,063 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:34:03,111 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 121 liaisons (volume_min=100, par=None)
+2026-11-18 17:34:03,132 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 107 liaisons comparables
+2026-11-18 17:34:03,187 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:34:03,209 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1116 liaisons (volume_min=0, par=annee)
+2026-11-18 17:34:03,227 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:34:03,247 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:34:03,263 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:34:03,267 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:34:21,574 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 17:34:21,627 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 121 liaisons (volume_min=100, par=None)
+2026-11-18 17:34:21,649 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 107 liaisons comparables
+2026-11-18 17:34:21,690 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:34:21,711 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1116 liaisons (volume_min=0, par=annee)
+2026-11-18 17:34:21,729 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:34:21,748 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:34:21,764 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:34:21,767 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:36:27,263 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:36:28,409 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:36:28,493 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:36:28,497 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:36:28,529 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:36:28,542 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:36:28,562 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:36:28,582 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:36:28,598 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:36:28,601 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:36:28,621 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:36:28,624 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:40:14,505 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:40:16,106 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:40:16,183 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:40:16,187 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:40:16,216 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:40:16,229 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:40:16,250 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:40:16,275 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:40:16,296 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:40:16,300 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:40:16,321 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:40:16,325 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 17:40:38,575 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 17:40:39,706 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 17:40:39,787 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 17:40:39,792 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 17:40:39,821 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:40:39,835 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 17:40:39,857 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 17:40:39,877 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 17:40:39,893 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 17:40:39,897 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 17:40:39,916 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 17:40:39,919 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 18:02:41,931 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 18:02:41,947 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 18:02:42,059 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 18:02:42,110 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 18:02:42,213 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 18:02:42,306 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:02:42,379 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 18:02:42,398 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 18:02:42,498 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 18:02:42,514 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 18:02:43,837 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 18:02:43,888 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 18:02:43,976 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 18:02:44,064 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:02:44,125 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 18:02:44,141 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 18:02:44,253 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 18:02:44,270 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 18:02:46,525 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 18:02:46,618 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:02:46,683 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 18:02:46,700 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 18:02:47,011 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 5 lignes
+2026-11-18 18:02:47,040 DEBUG railinsight.data.quality: Déduplication des gares : 6464 -> 6057 lignes
+2026-11-18 18:02:47,050 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 18:02:47,108 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 6065 gares uniques
+2026-11-18 18:02:47,373 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 18:02:49,494 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 18:02:49,566 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 121 liaisons (volume_min=100, par=None)
+2026-11-18 18:02:49,603 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 107 liaisons comparables
+2026-11-18 18:02:49,703 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 18:02:49,781 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1116 liaisons (volume_min=0, par=annee)
+2026-11-18 18:02:49,856 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 974 liaisons-années retenues (volume_min=100)
+2026-11-18 18:02:49,944 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 28/107 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:02:50,006 DEBUG railinsight.analysis.causes: Contributions calculées sur 5171/5176 observations fiables (par=periode)
+2026-11-18 18:02:50,023 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 107 liaisons
+2026-11-18 18:02:51,744 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 18:02:51,796 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=None)
+2026-11-18 18:02:53,404 DEBUG railinsight.analysis.causes: Contributions calculées sur 11345/11357 observations fiables (par=saison)
+2026-11-18 18:02:53,417 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 18:02:53,704 WARNING railinsight.analysis.causes: 1 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 18:02:53,860 DEBUG railinsight.analysis.causes: Contributions calculées sur 2/2 observations fiables (par=None)
+2026-11-18 18:02:53,906 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/2 observations fiables (par=None)
+2026-11-18 18:02:53,969 DEBUG railinsight.analysis.causes: Contributions calculées sur 3/3 observations fiables (par=saison)
+2026-11-18 18:02:53,983 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 18:02:54,029 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=saison)
+2026-11-18 18:02:54,042 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 18:02:54,086 DEBUG railinsight.analysis.causes: Contributions calculées sur 4/4 observations fiables (par=saison)
+2026-11-18 18:02:54,099 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 18:02:54,261 DEBUG railinsight.analysis.causes: Contributions calculées sur 3/3 observations fiables (par=saison)
+2026-11-18 18:02:54,275 INFO railinsight.analysis.causes: Contributions par saison calculées (1 saisons)
+2026-11-18 18:02:56,093 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 1 liaisons-années retenues (volume_min=100)
+2026-11-18 18:02:56,169 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 2 liaisons-années retenues (volume_min=100)
+2026-11-18 18:02:56,235 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 1 liaisons-années retenues (volume_min=1200)
+2026-11-18 18:02:56,406 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:02:56,520 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:02:56,664 DEBUG railinsight.analysis.causes: Contributions calculées sur 4/4 observations fiables (par=periode)
+2026-11-18 18:02:56,683 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 2 liaisons
+2026-11-18 18:02:56,787 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=periode)
+2026-11-18 18:02:56,830 DEBUG railinsight.analysis.causes: Contributions calculées sur 1/1 observations fiables (par=periode)
+2026-11-18 18:02:57,027 INFO railinsight.data.loader: Téléchargement du dataset regularite-mensuelle-tgv-aqst
+2026-11-18 18:02:59,100 INFO railinsight.data.loader: Dataset regularite-mensuelle-tgv-aqst chargé : 12907 lignes, 26 colonnes
+2026-11-18 18:02:59,118 INFO railinsight.data.loader: Téléchargement du dataset liste-des-gares
+2026-11-18 18:03:00,508 INFO railinsight.data.loader: Dataset liste-des-gares chargé : 6469 lignes, 18 colonnes
+2026-11-18 18:03:00,525 INFO railinsight.data.loader: Téléchargement du dataset lignes-lgv-et-par-ecartement
+2026-11-18 18:03:04,550 INFO railinsight.data.loader: Dataset lignes-lgv-et-par-ecartement chargé : 2166 lignes, 19 colonnes
+2026-11-18 18:03:04,583 INFO railinsight.data.loader: Téléchargement du dataset frequentation-gares
+2026-11-18 18:03:05,185 INFO railinsight.data.loader: Dataset frequentation-gares chargé : 2998 lignes, 8 colonnes
+2026-11-18 18:03:05,203 INFO railinsight.data.loader: Téléchargement du dataset dataset-inexistant
+2026-11-18 18:03:05,438 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 18:03:05,450 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 18:03:05,460 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 18:03:05,472 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 18:03:05,483 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 18:03:05,495 INFO railinsight.data.loader: Téléchargement du dataset regularite
+2026-11-18 18:03:05,528 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-13/test_exporter_donnees_test0/regularite-mensuelle-tgv-aqst.csv
+2026-11-18 18:03:05,533 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-13/test_exporter_donnees_test0/liste-des-gares.csv
+2026-11-18 18:03:05,538 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-13/test_exporter_donnees_test0/lignes-lgv-et-par-ecartement.csv
+2026-11-18 18:03:05,544 INFO railinsight.data.loader: Fichier de test enregistré : /tmp/pytest-of-julien/pytest-13/test_exporter_donnees_test0/frequentation-gares.csv
+2026-11-18 18:03:05,698 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 1 lignes
+2026-11-18 18:03:05,720 DEBUG railinsight.data.quality: Déduplication des gares : 2 -> 2 lignes
+2026-11-18 18:03:05,729 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 8 gares ajoutées
+2026-11-18 18:03:05,745 INFO railinsight.data.preprocessing: Référentiel des gares prétraité : 10 gares uniques
+2026-11-18 18:03:05,856 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 18:03:05,969 DEBUG railinsight.data.preprocessing: Toutes les gares ont été associées à un code UIC.
+2026-11-18 18:03:06,028 DEBUG railinsight.data.preprocessing: Table de dates générée : 2025-01 à 2025-04 (4 mois)
+2026-11-18 18:03:06,070 DEBUG railinsight.data.preprocessing: Table de dates générée : 2024-12 à 2025-02 (3 mois)
+2026-11-18 18:03:06,112 DEBUG railinsight.data.preprocessing: Table de dates générée : 2025-01 à 2025-02 (2 mois)
+2026-11-18 18:03:06,275 INFO railinsight.data.preprocessing: Dataset de fréquentation prétraité : 2998 lignes
+2026-11-18 18:03:06,405 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 2 lignes (0 observations internationales)
+2026-11-18 18:03:06,472 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 6 lignes (0 observations internationales)
+2026-11-18 18:03:06,541 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 2 lignes (1 observations internationales)
+2026-11-18 18:03:06,995 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 18:03:07,078 DEBUG railinsight.data.quality: Doublons non-TGV écartés : 1 lignes
+2026-11-18 18:03:07,112 DEBUG railinsight.data.quality: Déduplication des gares : 4 -> 2 lignes
+2026-11-18 18:03:07,132 DEBUG railinsight.data.quality: Ajout de gares complémentaires : 1 gares ajoutées
+2026-11-18 18:03:07,228 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:07,348 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:07,832 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 12907 lignes (1550 observations internationales)
+2026-11-18 18:03:07,845 WARNING railinsight.analysis.causes: 83 observations avec répartition des causes non fiable (écart > 5.0 pts)
+2026-11-18 18:03:08,098 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:08,165 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=None)
+2026-11-18 18:03:08,253 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:08,346 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 16 liaisons-années retenues (volume_min=100)
+2026-11-18 18:03:08,437 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:03:08,476 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=periode)
+2026-11-18 18:03:08,491 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 4 liaisons
+2026-11-18 18:03:08,606 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:08,677 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=saison)
+2026-11-18 18:03:08,690 INFO railinsight.analysis.causes: Contributions par saison calculées (4 saisons)
+2026-11-18 18:03:08,770 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:08,810 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 18:03:08,873 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 18:03:08,907 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 18:03:09,026 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:09,145 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:09,240 DEBUG railinsight.analysis.difficulte: Taux annuels calculés : 16 liaisons-années retenues (volume_min=100)
+2026-11-18 18:03:09,326 INFO railinsight.analysis.difficulte: Liaisons en difficulté identifiées : 1/4 (référence=[2023, 2024, 2025], suivi=2026)
+2026-11-18 18:03:09,366 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=periode)
+2026-11-18 18:03:09,383 DEBUG railinsight.analysis.difficulte: Évolution des causes calculée pour 4 liaisons
+2026-11-18 18:03:09,497 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:09,597 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 20 liaisons (volume_min=0, par=annee)
+2026-11-18 18:03:09,677 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:09,745 DEBUG railinsight.analysis.causes: Contributions calculées sur 192/192 observations fiables (par=None)
+2026-11-18 18:03:09,836 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:09,874 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 18:03:09,936 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 18:03:09,967 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 18:03:10,078 INFO railinsight.data.preprocessing: Jeu de régularité préparé : 240 lignes (48 observations internationales)
+2026-11-18 18:03:10,120 DEBUG railinsight.analysis.reliability: Filtrage sur les 12 derniers mois : ['2025-10', '2025-11', '2025-12', '2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06', '2026-07', '2026-08', '2026-09']
+2026-11-18 18:03:10,186 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 5 liaisons (volume_min=100, par=None)
+2026-11-18 18:03:10,217 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 4 liaisons comparables
+2026-11-18 18:03:10,269 DEBUG railinsight.analysis.reliability: Filtrage sur les 2 derniers mois : ['2024-03', '2024-04']
+2026-11-18 18:03:10,284 DEBUG railinsight.analysis.reliability: Filtrage sur les 1 derniers mois : ['2024-02']
+2026-11-18 18:03:10,366 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 18:03:10,450 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 18:03:10,536 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 1 liaisons (volume_min=100, par=None)
+2026-11-18 18:03:10,575 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 18:03:10,612 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 18:03:10,653 INFO railinsight.analysis.reliability: Score de fiabilité calculé pour 2 liaisons comparables
+2026-11-18 18:03:10,839 DEBUG railinsight.analysis.reliability: Composantes de fiabilité calculées pour 2 liaisons (volume_min=0, par=annee)
